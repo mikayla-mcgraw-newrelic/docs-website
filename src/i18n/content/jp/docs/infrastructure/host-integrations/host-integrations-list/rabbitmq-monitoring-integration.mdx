@@ -5,17 +5,11 @@ tags:
   - On-host integrations
   - On-host integrations list
 metaDescription: 'New Relic''s RabbitMQ integration: how to install it, configure it, and understand the data it reports.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
 New Relic RabbitMQオンホスト[統合](/docs/integrations/host-integrations/getting-started/introduction-host-integrations)は、クラスター、vhost、キュー、エクスチェンジ、コンシューマーに関連する重要なメトリックを含む、RabbitMQサービスからのメトリックと構成データをレポートします。
-
-<Callout
-  variant="important"
-  title="EOL通知"
->
-  2022年4月をもって、 `RabbitMQCluster`エンティティを含むいくつかの機能のサポートを終了します。この移行に簡単に備える方法など、詳細については、 [ExplorersHubの投稿](https://discuss.newrelic.com/t/q1-bulk-eol-announcement-fy23/181744)をご覧ください。
-</Callout>
 
 ## 互換性と要件 [#comp-req]
 
@@ -32,7 +26,7 @@ New Relic RabbitMQオンホスト[統合](/docs/integrations/host-integrations/g
 
 * RabbitMQがKubernetesまたはAmazonECSで実行されて**いない**場合は、RabbitMQを実行しているホスト[にインフラストラクチャエージェントをインストールする](/docs/infrastructure/install-infrastructure-agent/get-started/install-infrastructure-agent-new-relic)必要があります。さもないと：
 
-  * Kubernetesで実行している場合は、[これらの要件](/docs/monitor-service-running-kubernetes#requirements)を参照してください。
+  * Kubernetes で実行している場合は、 [これらの要件を](/docs/kubernetes-pixie/kubernetes-integration/get-started/kubernetes-integration-compatibility-requirements/)参照してください。
   * ECSで実行している場合は、 [これらの要件](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)を参照してください。
 
 ## インストールしてアクティブ化する [#install]
@@ -41,13 +35,18 @@ RabbitMQ統合をインストールするには、ご使用の環境の指示に
 
 <CollapserGroup>
   <Collapser
+    id="ansible"
+    title="Ansible"
+  >
+    [設定管理ツール](/docs/infrastructure/install-infrastructure-agent/linux-installation/install-configuration-management-tools) を使用して[ 、インフラストラクチャエージェント](/docs/infrastructure/infrastructure-monitoring/get-started/get-started-infrastructure-monitoring/) の使用を開始します。
+  </Collapser>
+
+  <Collapser
     id="ecs-install"
     title="ECS"
   >
     [ECSで実行されているモニターサービスを](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)参照してください。
   </Collapser>
-
-  ''
 
   <Collapser
     id="k8s-install"
@@ -60,29 +59,29 @@ RabbitMQ統合をインストールするには、ご使用の環境の指示に
     id="linux-install"
     title="Linux"
   >
-    1. ファイル名`nri-rabbitmq`を使用して[、統合をインストールする](/docs/install-integrations-package)ための指示に従います。
+    1. [インフラストラクチャ エージェントをインストールし](/docs/integrations/host-integrations/installation/install-infrastructure-host-integrations/#install)、 `INTEGRATION_FILE_NAME`変数を`nri-rabbitmq`に置き換えます。
 
     2. ディレクトリを統合構成フォルダに変更します。
 
-       ```
+       ```sh
        cd /etc/newrelic-infra/integrations.d
        ```
 
     3. サンプル構成ファイルをコピーします。
 
-       ```
+       ```sh
        sudo cp rabbitmq-config.yml.sample rabbitmq-config.yml
        ```
 
     4. [構成設定](#config)の説明に従って、 `rabbitmq-config.yml`ファイルを編集します。
 
-    5. [インフラストラクチャエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    5. 自動Rabbitmqエラーログの解析と転送を有効にするには、 `rabbitmq-log.yml.example`ファイルを`rabbitmq-log.yml`にコピー（または名前変更）します。エージェントを再起動する必要はありません。
 
-    6. 自動Rabbitmqエラーログの解析と転送を有効にするには、 `rabbitmq-log.yml.example`ファイルを`rabbitmq-log.yml`にコピー（または名前変更）します。エージェントを再起動する必要はありません。
+       <DNT>
+         **Example:**
+       </DNT>
 
-       **例：**
-
-       ```
+       ```sh
        sudo cp /etc/newrelic-infra/logging.d/rabbitmq-log.yml.example /etc/newrelic-infra/logging.d/rabbitmq-log.yml
        ```
   </Collapser>
@@ -93,34 +92,61 @@ RabbitMQ統合をインストールするには、ご使用の環境の指示に
   >
     1. `nri-rabbitmq` .MSIインストーラーイメージを以下からダウンロードします。
 
-       [http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-rabbitmq/nri-rabbitmq-amd64.msi](http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-rabbitmq/nri-rabbitmq-amd64.msi)
+       [https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-rabbitmq/nri-rabbitmq-amd64.msi](https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-rabbitmq/nri-rabbitmq-amd64.msi)
 
     2. Windowsコマンドプロンプトからインストールするには、次のコマンドを実行します。
 
-       ```
-       msiexec.exe /qn /i <var>PATH\TO\</var>nri-rabbitmq-amd64.msi
+       ```sh
+       msiexec.exe /qn /i PATH\TO\nri-rabbitmq-amd64.msi
        ```
 
     3. Integrationsディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、次のコマンドを実行してサンプル構成ファイルのコピーを作成します。
 
-       ```
+       ```sh
        cp rabbitmq-config.yml.sample rabbitmq-config.yml
        ```
 
     4. [構成設定](#config)を使用して`rabbitmq-config.yml`構成ファイルを編集します。
 
-    5. [インフラストラクチャエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    5. 自動 Rabbitmq エラー ログの解析と転送を有効にするには、 `rabbitmq-log-win.yml.example`ファイルを`rabbitmq-log-win.yml`にコピー (または名前を変更) します。
+
+       <DNT>
+         **Command Prompt Example:**
+       </DNT>
+
+       ```sh
+       rename "C:\Program Files\New Relic\newrelic-infra\logging.d\rabbitmq-log-win.yml.example" rabbitmq-log-win.yml
+       ```
+
+       <DNT>
+         **Powershell Example:**
+       </DNT>
+
+       ```powershell
+       Rename-Item -Path "C:\Program Files\New Relic\newrelic-infra\logging.d\rabbitmq-log-win.yml.example" -NewName "rabbitmq-log-win.yml"
+       ```
   </Collapser>
 </CollapserGroup>
 
 その他の注意事項：
 
-* **高度：**統合は[tarball形式](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball)でも利用可能であり、パッケージマネージャーの外部にインストールできます。
-* **オンホスト統合は自動的に更新されません。**最良の結果を得るには、統合パッケージと[インフラストラクチャエージェント](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に[更新して](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)ください。
+* <DNT>
+    **Advanced:**
+  </DNT>
+
+  インテグレーションは、パッケージマネージャの外部にインストールできるように、 [tarball 形式](/docs/infrastructure/host-integrations/installation/install-infrastructure-host-integrations/#tarball)でも利用できます。
+
+* <DNT>
+    **On-host integrations do not automatically update.**
+  </DNT>
+
+  最善の結果を得るため、[インテグレーションパッケージの更新](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)と[Infrastructureエージェントの更新](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に実施してください。
 
 <Callout variant="important">
   この統合では、ホストごとに1つのRabbitMQサーバーインスタンスのみを監視できます。
 </Callout>
+
+<InstallFeedback/>
 
 ## 統合を構成する [#config]
 
@@ -137,18 +163,20 @@ RabbitMQ統合をインストールするには、ご使用の環境の指示に
 構成ファイルには、 `interval` 、 `timeout` 、 `inventory_source`などのすべての統合に適用できる共通の設定があります。これらの一般的な設定についてすべて読むには、 [構成フォーマット](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics)のドキュメントを参照してください。
 
 <Callout variant="important">
-  レガシー構成/定義ファイルをまだ使用している場合は、この[ドキュメント](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/)を参照してください。
+  レガシー構成/定義ファイルをまだ使用している場合は、この [ドキュメント](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/) を参照してください。
 </Callout>
 
 RabbitMQに関連する特定の設定は、構成ファイルの`env`セクションを使用して定義されます。これらの設定は、RabbitMQインスタンスへの接続、およびその他のセキュリティ設定と機能を制御します。有効な設定のリストについては、このドキュメントの次のセクションで説明します。
 
-**クラスター環境**
+<DNT>
+  **Cluster environments**
+</DNT>
 
-クラスタ環境では、1つのノードのみが`METRICS=false`と`INVENTORY=false`を使用する必要があります。残りは`INVENTORY=true`と`METRICS=false`を使用する必要があります。これらの詳細については、[インスタンス設定](#instance-settings)を参照してください。
+クラスター環境では、統合は、1 つのノードに接続された統合の 1 つのインスタンスのみを使用して、すべてのクラスターからメトリックを収集します。このインスタンスは `METRICS=true` と `INVENTORY=true`を使用する必要があります。残りのノードでは、 `METRICS=false` と `INVENTORY=true`を使用してインベントリのみを収集する必要があります。これらの詳細については、 [インスタンス設定を](#instance-settings)参照してください。
 
 Kubernetesでクラスター環境を実行している場合は、RabbitMQを[StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)としてデプロイし、RabbitMQポッドからすべてのメトリックをクエリするようにエージェントを構成する必要があります。構成[ファイル](https://github.com/newrelic/nri-rabbitmq/blob/master/rabbitmq-config.yml.k8s_sample)の自動検出一致条件を次の値に設定します。
 
-```
+```yml
 discovery:
   command:
     exec: /var/db/newrelic-infra/nri-discovery-kubernetes
@@ -156,11 +184,25 @@ discovery:
       podName: rabbitmq-0
 ```
 
+<Callout variant="important">
+  統合には、収集できるキューの数に制限があります。キューの数が 2000 を超える場合、キュー フィルターの適用後、統合はそれらのいずれも報告しません。すべてのメトリックを保持する回避策を提供しますが、エンティティの登録は無効になります。回避策を適用するには、次の環境変数を構成ファイルに追加します。
+
+  ```yaml
+  integrations:
+    - name: nri-rabbitmq
+      env:
+        # Integration configuration parameters.
+        METRICS: true
+        DISABLE_ENTITIES: true
+        QUEUES_MAX_LIMIT: "0"
+  ```
+</Callout>
+
 ### RabbitMQインスタンス設定 [#instance-settings]
 
-RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</strong> ）の両方の情報を収集します。以下の**\[適用先]列を**チェックして、特定のコレクションごとに使用できる設定を見つけてください。
+RabbitMQ インテグレーションは、メトリクス ( <strong>M</strong> ) 情報とインベントリ ( <strong>I</strong> ) 情報の両方を収集します。 それぞれの特定のコレクションに使用できる設定を確認するには、以下の<DNT>**Applies To**</DNT>列を確認してください。
 
-'' '' '' '' '' '' '' '' '' '' '' '' '' '' '' ''
+'' '' '' '' '' '' '' '' '' '' '' '' '' '' '' '' '' '' ''
 
 <table>
   <thead>
@@ -186,7 +228,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
   <tbody>
     <tr>
       <td>
-        **ホスト名**
+        `HOSTNAME`
       </td>
 
       <td>
@@ -194,7 +236,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
       </td>
 
       <td>
-        ローカルホスト
+        `localhost`
       </td>
 
       <td style={{ "text-align": "center" }}>
@@ -204,7 +246,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **ポート**
+        `PORT`
       </td>
 
       <td>
@@ -212,7 +254,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
       </td>
 
       <td>
-        15672
+        `15672`
       </td>
 
       <td style={{ 'text-align': 'center' }}>
@@ -222,7 +264,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **ユーザー名**
+        `USERNAME`
       </td>
 
       <td>
@@ -240,7 +282,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **パスワード**
+        `PASSWORD`
       </td>
 
       <td>
@@ -258,7 +300,25 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **MANAGEMENT_PATH_PREFIX**
+        `TIMEOUT`
+      </td>
+
+      <td>
+        RabbitMQ エンドポイントへの接続をタイムアウトする秒単位のタイムアウト。
+      </td>
+
+      <td>
+        `30`
+      </td>
+
+      <td style={{ 'text-align': 'center' }}>
+        M / I
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `MANAGEMENT_PATH_PREFIX`
       </td>
 
       <td>
@@ -276,7 +336,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **USE_SSL**
+        `USE_SSL`
       </td>
 
       <td>
@@ -284,7 +344,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
       </td>
 
       <td>
-        false
+        `false`
       </td>
 
       <td style={{ 'text-align': 'center' }}>
@@ -294,7 +354,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **CA_BUNDLE_DIR**
+        `CA_BUNDLE_DIR`
       </td>
 
       <td>
@@ -312,7 +372,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **CA_BUNDLE_FILE**
+        `CA_BUNDLE_FILE`
       </td>
 
       <td>
@@ -330,7 +390,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **NODE_NAME_OVERRIDE**
+        `NODE_NAME_OVERRIDE`
       </td>
 
       <td>
@@ -348,7 +408,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **CONFIG_PATH**
+        `CONFIG_PATH`
       </td>
 
       <td>
@@ -366,7 +426,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **キュー**
+        `QUEUES`
       </td>
 
       <td>
@@ -374,7 +434,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
         例：
 
-        ```
+        ```yml
         queues: '["myQueue1","myQueue2"]'
         ```
       </td>
@@ -390,7 +450,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **QUEUES_REGEXES**
+        `QUEUES_REGEXES`
       </td>
 
       <td>
@@ -398,7 +458,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
         例：
 
-        ```
+        ```yml
         queues_regexes: '["queue[0-9]+",".*"]'
         ```
       </td>
@@ -414,7 +474,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **交換**
+        `EXCHANGES`
       </td>
 
       <td>
@@ -432,7 +492,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **EXCHANGES_REGEXES**
+        `EXCHANGES_REGEXES`
       </td>
 
       <td>
@@ -450,7 +510,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **VHOSTS**
+        `VHOSTS`
       </td>
 
       <td>
@@ -468,7 +528,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **VHOSTS_REGEXES**
+        `VHOSTS_REGEXES`
       </td>
 
       <td>
@@ -486,7 +546,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **METRICS**
+        `METRICS`
       </td>
 
       <td>
@@ -494,7 +554,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
       </td>
 
       <td>
-        false
+        `false`
       </td>
 
       <td style={{ 'text-align': 'center' }}/>
@@ -502,7 +562,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **在庫**
+        `INVENTORY`
       </td>
 
       <td>
@@ -510,7 +570,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
       </td>
 
       <td>
-        false
+        `false`
       </td>
 
       <td style={{ 'text-align': 'center' }}/>
@@ -518,7 +578,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
     <tr>
       <td>
-        **イベント**
+        `EVENTS`
       </td>
 
       <td>
@@ -526,7 +586,39 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
       </td>
 
       <td>
-        false
+        `false`
+      </td>
+
+      <td style={{ 'text-align': 'center' }}/>
+    </tr>
+
+    <tr>
+      <td>
+        `DISABLE_ENTITIES`
+      </td>
+
+      <td>
+        メトリック収集中にエンティティのインベントリ エントリを作成するかどうかを構成します。大量のキューを収集するための回避策としてのみ使用してください。
+      </td>
+
+      <td>
+        `false`
+      </td>
+
+      <td style={{ 'text-align': 'center' }}/>
+    </tr>
+
+    <tr>
+      <td>
+        `QUEUES_MAX_LIMIT`
+      </td>
+
+      <td>
+        処理できるキューの最大数を定義します。この数に達すると、すべてのキューが削除されます。 '0' と定義されている場合、制限は適用されません。これは、エージェントのメモリの増加を回避するために`DISABLE_ENTITIES=true`と共に使用されます。
+      </td>
+
+      <td>
+        2000
       </td>
 
       <td style={{ 'text-align': 'center' }}/>
@@ -542,12 +634,12 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
 ### ラベル/カスタム属性 [#labels]
 
-環境変数を使用して、ライセンスキーなどの構成設定を制御し、インフラストラクチャエージェントに渡すことができます。この機能の使用方法について[は、インフラストラクチャエージェントの構成](/docs/infrastructure/new-relic-infrastructure/configuration/configure-infrastructure-agent#passthrough)を参照してください。ラベルを使用して、メトリックをさらに装飾できます。ラベルを使用すると、キーと値のペアの属性をメトリックに追加して、メトリックのクエリ、フィルタリング、またはグループ化に使用できます。<br/>デフォルトのサンプル構成ファイルにはラベルの例が含まれていますが、必須ではないため、選択した新しいラベルを削除、変更、または追加できます。
+環境変数は、 <InlinePopover type="licenseKey"/>などの構成設定を制御するために使用でき、その後、インフラストラクチャエージェントに渡されます。 この機能の使用方法については、 [「インフラストラクチャエージェントの構成」を](/docs/infrastructure/new-relic-infrastructure/configuration/configure-infrastructure-agent#passthrough)参照してください。 ラベルを使用してメトリクスをさらに装飾することができます。 ラベルを使用すると、メトリクスにキー値のペア属性を追加して、メトリクスのクエリ、フィルタリング、またはグループ化に使用できます。<br/> デフォルトのサンプル設定ファイルにはラベルの例が含まれていますが、必須ではないため、必要に応じてラベルを削除、変更、または追加することができます。
 
-```
- labels:
-   env: production
-   role: rabbitmq
+```yml
+labels:
+  env: production
+  role: rabbitmq
 ```
 
 ## 構成例 [#example-config]
@@ -559,7 +651,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
     id="example-config1"
     title="SSLを使用した基本構成"
   >
-    ```
+    ```yml
     integrations:
       - name: nri-rabbitmq
         env:
@@ -568,7 +660,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
           USERNAME: admin
           PASSWORD: admin
           CA_BUNDLE_DIR: /path/to/bundle/dir/
-          NODE_NAME_OVERRIDE: local_node_name
+          NODE_NAME_OVERRIDE: local_node_name@localhost
           CONFIG_PATH: /path/to/config/file/rabbitmq.conf
           USE_SSL: true
 
@@ -592,7 +684,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
     id="example-config2"
     title="メトリックのみ"
   >
-    ```
+    ```yml
     integrations:
       - name: nri-rabbitmq
         env:
@@ -601,7 +693,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
           PORT: 15672
           USERNAME: admin
           PASSWORD: admin
-          NODE_NAME_OVERRIDE: local_node_name
+          NODE_NAME_OVERRIDE: local_node_name@locahost
 
           QUEUES: '["myQueue1","myQueue2"]'
           QUEUES_REGEXES: '["queue[0-9]+",".*"]'
@@ -623,7 +715,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
     id="example-config3"
     title="在庫のみ"
   >
-    ```
+    ```yml
     integrations:
       - name: nri-rabbitmq
         env:
@@ -632,7 +724,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
           PORT: 15672
           USERNAME: admin
           PASSWORD: admin
-          NODE_NAME_OVERRIDE: local_node_name
+          NODE_NAME_OVERRIDE: local_node_name@localhost
           CONFIG_PATH: /path/to/config/file/rabbitmq.conf
 
           QUEUES: '["myQueue1","myQueue2"]'
@@ -655,7 +747,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
     id="example-config4"
     title="イベントのみ"
   >
-    ```
+    ```yml
     integrations:
       - name: nri-rabbitmq
         env:
@@ -664,7 +756,7 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
           PORT: 15672
           USERNAME: admin
           PASSWORD: admin
-          NODE_NAME_OVERRIDE: local_node_name
+          NODE_NAME_OVERRIDE: local_node_name@localhost
         interval: 15s
         labels:
           env: production
@@ -682,10 +774,10 @@ RabbitMQ統合は、Metrics（ <strong>M</strong> ）とInventory（ <strong>I</
 
 メトリックは、これらの[イベントタイプ](/docs/using-new-relic/data/understand-data/new-relic-data-types#events-new-relic)に関連付けられています。
 
-* [RabbitmqVhostSample](#vhostsample)
-* [RabbitmqNodeSample](#nodesample)
-* [RabbitmqExchangeSample](#exchangesample)
-* [RabbitmqQueueSample](#queuesample)
+* [`RabbitmqVhostSample`](#vhostsample)
+* [`RabbitmqNodeSample`](#nodesample)
+* [`RabbitmqExchangeSample`](#exchangesample)
+* [`RabbitmqQueueSample`](#queuesample)
 
 トラブルシューティングの目的で、またはカスタムチャートとダッシュボードを作成するために、[このデータをクエリ](/docs/using-new-relic/data/understand-data/query-new-relic-data)できます。
 
@@ -765,7 +857,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
 
     <tr>
       <td>
-        vhost.connectionsOpening
+        `vhost.connectionsOpening`
       </td>
 
       <td>
@@ -775,7 +867,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
 
     <tr>
       <td>
-        vhost.connectionsRunning
+        `vhost.connectionsRunning`
       </td>
 
       <td>
@@ -795,7 +887,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
 
     <tr>
       <td>
-        vhost.connectionsTotal
+        `vhost.connectionsTotal`
       </td>
 
       <td>
@@ -805,7 +897,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
 
     <tr>
       <td>
-        vhost.connectionsTuning
+        `vhost.connectionsTuning`
       </td>
 
       <td>
@@ -835,7 +927,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
   <tbody>
     <tr>
       <td>
-        node.averageErlangProcessesWaiting
+        `node.averageErlangProcessesWaiting`
       </td>
 
       <td>
@@ -849,7 +941,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
       </td>
 
       <td>
-        ノードディスクアラーム（0または1）。 0はアラームが作動していないことを示し、1はアラームが作動していることを示します。 RabbitMQでは、これは`disk_free_alarm`と見なされます。
+        ノード ディスク アラーム ( `0`または`1` )。 `0`アラームが作動していないことを示し、 `1`アラームが作動していることを示します。 RabbitMQ では、これは`disk_free_alarm`として表示されます。
       </td>
     </tr>
 
@@ -909,7 +1001,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
       </td>
 
       <td>
-        ホストメモリアラーム（0または1）。 0はアラームが作動していないことを示し、1はアラームが作動していることを示します。 RabbitMQでは、これは`mem_alarm`と見なされます。
+        ホスト メモリ アラーム ( `0`または`1` )。 `0`アラームが作動していないことを示し、 `1`アラームが作動していることを示します。 RabbitMQ では、これは`mem_alarm`として表示されます。
       </td>
     </tr>
 
@@ -959,7 +1051,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
       </td>
 
       <td>
-        実行中のノード（0または1）。 0はノードが実行されていないことを示し、1はノードが実行されていることを示します。 RabbitMQでは、これは`running`と見なされます。
+        ノードが実行中です（ `0`または`1` ）。 `0`ノードが実行されていないことを示し、 `1`ノードが実行中であることを示します。 RabbitMQ では、これは`running`として表示されます。
       </td>
     </tr>
   </tbody>
@@ -1141,7 +1233,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
       </td>
 
       <td>
-        クライアントに配信されたが、1秒あたりにまだ確認されていないキューあたりのメッセージの割合。 RabbitMQでは、これは`message_stats` .deliver_no_ack_details.rateとして表示されます。
+        クライアントに配信されたがまだ確認されていない、キューあたりのメッセージの 1 秒あたりのレート。 RabbitMQ では、これは`message_stats.deliver_no_ack_details.rate`として表示されます。
       </td>
     </tr>
 
@@ -1181,7 +1273,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
       </td>
 
       <td>
-        確認応答モードでコンシューマーに配信されるメッセージの1秒あたりのキューあたりの割合。 RabbitMQでは、これは`message_stats` .deliver_details.rateとして表示されます。
+        1 秒あたりキューあたり消費者に確認応答モードで配信されるメッセージのレート。 RabbitMQ では、これは`message_stats.deliver_details.rate`として表示されます。
       </td>
     </tr>
 
@@ -1231,7 +1323,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
       </td>
 
       <td>
-        コンシューマーへの確認応答モード、コンシューマーへの非確認応答モード、basic.getに応答する確認応答モード、およびbasic.getに応答する非確認応答モードで配信されたメッセージの合計。キューごと。 RabbitMQでは、これは`message_stats.deliver_get`と見なされます。
+        キューごとに、消費者に確認応答モードで配信されたメッセージ、消費者に非確認応答モードで配信されたメッセージ、 `basic.get`に応答して確認応答モードで配信されたメッセージ、および`basic.get`に応答して非確認応答モードで配信されたメッセージの合計。 RabbitMQ では、これは`message_stats.deliver_get`として表示されます。
       </td>
     </tr>
 
@@ -1241,7 +1333,7 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
       </td>
 
       <td>
-        消費者への確認応答モード、消費者への非確認応答モード、basic.getに応答する確認応答モード、およびキューごとのbasic.getに応答する非確認応答モードで配信されるメッセージの合計の1秒あたりのレート。 RabbitMQでは、これは`message_stats.deliver_get_details.rate`と見なされます。
+        キューごとに、消費者に確認応答モードで配信されたメッセージ、消費者に非確認応答モードで配信されたメッセージ、 `basic.get`に応答して確認応答モードで配信されたメッセージ、および`basic.get`に応答して非確認応答モードで配信されたメッセージの合計の 1 秒あたりのレート。 RabbitMQ では、これは`message_stats.deliver_get_details.rate`として表示されます。
       </td>
     </tr>
 
@@ -1309,10 +1401,10 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
 
 ## 在庫データ [#inventory]
 
-統合により、RabbitMQの構成パラメーターが`/etc/rabbitmq/rabbitmq.conf`ファイルに取り込まれます。インベントリデータは、 [RabbitMQバージョン3.7](http://www.rabbitmq.com/blog/2018/02/05/whats-new-in-rabbitmq-3-7/)以降でのみキャプチャされます。 [インベントリデータ](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data)は、\[インフラストラクチャ[**インベントリ\]**ページ](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure)の`config/rabbitmq`ソースの下に表示されます。
+インテグレーションは、 `/etc/rabbitmq/rabbitmq.conf`ファイルに RabbitMQ の設定ファイルをキャプチャします。 インベントリデータは[ RabbitMQ バージョン 3.7](http://www.rabbitmq.com/blog/2018/02/05/whats-new-in-rabbitmq-3-7/) [](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data)[<DNT>**Inventory**</DNT>](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure)以上でのみキャプチャされます。 インベントリデータは、 インフラストラクチャUI の ページ の`config/rabbitmq` ソースの下に表示されます。
 
 <Callout variant="caution">
-  `rabbit.conf`ファイルに入力した機密情報は、\[インフラストラクチャ**インベントリ]**ページに表示されることに注意してください。これには、AWSからの次のようなアイテムが含まれます。
+  `rabbit.conf`ファイルに入力した機密情報は、インフラストラクチャ UI の<DNT>**Inventory**</DNT>ページに表示されることに注意してください。 これには、AWS からの次のような項目が含まれます。
 
   ```
   cluster_formation.aws.secret_key,
@@ -1331,13 +1423,13 @@ RabbitMQ統合は、次のメトリックデータ属性を収集します。各
   >
     このエラーが表示された場合は、RabbitMQコマンドラインツールである[rabbitmqctl](https://www.rabbitmq.com/rabbitmqctl.8.html)がrootユーザーのPATHに含まれていないことを意味します。この問題を修正するには、次のコマンドを実行します。
 
-    ```
+    ```sh
     find -name "rabbitmqctl"
-    export PATH="$PATH:<var><LOCATION_TO_RABBITMQCTL></var>
+    export PATH="$PATH:<LOCATION_TO_RABBITMQCTL>
     ```
   </Collapser>
 </CollapserGroup>
 
 ## ソースコードを確認してください [#source-code]
 
-この統合はオープンソースソフトウェアです。つまり[、ソースコードを参照して](https://github.com/newrelic/nri-rabbitmq "リンクが新しいウィンドウで開きます。")改善を送信したり、独自のフォークを作成してビルドしたりできます。
+この統合はオープン ソース ソフトウェアです。つまり[、ソース コードを参照して](https://github.com/newrelic/nri-rabbitmq)改善を送信したり、独自のフォークを作成してビルドしたりできます。

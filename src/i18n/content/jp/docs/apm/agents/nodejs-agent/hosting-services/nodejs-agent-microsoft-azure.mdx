@@ -5,85 +5,68 @@ tags:
   - Nodejs agent
   - Hosting services
 metaDescription: How to install APM for Node.js on Microsoft Azure Web Apps.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-Microsoft Azure Web Apps を New Relic の Node.js エージェントのホスティングサービスとして使用する際の特別な注意事項については、こちらをご覧ください。
+New Relic の Node.js エージェントで Microsoft Azure Web Apps をホスティング サービスとして使用する際の特別な考慮事項について説明します。
 
-## 必要なこと [#compatibility]
+## 何が必要 [#compatibility]
 
 [Compatibility and requirements for Node.js agent](/docs/agents/nodejs-agent/getting-started/compatibility-requirements-nodejs-agent) に加えて、このチュートリアルでは、お使いのプラットフォームにNode.jsとWindows Azure SDK for Node.jsが正常にインストールされていることを前提としています。
 
 * Azure SDK for Node.jsをインストールします。
 * Gitがインストールされていることを確認します。
 
-## Node.jsエージェントのインストール [#install_nodejs]
+<Callout variant="important">
+  Node.js エージェントは、Azure Functions のテレメトリを配信できません。代わりに、 [Azure Functions 監視統合を](/docs/infrastructure/microsoft-azure-integrations/azure-integrations-list/azure-functions-monitoring-integration/)使用する必要があります。
+</Callout>
 
-Azure アプリケーションに New Relic Node.js エージェントを追加するには、以下の手順に従います。
+## Node.jsエージェントのインストール [#install_nodejs][#install_nodejs]
 
-1. アプリのルートに、 `package.json`ファイルがあることを確認します。ない場合は、コマンドラインから作成します。
+New Relic Node.js エージェントを Azure アプリケーションに追加するには、最初に `newrelic` モジュールが読み込まれていることを確認し、Node.js `-r`/`--require` フラグを使用して次のコマンドを実行します。
 
-   ```bash
-   touch package.json
-   ```
+```shell
+node -r newrelic server.js
+```
 
-2. `package.json`ファイルに以下を追加します。
+<Callout variant="important">
+  Next.js アプリの場合は、次のように`NODE_OPTIONS`を介してエージェントを読み込みます。
 
-   ```json
-   {
-     "name": "node",
-     "version": "0.0.1",
-     "dependencies" : {
-       "newrelic" : "*"
-     },
-     "engine": {
-       "node": "10.18"
-     }
-   }
-   ```
+  ```shell
+  NODE_OPTIONS='-r newrelic' next start
+  ```
+</Callout>
 
-3. `server.js`ファイルの先頭に`require('newrelic');`を追加します。例えば：
-
-   ```js
-   require('newrelic');
-
-   var http = require('http')
-   var port = process.env.PORT || 1337;
-   http.createServer(function(req, res) {
-     res.writeHead(200, { 'Content-Type': 'text/plain' });
-     res.end('Hello New Relic Node.js agent!\n');
-   }).listen(port);
-   ```
-
-## Azureでのアプリ設定の追加 [#azure_settings]
+## Azureでのアプリ設定の追加 [#azure_settings][#azure_settings]
 
 インストール後、Azure Web Appsでアプリを設定する必要があります。
 
-1. Sign in to **[portal.azure.com](https://portal.azure.com)** .
+1. <DNT>**[portal.azure.com](https://portal.azure.com)**</DNT>にサインインします。
 
-2. Select **App Services> (Select a Node.js app)> Configure**.
+2. <DNT>**App Services > (select a Node.js app) > Configure**</DNT>を選択します。
 
-3. **アプリの設定に以下を追加**:
+3. <DNT>**app settings**</DNT>に以下を追加します:
 
    * `new_relic_app_name`：WindowsAzureのWebサイト名
-   * `new_relic_license_key`：NewRelic[ライセンスキー](/docs/subscriptions/license-key)
+   * `new_relic_license_key`: あなたのNew Relic<InlinePopover type="licenseKey"/>
 
 4. 設定を保存します。
 
 5. Node.jsアプリを再起動します。
 
-あなたのアプリにトラフィックを発生させ、数分待ちます。待機後、 **[one.newrelic.com](http://one.newrelic.com) > APM> (select your app)** にアクセスして、データを確認してください。
+アプリにトラフィックを生成し、数分間待ちます。 しばらくお待ちいただいた後、 <DNT>**[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) &amp;gt; APM &amp;amp; services &amp;gt; (select your app)**</DNT>に移動してデータを確認してください。
 
-## オプションCLIでアプリの設定を追加する [#app_settings]
+## オプションCLIでアプリの設定を追加する [#app_settings][#app_settings]
 
-オプション：ここでは、CLI（Node SDK）を使ってアプリの設定を追加する方法の例を示します。
+オプション: CLI (Node.js SDK) を使用してアプリ設定を追加する方法の例を次に示します。
 
-```
-azure account download "<var>YOUR_SUBSCRIPTION_NAME</var>"
-azure account import "<var>PATH_TO_PUBLISH_SETTINGS_FILE</var>"
-azure site config add "new_relic_app_name=<var>REPLACE_WITH_YOUR_APP_NAME</var>"
-azure site config add "new_relic_license_key=<var>REPLACE_WITH_YOUR_LICENSE_KEY</var>"
-azure site restart <var>AZURE_WEB_APP_NAME</var>
+```bash
+azure account download "YOUR_SUBSCRIPTION_NAME"
+azure account import "PATH_TO_PUBLISH_SETTINGS_FILE"
+azure site config add "new_relic_app_name=REPLACE_WITH_YOUR_APP_NAME"
+azure site config add "new_relic_license_key=REPLACE_WITH_YOUR_LICENSE_KEY"
+azure site restart AZURE_WEB_APP_NAME
 ```
 
 ## 環境変数の使用 [#variables]

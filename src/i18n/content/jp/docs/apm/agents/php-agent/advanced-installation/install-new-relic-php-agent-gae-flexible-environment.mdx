@@ -1,10 +1,11 @@
 ---
 title: GAEフレキシブル環境でのNew Relic PHPエージェントのインストール
 metaDescription: How to install your APM's PHP app in the Google App Engine (GAE) flexible environment.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-APM の [PHP エージェント](/docs/agents/php-agent/getting-started/introduction-new-relic-php) を使用すると、 [Google App Engine (GAE) のフレキシブル環境](https://cloud.google.com/appengine/docs/flexible/php/) に存在するアプリケーションを監視することができます。GAE フレックスアプリに New Relic を追加すると、アプリの健全性とパフォーマンスを把握することができ、GAE を拡張して [APM](/docs/apm/new-relic-apm/getting-started/introduction-new-relic-apm) 、 [ブラウザモニタリング](/docs/browser/new-relic-browser/getting-started/introduction-new-relic-browser) 、ダッシュボードで確認できるメトリクスを提供します。
+APMの[PHP エージェント](/docs/agents/php-agent/getting-started/introduction-new-relic-php)を使用すると、 [Google App Engine (GAE) フレキシブル環境](https://cloud.google.com/appengine/docs/flexible/php/)にあるアプリケーションを監視できます。 GAE flex アプリにNew Relicを追加すると、アプリの健全性とパフォーマンスをインサイトで確認できるようになり、 [<InlinePopover type="apm"/>](/docs/apm/new-relic-apm/getting-started/introduction-new-relic-apm)、 [<InlinePopover type="browser"/>](/docs/browser/new-relic-browser/getting-started/introduction-new-relic-browser)、ダッシュボードで表示できるメトリックで GAE が拡張されます。
 
 このドキュメントでは、 [カスタムランタイム](https://cloud.google.com/appengine/docs/flexible/custom-runtimes/about-custom-runtimes) を設定することで、GAE flex アプリに New Relic を追加する方法を説明し、Docker を使って PHP アプリをデプロイする例を紹介しています。
 
@@ -26,18 +27,18 @@ GAEフレキシブル環境でのPHPアプリのデプロイと設定につい�
     id="setup-gae"
     title="1.GAEプロジェクトの設定と依存関係のインストール"
   >
-    1. [標準的な手順に従って、特定のアプリサーバー用の New Relic PHP エージェント](/docs/agents/php-agent/installation/php-agent-installation-overview) をインストールし、 [ライセンスキー](/docs/apis/intro-apis/new-relic-api-keys/#ingest-license-key) を取得してください。
+    1. 標準の手順に従って、特定のアプリケーション サーバーに[New Relic PHP エージェントをインストールし](/docs/agents/php-agent/installation/php-agent-installation-overview)、<InlinePopover type="licenseKey"/> を取得します。
 
     2. [Google App Engine procedures for PHP](https://cloud.google.com/appengine/docs/flexible/php/quickstart) に従って、新しい Cloud Platform プロジェクトを作成し、App Engine アプリケーションを作成し、 [Google Cloud SDK](https://cloud.google.com/sdk/docs/) のためのその他の前提条件を完了します。
 
-       Google Cloud SDKは、GAEアプリを管理・展開するためのコマンドラインツール `gcloud` を提供しています。
+       Google Cloud SDKは、GAEアプリを管理およびデプロイするための`gcloud`コマンドラインツールを提供します。
   </Collapser>
 
   <Collapser
     id="custom"
     title="2.GAEのイメージをPHP用に拡張"
   >
-    この例では、Dockerfileは一般的なPHPイメージをDebianの単一のアプリケーション用のアプリケーションファイルで拡張しています。 [New Relic のライセンスキー](/docs/apis/intro-apis/new-relic-api-keys/#ingest-license-key) を直接 Dockerfile に追加するか、 `docker run` コマンドで環境変数を使用することができます。
+    この例では、Dockerfile は、Debian の単一アプリケーション用のアプリケーション ファイルを使用して汎用 PHP イメージを拡張します。 <InlinePopover type="licenseKey"/>を Dockerfile に直接追加することも、 `docker run`コマンドで環境変数を使用することもできます。
 
     ```
     FROM gcr.io/google-appengine/php:latest
@@ -47,7 +48,7 @@ GAEフレキシブル環境でのPHPアプリのデプロイと設定につい�
     RUN wget -O - https://download.newrelic.com/548C16BF.gpg | sudo apt-key add -
     RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list
     RUN DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install newrelic-php5
-    RUN NR_INSTALL_KEY="<var>new-relic-license-key</var>" NR_INSTALL_SILENT=true newrelic-install install
+    RUN NR_INSTALL_KEY="new-relic-license-key" NR_INSTALL_SILENT=true newrelic-install install
     ```
   </Collapser>
 
@@ -55,7 +56,7 @@ GAEフレキシブル環境でのPHPアプリのデプロイと設定につい�
     id="configure-app-yaml"
     title="3.app.yamlの設定"
   >
-    `app.yaml` 設定ファイルは、カスタムランタイムを持つGAEフレキシブル環境アプリに必要です。最低限、それが含まれていることを確認してください。
+    カスタムランタイムを備えたGAEフレキシブル環境アプリには`app.yaml`構成ファイルが必要です。少なくとも、次のものが含まれていることを確認してください。
 
     ```
     env: flex
@@ -74,7 +75,7 @@ GAEフレキシブル環境でのPHPアプリのデプロイと設定につい�
     Dockerイメージをビルドするには、以下のコマンドを実行します。カレントディレクトリにビルドファイルがあることを示すために、コードの最後にピリオドを必ず入れてください。
 
     ```
-    docker build --rm -t <var>Docker-image-name</var> .
+    docker build --rm -t Docker-image-name .
     ```
   </Collapser>
 
@@ -85,39 +86,37 @@ GAEフレキシブル環境でのPHPアプリのデプロイと設定につい�
     1. [初期化されたGAEフレキシブル環境](https://cloud.google.com/sdk/docs/initializing) にDockerイメージをデプロイするには、以下のコマンドを実行します。
 
        ```
-       gcloud app deploy --project <var>php-app-name</var>
+       gcloud app deploy --project php-app-name
        ```
 
     2. 展開が完了するまで待ちます。
 
-    3. GAE flex アプリのデータを New Relic で表示するには、 [APM **概要** ページ](/docs/apm/applications-menu/monitoring/apm-overview-page) をご覧ください。
+    3. New Relic で GAE flex アプリ データを表示するには、 [APM <DNT>**Overview**</DNT>ページ](/docs/apm/applications-menu/monitoring/apm-overview-page)に移動します。
   </Collapser>
 </CollapserGroup>
 
+<InstallFeedback/>
+
 ## オプションヘルスチェックの無効化 [#health-checks]
 
-Google App Engine は、インスタンスが正常にデプロイされたことを確認するため、および実行中のインスタンスが健全な状態を維持していることを確認するために、 [定期的にヘルス チェック リクエストを送信します。ヘルスチェックは、URL `/_ah/health` への HTTP リクエストです。](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)
+Google App Engine [は定期的にヘルスチェックリクエスト](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)を送信して、インスタンスが正常にデプロイされたことを確認し、実行中のインスタンスが正常なステータスを維持していることを確認します。ヘルスチェックは、URL `/_ah/health`へのHTTPリクエストです。
 
-[カスタムランタイムを作成する場合は、アプリが大量のヘルスチェックリクエストを処理できなければなりません。そうしないと、アプリのデータがAPMで正しく表示されない可能性があります。](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)
+カスタムランタイムを作成する場合は、アプリが大量のヘルスチェックリクエストを処理できなければなりません。そうしないと、アプリのデータがAPMで正しく表示されない可能性があります。
 
-[パフォーマンスに問題がある場合は、GAE のヘルスチェックを無効にしてください。 `app.yaml` に、以下を追加します。](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)
+パフォーマンスの問題に気付いた場合は、GAEヘルスチェックを無効にしてください。 `app.yaml`に、次を追加します。
 
 ```
 health_check:
   enable_health_check: False
 ```
 
-## [GAEからNew Relicエージェントのトラブルシューティングログを取得する [#agent-logs]](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)
+## GAEからNew Relicエージェントのトラブルシューティングログを取得する [#agent-logs]
 
-[GAE flex環境アプリのトラブルシューティングには、これらのリソースをご利用ください。](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)
+GAE flex環境アプリのトラブルシューティングには、これらのリソースをご利用ください。
 
-* [](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)
+* GAE インスタンスに接続して、コードを実行している Docker コンテナでシェルを起動するには、 [Debugging an instance](https://cloud.google.com/appengine/docs/flexible/php/debugging-an-instance) を参照してください。
 
-* [](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)
-
-  [GAE インスタンスに接続して、コードを実行している Docker コンテナでシェルを起動するには、 ](https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml#health_checks)[Debugging an instance](https://cloud.google.com/appengine/docs/flexible/php/debugging-an-instance) を参照してください。
-
-* New Relic PHP エージェントのログを [Stackdriver](http://cloud.google.com/logging/docs/view/logs_viewer_v2) in [Cloud Platform Console](https://cloud.google.com/compute/docs/console) にリダイレクトするには、 `newrelic.yml` ファイルを以下のように変更してください。
+* [Cloud Platform Console](https://cloud.google.com/compute/docs/console)で New Relic PHP エージェント ログを[Stackdriver](http://cloud.google.com/logging/docs/view/logs_viewer_v2)にリダイレクトするには、 `newrelic.yml`ファイルを次のように変更します。
 
   ```
   log_file_name: STDOUT

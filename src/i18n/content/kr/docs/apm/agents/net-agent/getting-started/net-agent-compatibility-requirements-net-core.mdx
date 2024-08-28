@@ -5,6 +5,7 @@ tags:
   - NET agent
   - Getting started
 metaDescription: 'APM .NET agent: Software and hardware requirements for the agent''s support of .NET Core, and an explanation of automatically instrumented features.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -18,9 +19,9 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
 
 .NET 에이전트를 사용해 보고 싶으십니까? 무료 [로 New Relic 계정을 만드](https://newrelic.com/signup) 십시오! 신용 카드가 필요하지 않습니다.
 
-## 요구 사항
+## 요구 사항 [#requirements]
 
-[Windows](/docs/agents/net-agent/installation/install-net-agent-windows) 또는 [Linux](/docs/agents/net-agent/installation/install-net-agent-linux) 에 New Relic .NET 에이전트를 설치하기 전에 시스템이 다음 요구 사항을 충족하는지 확인하십시오.
+Windows 또는 Linux에 New Relic .NET 에이전트를 설치하기 전에 시스템이 다음 요구 사항을 충족하는지 확인하십시오.
 
 <CollapserGroup>
   <Collapser
@@ -35,19 +36,19 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
       Microsoft는 공식적으로 다음 제품의 수명 종료를 발표했습니다.
 
       * 2018년 10월 1일의 [.NET Core 버전 2.0](https://devblogs.microsoft.com/dotnet/net-core-2-0-will-reach-end-of-life-on-september-1-2018)
-
       * 2021년 8월 21일의 [.NET Core 버전 2.1](https://devblogs.microsoft.com/dotnet/net-core-2-1-will-reach-end-of-support-on-august-21-2021)
-
       * 2019년 12월 23일의 [.NET Core 버전 2.2](https://devblogs.microsoft.com/dotnet/net-core-2-2-will-reach-end-of-life-on-december-23-2019)
-
       * 2020년 3월 3일의 [.NET Core 버전 3.0](https://devblogs.microsoft.com/dotnet/net-core-3-0-end-of-life/)
+      * 2022년 12월 13일의[.NET Core 버전 3.1](https://devblogs.microsoft.com/dotnet/net-core-3-1-will-reach-end-of-support-on-december-13-2022/)
+      * 2022년 5월 10일의[.NET 버전 5](https://devblogs.microsoft.com/dotnet/dotnet-5-end-of-support-update/)
+      * 2024년 5월 24일 [.NET 버전 7](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core) .
 
-        공식 제품 수명 주기 시작 및 종료 날짜는 [Microsoft 설명서](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core) 에서 찾을 수 있습니다.이러한 프레임워크 버전에 대한 .NET 에이전트 지원은 최신 9.x New Relic .NET 에이전트로 끝납니다.New Relic .NET 에이전트 버전 10.0부터 .NET Core 3.1 이상을 대상으로 합니다.
+        공식적인 제품 수명 주기 시작 및 종료 날짜는 [Microsoft 설명서](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core) 에서 확인할 수 있습니다.
+
+        Core 버전 3.1 이하의 .NET 에이전트 지원은 9.x 뉴렐릭 .NET 에이전트 지원으로 종료되었습니다. 뉴웰릭 .NET 에이전트 버전 10.0부터, 목표 ..NET Core 3.1부터 적용하겠습니다.
     </Callout>
 
-    .NET 에이전트는 .NET Core 버전 2.0, 2.1, 2.2, 3.0, 3.1, .NET 5.0 및 6.0을 지원합니다.
-
-    .NET Core 버전에 필요한 최소 에이전트 버전 표
+    .NET 에이전트는 .NET Core 버전 3.1과 .NET 5.0, 6.0 및 8.0을 지원합니다.
 
     <table style={{ width: "500px" }}>
       <thead>
@@ -63,46 +64,6 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
       </thead>
 
       <tbody>
-        <tr>
-          <td>
-            .NET 코어 2.0
-          </td>
-
-          <td>
-            8.19.353.0 - 9.9.0
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            .NET 코어 2.1
-          </td>
-
-          <td>
-            8.19.353.0 - 9.9.0
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            .NET 코어 2.2
-          </td>
-
-          <td>
-            8.19.353.0 - 9.9.0
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            .NET 코어 3.0
-          </td>
-
-          <td>
-            8.21.34.0 - 9.9.0
-          </td>
-        </tr>
-
         <tr>
           <td>
             .NET 코어 3.1
@@ -132,14 +93,32 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
             9.2.0 이상
           </td>
         </tr>
+
+        <tr>
+          <td>
+            .NET 7.0
+          </td>
+
+          <td>
+            10.0.0 이상
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            .NET 8.0
+          </td>
+
+          <td>
+            10.0.0 이상
+          </td>
+        </tr>
       </tbody>
     </table>
 
     <Callout variant="important">
-      Linux ARM64 플랫폼에서 .NET 에이전트는 .NET 5.0 이상의 버전 **만** 지원합니다.
+      Linux ARM64 플랫폼에서 .NET 에이전트 <DNT>**only**</DNT> 는 .NET 5.0 이상의 버전을 지원합니다.
     </Callout>
-
-    에이전트는 .NET Core 버전 1.0 또는 1.1과 호환 **되지 않습니다** . 계층화된 컴파일이 활성화된 .NET Core 2.1 이상 애플리케이션의 경우 에이전트는 계층화된 컴파일을 비활성화합니다. .NET Core 2.1 지원에는 .NET [Core 프로파일링 API의 버그](https://github.com/dotnet/coreclr/issues/18448) 로 인해 .NET Core 런타임 2.1.3 및 .NET Core SDK 2.1.401 이상이 필요합니다.
   </Collapser>
 
   <Collapser
@@ -147,25 +126,9 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
     id="target-framework"
     title="대상 프레임워크 버전"
   >
-    .NET 에이전트는 .NET Core 2.0, 2.1, 2.2, 3.0, 3.1, .NET 5.0 및 6.0을 대상으로 하는 애플리케이션만 지원합니다. `.csproj` 파일에서 대상 프레임워크를 찾을 수 있습니다.
+    .NET 에이전트는 .NET Core 3.1과 .NET 5.0, 6.0 및 8.0을 대상으로 하는 애플리케이션만 지원합니다. `.csproj` 파일에서 쿠, 목표 프레임워크를 찾을 수 있습니다. 에이전트 호환성은 .NET Core 버전에 따라 다릅니다. ..NET Core의 디버그, 목표 버전에 사용할 에이전트 버전에 대한 자세한 내용은 위 문서 섹션인 <DNT>**[Microsoft .NET Core version](/docs/apm/agents/net-agent/getting-started/net-agent-compatibility-requirements-net-core/#net-version)**</DNT> 을 참조하세요.
 
     지원:
-
-    ```xml
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    ```
-
-    ```xml
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    ```
-
-    ```xml
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    ```
-
-    ```xml
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    ```
 
     ```xml
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -179,8 +142,16 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
     <TargetFramework>net6.0</TargetFramework>
     ```
 
+    ```xml
+    <TargetFramework>net7.0</TargetFramework>
+    ```
+
+    ```xml
+    <TargetFramework>net8.0</TargetFramework>
+    ```
+
     <Callout variant="important">
-      Linux ARM64 플랫폼에서 .NET 에이전트는 `net5.0` 이상의 대상 프레임워크 **만** 지원합니다.
+      Linux ARM64 플랫폼에서 .NET 에이전트 <DNT>**only**</DNT> 는 `net5.0` 이상의 목표 프레임워크를 지원합니다.
     </Callout>
 
     지원되지 않음:
@@ -236,11 +207,14 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            * 서버 2008 R2 SP1
-            * 서버 2012
-            * 서버 2012 R2
-            * 서버 2016
-            * 서버 2019
+            * 윈도우 서버 2008 R2 SP1
+            * 윈도우 서버 2012
+            * 윈도우 서버 2012 R2
+            * 윈도우 서버 2016
+            * 윈도우 서버 2019
+            * 윈도우 서버 2022
+            * 윈도우 10
+            * 윈도우 11
             * Server 2016에서 실행되는 Windows 컨테이너(NanoServer 기반 이미지는 지원되지 않음)
           </td>
         </tr>
@@ -261,7 +235,9 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            .NET 5+ 런타임에서 지원하는 모든 ARM64 Linux 배포는 .NET 에이전트에서 지원됩니다. 전체 목록은 Microsoft 설명서를 참조하십시오.
+            .NET 5+ 런타임에서 지원하는 모든 ARM64 Linux 배포판은 다음과 같은 알려진 예외를 제외하고 .NET 에이전트에서 지원됩니다.
+
+            * 알파인 리눅스
           </td>
         </tr>
       </tbody>
@@ -281,11 +257,11 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
 
   <Collapser
     id="aws-elastic-beanstalk"
-    title="AWS Elastic Beanstalk"
+    title="<DNT>AWS Elastic Beanstalk</DNT>"
   >
-    <Callout variant="important">
-      AWS [Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk) 는 지원되는 .NET 환경이 아닙니다.
-    </Callout>
+    [<DNT>AWS Elastic Beanstalk</DNT>](https://aws.amazon.com/elasticbeanstalk) 설치 지침은 다음을 참조하세요.
+
+    * [설치 날짜 <DNT>AWS Elastic Beanstalk</DNT>](/docs/agents/net-agent/install-guides/install-net-agent-on-aws-elastic-beanstalk)
   </Collapser>
 
   <Collapser
@@ -294,6 +270,10 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
     title="프로세서 아키텍처"
   >
     에이전트는 Windows의 32비트(x86) 및 64비트(x64) 버전과 Linux의 64비트(x64) 및 ARM64(aarch64) 버전 모두에서 사용할 수 있습니다.
+
+    <Callout variant="important">
+      Linux ARM64 플랫폼에서 .NET 에이전트 <DNT>**only**</DNT> 는 .NET 5.0 이상의 버전을 지원합니다.
+    </Callout>
   </Collapser>
 
   <Collapser
@@ -370,7 +350,8 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
   >
     .NET 에이전트는 다음 애플리케이션 프레임워크를 자동으로 계측합니다.
 
-    * ASP.NET Core MVC 2.0, 2.1, 2.2, 3.0, 3.1, 5.0 및 6.0(Web API 포함)
+    * ASP.NET Core MVC 2.0, 2.1, 2.2, 3.0, 3.1, 5.0, 6.0, 7.0 및 8.0(웹 API 포함)
+    * ASP.NET Core Razor Pages 6.0, 7.0 및 8.0(.NET 에이전트 버전 10.19.0부터 시작)
   </Collapser>
 
   <Collapser
@@ -411,7 +392,10 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            .NET 에이전트 `v9.2.0` 이상은 [Microsoft.Azure.Cosmos](https://www.nuget.org/packages/Microsoft.Azure.Cosmos) 라이브러리 `v3.17.0` 이상을 자동으로 계측합니다( `v3.23.0` 는 테스트된 최신 버전임).
+            .NET 에이전트 `v9.2.0` 이상은 [Microsoft.Azure.Cosmos](https://www.nuget.org/packages/Microsoft.Azure.Cosmos) 라이브러리를 자동으로 계측합니다.
+
+            * 지원되는 최소 버전: 3.17.0
+            * 최근 검증된 호환 버전: 3.23.0
           </td>
         </tr>
 
@@ -428,7 +412,23 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            System.Data.SqlClient 버전 4.3.1 또는 Microsoft.Data.SqlClient를 사용합니다.
+            [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient) NuGet 패키지 또는 [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) NuGet 패키지에서 SqlClient를 사용합니다.
+
+            <DNT>
+              **System.Data.SqlClient**
+            </DNT>
+
+            * 지원되는 최소 버전: 4.4.0
+
+            * 최근 검증된 호환 버전: 4.8.6
+
+              <DNT>
+                **Microsoft.Data.SqlClient**
+              </DNT>
+
+            * 지원되는 최소 버전: 1.0.19239.1
+
+            * 최근 검증된 호환 버전: 5.2.1
           </td>
         </tr>
 
@@ -445,15 +445,18 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            Npgsql 4.0을 사용합니다.
+            [Npgsql](https://www.nuget.org/packages/Npgsql/) 사용
 
-            이전 버전의 Npgsql도 계측될 수 있지만 중복 및/또는 누락된 메트릭이 가능합니다.
+            * 지원되는 최소 버전: 4.0.0
+            * 최근 검증된 호환 버전: 4.0.13
+
+              이전 버전의 Npgsql도 계측될 수 있지만 중복 및/또는 누락된 메트릭이 가능합니다.
           </td>
         </tr>
 
         <tr>
           <td>
-            MongoDB
+            MongoDB(최신 드라이버)
           </td>
 
           <td className="fcenter">
@@ -464,7 +467,19 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            * [드라이버 버전 2.3.x - 2.13.x](http://docs.mongodb.com/ecosystem/drivers/csharp/#compatibility) : .NET 에이전트는 2.6.x의 기존 및 새로운 API 메서드 계측을 지원하지만 2.7.x 이상에서 도입된 새로운 메서드는 지원하지 않습니다.
+            지원되는 최소 버전: 2.3.0
+
+            최근 검증된 호환 버전: 2.26.0
+
+            에이전트 버전 10.12.0부터 드라이버 버전 2.7 이후에 추가된 다음 메서드가 계측됩니다.
+
+            * IMongoCollection.CountDocuments\[Async]
+            * IMongoCollection.EstimatedDocumentCount\[Async]
+            * IMongoCollection.AggregateToCollection\[비동기화]
+            * IMongoDatabase.ListCollectionNames\[Async]
+            * IMongoDatabase.Aggregate\[Async]
+            * IMongoDatabase.AggregateToCollection\[Async]
+            * IMongoDatabase.Watch\[Async]
           </td>
         </tr>
 
@@ -481,7 +496,23 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            MySql.Data 버전 6.10.4 이상을 사용하거나 [MySQL 커넥터](https://github.com/mysql-net/MySqlConnector) 를 사용하십시오.
+            [MySql.Data](https://www.nuget.org/packages/MySql.Data/) 또는 [MySQL 커넥터](https://github.com/mysql-net/MySqlConnector) 사용
+
+            <DNT>
+              **MySql.Data**
+            </DNT>
+
+            * 지원되는 최소 버전: 6.10.7
+
+            * 최근 검증된 호환 버전: 8.4.0
+
+              <DNT>
+                **MySqlConnector**
+              </DNT>
+
+            * 지원되는 최소 버전: 1.0.1
+
+            * 최근 검증된 호환 버전: 2.3.6
           </td>
         </tr>
 
@@ -497,7 +528,56 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
             />
           </td>
 
-          <td/>
+          <td>
+            최소 지원 버전: .0.488
+
+            최근 검증된 호환 버전: 2.7.33
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            엘라스틱서치
+          </td>
+
+          <td className="fcenter">
+            <Icon
+              style={{color: '#328787'}}
+              name="fe-check"
+            />
+          </td>
+
+          <td>
+            [Elastic.Clients.Elasticsearch](https://www.nuget.org/packages/Elastic.Clients.Elasticsearch), [NEST](https://www.nuget.org/packages/NEST)또는 [Elasticsearch.Net 을](https://www.nuget.org/packages/Elasticsearch.Net)사용하십시오.
+
+            <DNT>
+              **Elastic.Clients.Elasticsearch**
+            </DNT>
+
+            * 최소 지원 버전: 8.0.0
+
+            * 최근 검증된 호환 버전: 8.14.6
+
+            * .NET 에이전트 v10.20.1부터 버전 8.10.0 이상이 지원됩니다.
+
+            * 버전 8.12.1 이상은 .NET 에이전트 v10.23.0부터 지원됩니다.
+
+              <DNT>
+                **NEST**
+              </DNT>
+
+            * 최소 지원 버전: 7.0.0
+
+            * 최근 검증된 호환 버전: 7.17.5
+
+              <DNT>
+                **Elasticsearch.Net**
+              </DNT>
+
+            * 최소 지원 버전: 7.0.0
+
+            * 최근 검증된 호환 버전: 7.17.5
+          </td>
         </tr>
       </tbody>
     </table>
@@ -522,7 +602,9 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </th>
 
           <th>
-            **지원되는 방법**
+            <DNT>
+              **Supported methods**
+            </DNT>
           </th>
         </tr>
       </thead>
@@ -557,25 +639,122 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
   >
     에이전트는 다음 메시지 시스템을 자동으로 계측합니다.
 
-    NServiceBus 6.0 이상:
+    <table>
+      <thead>
+        <tr>
+          <th style={{ width: "200px" }}>
+            도서관
+          </th>
 
-    * 메시지 및 [분산 추적을 처리합니다](/docs/distributed-tracing/concepts/introduction-distributed-tracing) .
+          <th>
+            <DNT>
+              **Supported methods**
+            </DNT>
+          </th>
+        </tr>
+      </thead>
 
-      RabbitMQ 클라이언트 라이브러리 버전 5.1.0또는 더 높게:
+      <tbody>
+        <tr>
+          <td>
+            Confluent.Kafka
+          </td>
 
-    * 메시지 및 대기열 제거를 처리합니다.
+          <td>
+            * 주제에 따라 생산하고 소비합니다.
 
-    * `IBasicConsumer` 을 사용하여 메시지를 수신할 때 `EventingBasicConsumer` 은 .NET 에이전트에 의해 계측되는 유일한 구현입니다.
+            * 다음 방법이 계측됩니다.
 
-    * `BasicGet` 계측되지만 에이전트는 `BasicGet` 에 대한 [분산 추적](/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing) 을 지원하지 않습니다.
+              * `IProducer.Produce`
+              * `IProducer.ProduceAsync`
+              * `IConsumer.Consume`
 
-    * 다음 방법이 계측됩니다.
+            * 최소 지원 버전: 1.4.0
 
-      * `IModel.BasicGet`
-      * `IModel.BasicPublish`
-      * `IModel.BasicComsume`
-      * `IModel.QueuePurge`
-      * `EventingBasicConsumer.HandleBasicDeliver`
+            * 최근 검증된 호환 버전: 2.2.0
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            N서비스버스
+          </td>
+
+          <td>
+            * 메시지를 주고받습니다.
+
+            * 지원되는 최소 버전: 5.0
+
+            * 최근 검증된 호환 버전: 9.1.0
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            RabbitMQ
+          </td>
+
+          <td>
+            * 메시지 및 대기열 제거를 처리합니다.
+
+            * `IBasicConsumer` 을 사용하여 메시지를 수신할 때 `EventingBasicConsumer` 은 .NET 에이전트에 의해 계측되는 유일한 구현입니다.
+
+            * `BasicGet` 계측되지만 에이전트는 `BasicGet` 에 대한 [분산 추적](/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing) 을 지원하지 않습니다.
+
+            * 다음 방법이 계측됩니다.
+
+              * `IModel.BasicGet`
+              * `IModel.BasicPublish`
+              * `IModel.BasicConsume`
+              * `IModel.QueuePurge`
+              * `EventingBasicConsumer.HandleBasicDeliver`
+
+            * 지원되는 최소 버전: 3.5.2
+
+            * 최근 검증된 호환 버전: 6.6.0
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            MassTransit(에이전트 버전 10.19.0 이상)
+          </td>
+
+          <td>
+            * 메시지 게시/전송 및 사용
+
+            * 최소 지원 버전: 7.1.0
+
+            * 최근 검증된 호환 버전: 8.2.3
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            Amazon Simple Queue Service(AWSSDK.SQS)(에이전트 버전 10.27.0 이상)
+          </td>
+
+          <td>
+            * 메시지 보내기 및 받기, 대기열 제거.
+
+            * 다음 방법이 계측됩니다.
+
+              * `AmazonSQSClient.SendMessage`
+              * `AmazonSQSClient.SendMessageAsync`
+              * `AmazonSQSClient.SendMessageBatch`
+              * `AmazonSQSClient.SendMessageBatchAsync`
+              * `AmazonSQSClient.ReceiveMessage`
+              * `AmazonSQSClient.ReceiveMessageAsync`
+              * `AmazonSQSClient.PurgeQueue`
+              * `AmazonSQSClient.PurgeQueueAsync`
+
+            * 최소 지원 버전: 3.3.0
+
+            * 최근 검증된 호환 버전: 3.7.301.32
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </Collapser>
 
   <Collapser
@@ -593,7 +772,15 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </th>
 
           <th>
-            지원되는 버전
+            최소 프레임워크 버전
+          </th>
+
+          <th>
+            최소 에이전트 버전
+          </th>
+
+          <th>
+            최근 검증된 호환 버전
           </th>
         </tr>
       </thead>
@@ -605,7 +792,15 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            2.0.6 이상
+            2.0.10
+          </td>
+
+          <td>
+            9.7.0
+          </td>
+
+          <td>
+            2.0.17
           </td>
         </tr>
 
@@ -615,17 +810,15 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            2.0.0 이상
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            Microsoft.Extensions.Logging
+            2.5.0
           </td>
 
           <td>
-            2.0.0 이상
+            9.7.0
+          </td>
+
+          <td>
+            4.0.1
           </td>
         </tr>
 
@@ -635,7 +828,83 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
           </td>
 
           <td>
-            4.0.0 이상
+            4.5.0
+          </td>
+
+          <td>
+            9.7.0
+          </td>
+
+          <td>
+            5.3.2
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            Microsoft.Extensions.Logging
+          </td>
+
+          <td>
+            3.0.0
+          </td>
+
+          <td>
+            10.0.0
+          </td>
+
+          <td>
+            8.0.0
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </Collapser>
+
+  <Collapser
+    className="freq-link"
+    id="large-language-models"
+    title="기타 언어 모델(LLM) (LLM)"
+  >
+    .NET 에이전트는 다음 LLM 프레임워크를 자동으로 사용하도록 [구성할 수 있습니다](/docs/apm/agents/net-agent/configuration/net-agent-configuration/#ai_monitoring) .
+
+    <table>
+      <thead>
+        <tr>
+          <th style={{ width: "200px" }}>
+            프레임워크
+          </th>
+
+          <th>
+            최소 프레임워크 버전
+          </th>
+
+          <th>
+            최소 에이전트 버전
+          </th>
+
+          <th>
+            최근 검증된 호환 버전
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            AWS 기반암
+          </td>
+
+          <td>
+            3.7.200.0
+          </td>
+
+          <td>
+            10.23.0
+          </td>
+
+          <td>
+            3.7.400
           </td>
         </tr>
       </tbody>
@@ -643,13 +912,13 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
   </Collapser>
 </CollapserGroup>
 
-## 사용할 수 없는 기능
+## 사용할 수 없는 기능 [#unavailable]
 
 .NET 에이전트에는 다음 기능을 사용할 수 없습니다.
 
-* 자동 브라우저 모니터링 스크립트 주입( [API](/docs/agents/net-agent/net-agent-api/get-browser-timing-header) 또는 [수동 계측](/docs/agents/net-agent/additional-installation/new-relic-browser-net-agent#manual_instrumentation) 필요)
 * 컴파일러는 에이전트가 의존하는 어셈블리를 잠재적으로 트리밍할 수 있기 때문에 .NET 에이전트는 [자체 포함된 배포 및 실행 파일 트리밍](https://docs.microsoft.com/en-us/dotnet/core/deploying/trim-self-contained) 을 지원하지 않습니다.
-* [Infinite Tracing](https://newrelic.com/products/edge-infinite-tracing) 은 [GRPC 호환성 문제](https://github.com/grpc/grpc/issues/21446) 로 인해 Alpine Linux에서 지원되지 않습니다. 자세한 내용은 [이 에이전트 문제](https://github.com/newrelic/newrelic-dotnet-agent/issues/289) 를 참조하세요.
+* [](/docs/distributed-tracing/infinite-tracing/introduction-infinite-tracing)[GRPC 호환성 문제](https://github.com/grpc/grpc/issues/21446)로 인해 Alpine Linux에서는 무한 추적이 지원되지 않습니다. 자세한 내용은 [이 에이전트 문제를](https://github.com/newrelic/newrelic-dotnet-agent/issues/289) 참조하십시오.
+* 에이전트가 제대로 작동하려면 JIT(Just-In-Time) 컴파일이 필요하기 때문에 .NET 에이전트는 .NET 애플리케이션에 대한 [AOT(Native Ahead of Time) 배포를](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/?tabs=net8plus%2Cwindows) 지원하지 않습니다.
 
 ## 에이전트를 다른 New Relic 제품에 연결 [#digital-intelligence-platform]
 
@@ -675,9 +944,11 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
       </td>
 
       <td>
-        브라우저 모니터링 JavaScript 에이전트는 **ASP.NET 핵심** 응용 프로그램용 .NET 에이전트에 의해 주입되지 않습니다. 그러나 [.NET 에이전트 API](/docs/agents/net-agent/net-agent-api/get-browser-timing-header) 또는 [브라우저 에이전트의 복사/붙여넣기 방법](/docs/browser/new-relic-browser/installation/install-new-relic-browser-agent#copy-paste-app) 을 사용하여 브라우저 에이전트를 삽입할 수 있습니다.
+        ASP.NET Core v6.0 이상 웹 애플리케이션(MVC, Razor 및 Blazor)의 경우 [자동 계측을 활성화](/docs/browser/browser-monitoring/installation/install-browser-monitoring-agent/#select-apm-app) 하면 .NET 에이전트(버전 10.19.0부터)가 자동으로 브라우저 JavaScript 에이전트를 삽입합니다.
 
-        브라우저 삽입을 활성화한 후 [APM 요약 페이지](/docs/apm/applications-menu/monitoring/apm-overview-page) 에서 브라우저 데이터를 보고 APM과 특정 앱에 대한 브라우저 데이터 간에 빠르게 전환할 수 있습니다. 구성 옵션 및 수동 계측은 [브라우저 모니터링 및 .NET 에이전트](/docs/agents/net-agent/instrumentation-features/new-relic-browser-net-agent) 를 참조하십시오.
+        다른 유형의 웹 애플리케이션의 경우 [.NET 에이전트 API](/docs/agents/net-agent/net-agent-api/get-browser-timing-header) 또는 [브라우저 에이전트의 복사/붙여넣기 방법을](/docs/browser/new-relic-browser/installation/install-new-relic-browser-agent#copy-paste-app) 사용하여 <InlinePopover type="browser"/>에이전트를 삽입할 수 있습니다.
+
+        브라우저 삽입을 활성화한 후 [APM 요약 페이지](/docs/apm/apm-ui-pages/monitoring/apm-summary-page-view-transaction-apdex-usage-data/) 에서 브라우저 데이터를 보고 특정 앱에 대한 APM과 브라우저 데이터 간에 빠르게 전환할 수 있습니다. 구성 옵션 및 수동 계측에 대해서는 [브라우저 모니터링 및 .NET 에이전트를](/docs/apm/agents/net-agent/other-features/browser-monitoring-net-agent/) 참조하세요.
       </td>
     </tr>
 
@@ -687,7 +958,7 @@ New Relic의 .NET 에이전트에는 프레임워크, 데이터베이스 및 메
       </td>
 
       <td>
-        동일한 호스트에 Infrastructure 및 APM 에이전트를 설치하면 자동으로 서로를 감지합니다. 그런 다음 APM UI에서 호스트 목록을 보고 인프라 UI에서 APM 앱별로 인프라 호스트를 필터링할 수 있습니다. 자세한 내용 [은 인프라의 APM 데이터를](/docs/infrastructure/new-relic-infrastructure/data-instrumentation/new-relic-apm-data-infrastructure) 참조하십시오.
+        인프라와 APM 에이전트를 동일한 호스트에 설치하면 자동으로 서로를 감지합니다. 그런 다음 APM UI에서 호스트 목록을 보고 인프라 UI에서 APM 앱별로 인프라 호스트를 필터링할 수 있습니다. 자세한 내용은 [인프라 UI의 APM 데이터를](/docs/infrastructure/new-relic-infrastructure/data-instrumentation/new-relic-apm-data-infrastructure) 참조하십시오.
       </td>
     </tr>
 

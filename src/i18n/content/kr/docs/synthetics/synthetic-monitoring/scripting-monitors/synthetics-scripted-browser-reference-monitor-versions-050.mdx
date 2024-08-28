@@ -5,6 +5,7 @@ tags:
   - Synthetic monitoring
   - Scripting monitors
 metaDescription: Description of every function available for synthetic scripted monitors for versions 0.5.0 and 0.6.0.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -12,9 +13,17 @@ translationType: machine
 
 모니터 버전 및 런타임 차이점에 대한 자세한 내용은 [런타임 환경](/docs/synthetics/new-relic-synthetics/scripting-monitors/scripted-monitor-runtime-environment) 을 참조하세요.
 
+<Callout variant="important">
+  2024년 10월 22일을 기점으로 컨테이너화된 미니언(분당 호출 수) 및 구형 신세틱스 손잡이 버전 [의 수명이 종료](/whats-new/2024/04/whats-new-04-09-eol-synthetics-runtime-cpm) 됩니다. 표시 위치의 경우 [런타임 업그레이드 UI](/docs/synthetics/synthetic-monitoring/using-monitors/runtime-upgrade-ui/) 사용하여 모니터를 최신 런타임으로 업데이트하세요. 위치 위치의 경우 모니터 성능 저하를 방지하기 위해 [권장되는 마이그레이션 단계를](/docs/synthetics/synthetic-monitoring/private-locations/job-manager-transition-guide/#monitorMigration) 검토하십시오.
+
+  Chrome 100+ 브라우저 런타임은 0.5.0 및 0.6.0에 대한 이전 버전과 호환되는 지원을 제공합니다. 브라우저 런타임 구문.
+</Callout>
+
+몇 가지 일반적인 사용 예는 [스크립팅된 브라우저 모니터 소개를](/docs/synthetics/synthetic-monitoring/scripting-monitors/introduction-scripted-browser-monitors)참조하십시오.
+
 ## Selenium Webdriver API [#selenium]
 
-`$driver` 및 `$browser` 변수를 사용하여 [스크립트 브라우저](/docs/synthetics/new-relic-synthetics/scripting-monitors/write-scripted-browsers) 는 모니터 버전 0.6.x용 [Selenium Webdriver API 3.6.0](http://seleniumhq.github.io/selenium/docs/api/javascript/index.html) 및 모니터 버전 0.5.x용 [Selenium Webdriver API 3.5.0](http://seleniumhq.github.io/selenium/docs/api/javascript/index.html) 에 액세스할 수 있습니다.
+변수 `$driver` 및 `$browser`을 사용하면 [스크립트 브라우저에서](/docs/synthetics/new-relic-synthetics/scripting-monitors/write-scripted-browsers) 셀레니엄 웹 드라이브 API 3.6.0에 액세스할 수 있습니다. 모니터 버전 0.6.x의 경우 및 셀레니엄 웹 드라이버 API 3.5.0 모니터 버전 0.5.x의 경우.
 
 특히:
 
@@ -749,7 +758,7 @@ New Relic은 `$browser` 인스턴스에서 직접 최상위 함수를 호출합�
       </td>
 
       <td>
-        특정 클래스 이름을 가진 요소를 찾습니다. 반환된 로케이터는 CSS 선택기 `.clazz` 로 요소를 검색하는 것과 같습니다.
+        특정 클래스 이름을 가진 요소를 찾습니다. 반환된 로케이터는 CSS 선택기 `.class` 로 요소를 검색하는 것과 같습니다.
 
         반환 값: 로케이터
       </td>

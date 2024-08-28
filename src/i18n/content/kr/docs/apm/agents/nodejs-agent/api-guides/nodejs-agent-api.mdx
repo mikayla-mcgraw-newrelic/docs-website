@@ -5,6 +5,7 @@ tags:
   - Nodejs agent
   - API guides
 metaDescription: 'How to use the Node.js API to name, rename, and ignore requests, and to read router names with New Relic''s Node.js agent.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -16,13 +17,13 @@ New Relic은 Node.js 애플리케이션에 대한 유용한 메트릭을 제공�
 
 New Relic이 추적하는 이름의 수는 사용자 경험이 강력하도록 충분히 작아야 합니다. 또한 애플리케이션의 문제 지점을 더 쉽게 식별할 수 있도록 적절한 양의 정보를 제공할 수 있을 만큼(데이터에 부담을 주지 않으면서) 충분히 커야 합니다.
 
-자세한 내용은 Github의 [Node.js 에이전트 구성](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration) 문서 및 [Node.js 에이전트 API 문서를](https://newrelic.github.io/node-newrelic/docs) 참조하세요.
+자세한 내용은 [Node.js 에이전트 구성](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration) 설명서 및 [Github의 Node.js 에이전트 API 설명서를](https://newrelic.github.io/node-newrelic/) 참조하십시오.
 
 ## 요청 이름
 
 Node.js 에이전트는 잠재적으로 매개변수화된 경로(예: `/user/:id` ) 또는 정규식(예: `/^/user/([-0-9a-f]+)$/` )과 함께 HTTP 메서드를 캡처합니다. 이러한 정보는 요청 이름의 일부가 됩니다.
 
-느린 트랜잭션 추적을 지원하고 구성 파일에서 [`capture_params`](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration#params) 을 활성화한 경우 트랜잭션 추적에는 요청의 매개변수와 해당 값도 첨부됩니다. Node.js 에이전트가 사용하는 요청 이름이 마음에 들지 않으면 API 호출을 사용하여 더 설명적인 이름을 만들 수 있습니다.
+느린 트랜잭션 추적을 지원하고 구성 파일의 [`attributes.include`](/docs/agents/nodejs-agent/attributes/nodejs-agent-attributes#cfg-attributes-include) 에 `'request.parameters.*'` 를 추가한 경우 트랜잭션 추적에도 요청의 매개변수와 해당 값이 연결됩니다. Node.js 에이전트가 사용하는 요청 이름이 마음에 들지 않으면 API 호출을 사용하여 더 설명적인 이름을 만들 수 있습니다.
 
 <Callout variant="tip">
   일반 이름으로 요청을 그룹화하는 경우 `/*` 이면 충분하며 구성 파일이나 API 호출을 사용자 정의할 필요가 없습니다.
@@ -94,7 +95,7 @@ New Relic은 요청 이름을 사용하여 많은 차트와 테이블에 대한 
 나머지 애플리케이션이 로드되기 전에 스스로 부트스트랩해야 하므로 New Relic 모듈을 로드하는 것이 애플리케이션에서 가장 먼저 하는 일인지 확인하세요.
 
 ```js
-var newrelic = require('newrelic');
+const newrelic = require('newrelic');
 ```
 
 이것은 요청 명명 API를 반환합니다. 한 번만 초기화되므로 애플리케이션의 여러 모듈에서 모듈을 안전하게 요구할 수 있습니다.
@@ -154,7 +155,7 @@ var newrelic = require('newrelic');
     * 자신의 코드를 계측합니다.
     * Node.js 에이전트의 내장 계측을 자신의 계측으로 교체하십시오.
 
-    자세한 내용 [은 Github에서 New Relic의 Node.js 계측 자습서를](https://newrelic.github.io/node-newrelic/docs/tutorial-Instrumentation-Basics.html) 참조하십시오.
+    자세한 내용 [은 Github에서 New Relic의 Node.js 계측 튜토리얼을](https://newrelic.github.io/node-newrelic/tutorial-Instrumentation-Basics.html) 참조하세요.
   </Collapser>
 
   <Collapser
@@ -167,13 +168,17 @@ var newrelic = require('newrelic');
 
     데이터 저장소 모듈에 대한 계측 콜백을 설정합니다.
 
-    이 메서드는 [데이터 저장소에 특화된 shim](https://newrelic.github.io/node-newrelic/docs/DatastoreShim.html) 을 제공한다는 점을 제외하고는 [`newrelic.instrument()`](#instrument) 과 비슷합니다. 자세한 내용 [은 Github에서 New Relic의 Node.js 데이터 저장소 계측 자습서를](https://newrelic.github.io/node-newrelic/docs/tutorial-Datastore-Simple.html) 참조하십시오.
+    이 메서드는 [데이터 저장소에 특화된 shim](https://newrelic.github.io/node-newrelic/DatastoreShim.html) 을 제공한다는 점을 제외하면 [`newrelic.instrument()`](#instrument) 와 같습니다. 자세한 내용 [은 Github에서 New Relic의 Node.js 데이터 저장소 계측 자습서를](https://newrelic.github.io/node-newrelic/tutorial-Datastore-Simple.html) 참조하세요.
   </Collapser>
 
   <Collapser
     id="instrumentLoadedModule"
     title={<InlineCode>newrelic.instrumentLoadedModule(moduleName, moduleInstance)</InlineCode>}
   >
+    <Callout variant="important">
+      이 방법은 ES 모듈 응용 프로그램에서 지원되지 않거나 필요하지 않습니다. ES 모듈 응용 프로그램의 에이전트 부트스트랩은 CommonJS 응용 프로그램과 다르기 때문입니다. ES 모듈 응용 프로그램에서 에이전트는 이 방법이 CommonJS 응용 프로그램에 대해 해결하는 문제를 보상할 수 있습니다.
+    </Callout>
+
     ```js
     newrelic.instrumentLoadedModule(moduleName, moduleInstance)
     ```
@@ -184,7 +189,7 @@ var newrelic = require('newrelic');
     // load the agent
     const newrelic = require('newrelic');
 
-    // module loaded before newrelic 
+    // module loaded before newrelic
     const expressModule = require('express');
 
     // instrument express after the agent has been loaded
@@ -209,7 +214,7 @@ var newrelic = require('newrelic');
 
     메시지 서비스 클라이언트 모듈에 대한 계측 콜백을 설정합니다.
 
-    이 메서드는 [message-service-specialized shim을](https://newrelic.github.io/node-newrelic/docs/MessageShim.html) 제공한다는 점을 제외하고는 [`newrelic.instrument()`](#instrument) 과 같습니다. 자세한 내용 [은 Github에서 New Relic의 Node.js 메시지 서비스 계측 자습서를](https://newrelic.github.io/node-newrelic/docs/tutorial-Messaging-Simple.html) 참조하십시오.
+    이 메서드는 [메시지 서비스 전문 shim을](https://newrelic.github.io/node-newrelic/MessageShim.html) 제공한다는 점을 제외하면 [`newrelic.instrument()`](#instrument) 와 같습니다. 자세한 내용 [은 Github에서 New Relic의 Node.js 메시지 서비스 계측 자습서를](https://newrelic.github.io/node-newrelic/tutorial-Messaging-Simple.html) 참조하세요.
   </Collapser>
 
   <Collapser
@@ -222,7 +227,7 @@ var newrelic = require('newrelic');
 
     웹 프레임워크 모듈에 대한 계측 콜백을 설정합니다.
 
-    이 메서드는 [웹 프레임워크에 특화된 shim](https://newrelic.github.io/node-newrelic/docs/WebFrameworkShim.html) 을 제공한다는 점을 제외하고는 [`newrelic.instrument()`](#instrument) 과 비슷합니다. 자세한 내용 [은 Github에서 New Relic의 Node.js 웹 프레임워크 계측 자습서를](https://newrelic.github.io/node-newrelic/docs/tutorial-Webframework-Simple.html) 참조하십시오.
+    이 메서드는 [웹 프레임워크에 특화된 shim](https://newrelic.github.io/node-newrelic/WebFrameworkShim.html) 을 제공한다는 점을 제외하면 [`newrelic.instrument()`](#instrument) 와 같습니다. 자세한 내용 [은 Github에서 New Relic의 Node.js 웹 프레임워크 계측 자습서를](https://newrelic.github.io/node-newrelic/tutorial-Webframework-Simple.html) 참조하세요.
   </Collapser>
 
   <Collapser
@@ -240,9 +245,22 @@ var newrelic = require('newrelic');
 
     New Relic은 자동 계측 및 [`startSegment()`](#startSegment) 을 통한 수동 계측으로 캡처되는 모든 측정항목을 캡처합니다.
 
-    트랜잭션 시작 시 `newrelic.getTransaction()` 를 호출하여 사용자 정의 트랜잭션을 **수동** 으로 처리하고 완료되면 `transaction.end()` 을 호출해야 합니다. New Relic은 `newrelic.startWebTransaction()` 가 호출될 때 트랜잭션 타이밍을 시작하고 `transaction.end()` 이 호출될 때 트랜잭션을 종료합니다.
+    프로세서 시작 시 `newrelic.getTransaction()` 호출하여 수동으로 사용자 정의 프로세서를 <DNT>**must**</DNT> 처리하고 완료되면 `transaction.end()` 호출합니다. 뉴렐릭은 `newrelic.startWebTransaction()` 이 호출될 때 프로세서 타이밍을 시작하고 `transaction.end()` 호출될 때 프로세서를 종료합니다.
 
     트랜잭션의 끝을 나타내는 약속을 반환할 수도 있습니다. 이 약속이 거부되면 New Relic의 오류 추적에 자동으로 연결되지 않습니다. [`noticeError()`](#noticeError) 을(를) 사용하여 수동으로 수행해야 합니다.
+
+    예시:
+
+    ```js
+    var newrelic = require("newrelic");
+    newrelic.startWebTransaction("/some/url/path", function () {
+      var transaction = newrelic.getTransaction();
+      setTimeout(function () {
+        // do some work
+        transaction.end();
+      }, 100);
+    });
+    ```
   </Collapser>
 
   <Collapser
@@ -256,14 +274,35 @@ var newrelic = require('newrelic');
     지정된 백그라운드 트랜잭션을 계측합니다. 이 API 호출을 사용하여 New Relic의 계측을 확장[하여 백그라운드 트랜잭션에서 데이터를 캡처](/docs/agents/nodejs-agent/supported-features/nodejs-custom-instrumentation#background-txn) 할 수 있습니다.
 
     * `name` 은 트랜잭션 이름을 정의하며 정적이어야 합니다. 사용자 ID와 같은 변수 데이터를 포함하지 마십시오.
-    * `group` 은 선택사항이며 [사용자 인터페이스의 **트랜잭션 유형** 을](/docs/apm/applications-menu/monitoring/transactions-dashboard#txn-type-dropdown) 통해 유사한 작업을 함께 그룹화할 수 있습니다. `name` 과 마찬가지로 &#x7B; `group` 는 정적이어야 합니다.
+
+    * `group` 는 선택사항이며 [사용자 인터페이스의](/docs/apm/applications-menu/monitoring/transactions-dashboard#txn-type-dropdown)
+
+      <DNT>
+        [**transaction type**](/docs/apm/applications-menu/monitoring/transactions-dashboard#txn-type-dropdown)
+      </DNT>
+
+      [](/docs/apm/applications-menu/monitoring/transactions-dashboard#txn-type-dropdown)를 통해 유사한 작업을 그룹화할 수 있습니다. `name` 와 마찬가지로 `group` 도 정적이어야 합니다.
+
     * `handle` 은 계측하려는 전체 백그라운드 작업을 포함하는 함수를 정의합니다.
 
     New Relic은 자동 계측 및 [`startSegment()`](#startSegment) 을 통한 수동 계측으로 캡처되는 모든 측정항목을 캡처합니다.
 
-    트랜잭션 시작 시 `newrelic.getTransaction()` 를 호출하여 사용자 정의 트랜잭션을 **수동** 으로 처리하고 완료되면 `transaction.end()` 을 호출해야 합니다. New Relic은 `newrelic.startBackgroundTransaction()` 가 호출될 때 트랜잭션 타이밍을 시작하고 `transaction.end()` 이 호출될 때 트랜잭션을 종료합니다.
+    프로세서 시작 시 `newrelic.getTransaction()` 호출하여 수동으로 사용자 정의 프로세서를 <DNT>**must**</DNT> 처리하고 완료되면 `transaction.end()` 호출합니다. 뉴렐릭은 `newrelic.startBackgroundTransaction()` 이 호출될 때 프로세서 타이밍을 시작하고 `transaction.end()` 호출될 때 프로세서를 종료합니다.
 
     트랜잭션의 끝을 나타내기 위해 약속을 반환할 수도 있습니다. 이 약속이 거부되면 New Relic의 오류 추적에 자동으로 연결되지 않습니다. [`noticeError()`](#noticeError) 을(를) 사용하여 수동으로 수행해야 합니다.
+
+    예시:
+
+    ```js
+    var newrelic = require("newrelic");
+    newrelic.startBackgroundTransaction("Red October", "Subs", function () {
+    var transaction = newrelic.getTransaction();
+    setTimeout(function () {
+      // do some work
+      transaction.end();
+    }, 100);
+    });
+    ```
   </Collapser>
 
   <Collapser
@@ -306,6 +345,15 @@ var newrelic = require('newrelic');
     * 선택적 `callback` 은 작업이 완료된 후 실행되도록 핸들러에 전달되는 함수입니다.
 
     에이전트는 `startSegment` 이 호출될 때 세그먼트 타이밍을 시작합니다. 세그먼트는 `handler` 실행이 완료되거나 제공되는 경우 `callback` 가 실행될 때 종료됩니다.
+
+    예시:
+
+    ```js
+    newrelic.startSegment('mySegment', false, function handler() {
+      // The returned promise here will signify the end of the segment.
+      return myAsyncTask().then(myNextTask)
+    })
+    ```
   </Collapser>
 </CollapserGroup>
 
@@ -325,7 +373,7 @@ var newrelic = require('newrelic');
     일반적으로 특정 기간과 관련된 이벤트 기반 측정항목을 기록하려면 `recordMetric` 을 사용합니다. `name` 은 표준 메트릭 명명 규칙을 따르는 문자열이어야 합니다. `value` 는 일반적으로 숫자이지만 객체일 수도 있습니다.
 
     * `value` 이 숫자 값인 경우 이벤트와 관련된 측정의 크기를 나타내야 합니다. 예를 들어 특정 메서드 호출에 대한 기간입니다.
-    * `value` 이 객체인 경우 `count` , `total` , `min` , `max` 및 `sumOfSquares` 키가 모두 숫자 값과 함께 포함되어야 합니다. 이 양식은 자체적으로 측정항목을 집계하고 주기적으로 보고하는 데 유용합니다. 예를 들어 `setInterval` 에서. 이러한 값은 동일한 메트릭에 대해 이전에 수집된 값과 함께 집계됩니다. 이러한 키의 이름은 플랫폼 API에서 사용하는 키의 이름과 일치합니다.
+    * `value` 이 객체인 경우 `count`, `total`, `min`, `max` 및 `sumOfSquares` 키를 포함해야 하며 모두 숫자 값을 가지며 다른 키는 무시됩니다. 이 양식은 스스로 데이터를 작성하고 정기적으로 보고하는 데 유용합니다. 예를 들어, `setInterval` 에서. 이러한 값은 동일한 지표에 대해 이전에 수집된 값과 집계됩니다. 이러한 키의 이름은 플랫폼 API에서 사용되는 키의 이름과 일치합니다.
   </Collapser>
 
   <Collapser
@@ -372,6 +420,35 @@ var newrelic = require('newrelic');
         };
 
         newrelic.recordCustomEvent('MessagingEvent', attributes);
+        ```
+      </Collapser>
+    </CollapserGroup>
+  </Collapser>
+</CollapserGroup>
+
+<CollapserGroup>
+  <Collapser
+    id="record_log_event"
+    title={<InlineCode>newrelic.recordLogEvent(로그 이벤트)</InlineCode>}
+  >
+    ```js
+    newrelic.recordLogEvent({message, level})
+    ```
+
+    자동 로깅 계측이 로깅 프레임워크에 충분하지 않은 경우 `recordLogEvent` 를 사용하여 로그 이벤트를 기록합니다. 허용되는 매개변수 유형에 대한 자세한 내용은 [자동 생성된 문서](https://newrelic.github.io/node-newrelic/API.html#recordLogEvent) 를 참조하세요.
+
+    <CollapserGroup>
+      <Collapser
+        id="example-link-bg-txn"
+        title="오류 개체와 함께 로그 이벤트 기록"
+      >
+        다음 예는 오류와 관련된 로그 이벤트를 기록하는 방법을 보여줍니다.
+
+        ```js
+        const error = new SystemError('invalid state');
+        const timestamp = Date.now();
+
+        newrelic.recordLogEvent({message: 'an error happened', level: 'error', timestamp, error});
         ```
       </Collapser>
     </CollapserGroup>
@@ -466,15 +543,15 @@ var newrelic = require('newrelic');
 
     `transportType` 다음 문자열 중 하나여야 합니다.
 
-    * AMQP
-    * HTTP
-    * HTTPS
-    * 아이언MQ
-    * JMS
-    * 카프카
-    * 다른
-    * 대기줄
-    * 알려지지 않은
+    * `AMQP`
+    * `HTTP`
+    * `HTTPS`
+    * `IronMQ`
+    * `JMS`
+    * `Kafka`
+    * `Other`
+    * `Queue`
+    * `Unknown`
 
     `headers` 들어오는 요청의 모든 헤더를 포함하는 객체여야 합니다. 키는 소문자여야 합니다.
 
@@ -730,42 +807,123 @@ New Relic의 Node.js 에이전트에는 추가 API 호출이 포함되어 있습
     newrelic.getBrowserTimingHeader()
     ```
 
-    [브라우저 모니터링](/docs/agents/nodejs-agent/supported-features/page-load-timing-nodejs) 을 활성화하기 위해 HTML 페이지의 헤더에 삽입할 HTML 스니펫을 반환합니다. HTML은 브라우저에 작은 JavaScript 파일을 가져오고 페이지 타이머를 시작하도록 지시합니다.
+    [<InlinePopover type="browser"/>](/docs/agents/nodejs-agent/supported-features/page-load-timing-nodejs)) 활성화하기 위해 HTML 페이지 헤더에 삽입할 HTML 스니펫을 반환합니다. HTML은 브라우저에 작은 JavaScript 파일을 가져오고 페이지 타이머를 시작하도록 지시합니다.
+  </Collapser>
+
+  <Collapser
+    id="noticeError"
+    title={<InlineCode>newrelic.noticeError(오류, \[customAttributes], \[예상됨])</InlineCode>}
+  >
+    ```js
+    newrelic.noticeError(error, [customAttributes], [expected])
+    ```
+
+    앱이 도메인 또는 try/catch 절을 사용하여 자체 오류 처리를 수행하지만 앱에서 얼마나 많은 오류가 발생하는지에 대한 모든 정보를 중앙에서 관리하려는 경우 이 호출을 사용합니다. 다른 Node.js 호출과 달리 경로 핸들러 외부에서 사용할 수 있지만 트랜잭션 범위 내에서 호출하면 추가 컨텍스트가 있습니다.
+
+    `error` `Error` 또는 해당 하위 유형 중 하나여야 하지만 API는 연결된 `.message` 또는 `.stack` 속성이 있는 문자열 및 객체를 처리합니다.
+
+    `customAttributes` New Relic UI에 표시되는 모든 사용자 정의 속성의 선택적 개체입니다.
+
+    `expected` 오류를 예상한 오류로 분류하기 위한 선택적 부울입니다. `noticeError` 로 수집된 오류가 `expected` 인 경우 수집 및 보고되지만 `Apdex` 또는 오류율 메트릭에는 영향을 미치지 않습니다. 기본적으로 `expected` `false` 입니다.
+
+    <Callout variant="important">
+      `expected` 매개변수에는 [Node.js 에이전트 버전 9.12.1](/docs/release-notes/agent-release-notes/nodejs-release-notes/node-agent-9-12-1) 이상이 필요합니다.
+    </Callout>
+
+    <DNT>
+      **Example:**
+    </DNT>
+
+    ```js
+    try {
+      performSomeTask();
+    } catch(err) {
+      newrelic.noticeError(
+        err,
+        { extraInformation: "error already handled in the application" },
+        true
+      );
+    }
+    ```
+
+    <Callout variant="caution">
+      이 방법을 사용하여 기록된 오류는 [`ignore_status_codes`](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration#error_ignore) 구성 값을 따르지 않습니다.
+    </Callout>
+  </Collapser>
+
+  <Collapser
+    id="setErrorGroupCallback"
+    title={<InlineCode>newrelic.setErrorGroupCallback(콜백)</InlineCode>}
+  >
+    ```js
+    newrelic.setErrorGroupCallback(callback)
+    ```
+
+    이 메소드를 사용하면 사용자 정의 콜백을 정의하여 오류 그룹 이름을 생성할 수 있습니다. 이 콜백은 오류 수신함에서 `error.group.name` 에이전트 속성을 통해 유사한 오류를 그룹화하는 데 사용됩니다.
+
+    제공된 함수는 문자열을 반환하고 개체를 인수로 받아야 합니다. 개체에는 발생한 오류와 관련된 정보가 포함되며 형식은 다음과 같습니다.
+
+    <Callout variant="important">
+      `setErrorGroupCallback` 를 사용하려면 [Node.js 에이전트 버전 9.14.0](/docs/release-notes/agent-release-notes/nodejs-release-notes/node-agent-9-14-0/) 이상이 필요합니다.
+    </Callout>
+
+    ```js
+    {
+      "customAttributes": object,
+      "request.uri": string,
+      "http.statusCode": string,
+      "http.method": string,
+      "error": Error,
+      "error.expected": boolean
+    }
+    ```
+
+    이 함수를 여러 번 호출하면 이전에 정의된 이 콜백 함수 버전이 대체됩니다. 예:
+
+    ```js
+    function myCallback(metadata) {
+      if (metadata['http.statusCode'] === '400') {
+        return 'Bad User Input'
+      }
+    }
+
+    newrelic.setErrorGroupCallback(myCallback)
+    ```
+
+    이 기능에 대해 자세히 알아보려면 [예제 앱 을](https://github.com/newrelic/newrelic-node-examples/tree/main/error-fingerprinting)참조하십시오.
   </Collapser>
 
   <Collapser
     id="ignore"
     title={<InlineCode>newrelic.setIgnoreTransaction(무시됨)</InlineCode>}
   >
+    <Callout variant="caution">
+      이 메서드는 더 이상 사용되지 않으며 버전 7.0.0에서 제거되었습니다. [transactionHandle.ignore()](#transaction-handle-ignore) 를 사용하십시오.
+    </Callout>
+
     ```js
     newrelic.setIgnoreTransaction(ignored)
     ```
 
     주어진 요청을 무시할지 여부를 모듈에 알립니다. 이를 통해 긴 폴링, 관련 없는 경로 또는 시간이 많이 소요될 요청을 명시적으로 필터링할 수 있습니다. 또한 그렇지 않으면 무시될 요청에 대한 메트릭을 수집할 수도 있습니다.
 
-    * 트랜잭션을 무시하려면 매개변수를 `true` 으로 설정하면 트랜잭션이 무시됩니다.
+    * 트랜잭션을 무시하려면 매개변수를 `true`로 설정합니다. 그러면 트랜잭션이 무시됩니다.
     * 이 함수로 트랜잭션이 무시되는 것을 방지하려면 `false` 매개변수를 전달하십시오.
     * `null` 또는 `undefined` 을 전달해도 트랜잭션이 무시되는지 여부는 변경되지 않습니다.
-
-    <Callout variant="caution">
-      이 메서드는 더 이상 사용되지 않으며 버전 7.0.0에서 제거되었습니다. [transactionHandle.ignore()](#transaction-handle-ignore) 를 사용하십시오.
-    </Callout>
   </Collapser>
 
   <Collapser
-    id="noticeError"
-    title={<InlineCode>newrelic.noticeError(오류, \[customAttributes])</InlineCode>}
+    id="setUserID"
+    title={<InlineCode>newrelic.setUserID(문자열)</InlineCode>}
   >
     ```js
-    newrelic.noticeError(error, [customAttributes])
+    newrelic.setUserID(string)
     ```
 
-    앱이 도메인 또는 try/catch 절을 사용하여 자체 오류 처리를 수행하지만 앱에서 얼마나 많은 오류가 발생하는지에 대한 모든 정보를 중앙에서 관리하려는 경우 이 호출을 사용합니다. 다른 Node.js 호출과 달리 경로 핸들러 외부에서 사용할 수 있지만 트랜잭션 범위 내에서 호출하면 추가 컨텍스트가 있습니다.
+    이 방법은 고유 식별자를 트랜잭션 이벤트, 트랜잭션 추적 및 트랜잭션 내의 오류와 연결하는 방법을 제공합니다. 새 속성인 `enduser.id`가 오류에 추가되고 오류 수신함에 보고됩니다.
 
-    `customAttributes` New Relic UI에 표시되는 모든 사용자 정의 속성의 선택적 개체입니다.
-
-    <Callout variant="caution">
-      이 방법을 사용하여 기록된 오류는 [ignore_status_codes](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration#error_ignore) 구성 값을 따르지 않습니다.
+    <Callout variant="important">
+      `setUserID` API에는 [Node.js 에이전트 버전 9.13.0](/docs/release-notes/agent-release-notes/nodejs-release-notes/node-agent-9-13-0/) 이상이 필요합니다.
     </Callout>
   </Collapser>
 
@@ -774,102 +932,170 @@ New Relic의 Node.js 에이전트에는 추가 API 호출이 포함되어 있습
     title={<InlineCode>newrelic.shutdown(\[옵션], 콜백)</InlineCode>}
   >
     ```js
-    newrelic.shutdown([options], callback)
+    newrelic.shutdown(options, callback)
     ```
 
-    에이전트를 정상적으로 종료하려면 이 방법을 사용하십시오.
+    에이전트를 정상적으로 종료하려면 이 방법을 사용하십시오. 두 매개변수는 모두 선택 사항입니다. 다음은 매개변수를 보여주는 개요 표입니다.
 
     <table>
-      <tr>
-        <th style={{ width: "180px" }}>
-          옵션 이름
-        </th>
+      <thead>
+        <tr>
+          <th style={{ width: "180px" }}>
+            매개변수
+          </th>
 
-        <th style={{ width: "100px" }}>
-          유형
-        </th>
+          <th style={{ width: "100px" }}>
+            유형
+          </th>
 
-        <th style={{ width: "100px" }}>
-          속성
-        </th>
+          <th style={{ width: "100px" }}>
+            속성
+          </th>
 
-        <th style={{ width: "50px" }}>
-          기본값
-        </th>
+          <th style={{ width: "200px" }}>
+            설명
+          </th>
+        </tr>
+      </thead>
 
-        <th style={{ width: "200px" }}>
-          설명
-        </th>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            `options`
+          </td>
 
-      <tr>
-        <td>
-          `collectPendingData`
-        </td>
+          <td>
+            `object`
+          </td>
 
-        <td>
-          `boolean`
-        </td>
+          <td>
+            선택 과목
+          </td>
 
-        <td>
-          선택 과목
-        </td>
+          <td>
+            종료 옵션이 있는 개체
+          </td>
+        </tr>
 
-        <td>
-          `false`
-        </td>
+        <tr>
+          <td>
+            `callback`
+          </td>
 
-        <td>
-          종료하기 전에 보류 중인 데이터를 New Relic 수집기로 보낼지 여부를 에이전트에 알립니다.
-        </td>
-      </tr>
+          <td>
+            `function`
+          </td>
 
-      <tr>
-        <td>
-          `timeout`
-        </td>
+          <td>
+            선택 과목
+          </td>
 
-        <td>
-          `number`
-        </td>
-
-        <td>
-          선택 과목
-        </td>
-
-        <td>
-          `0`
-        </td>
-
-        <td>
-          강제 종료 전의 기본 시간입니다. `collectPendingData` 이 true이면 에이전트는 종료되기 전에 연결을 기다립니다. 이 시간 제한은 연결을 시도하는 동안 프로세스가 너무 오래 열려 있지 않도록 하기 위해 AWS Lambda와 같은 수명이 짧은 프로세스에 유용합니다.
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          `waitForIdle`
-        </td>
-
-        <td>
-          `boolean`
-        </td>
-
-        <td>
-          선택 과목
-        </td>
-
-        <td>
-          `false`
-        </td>
-
-        <td>
-          true인 경우 활성 트랜잭션이 없을 때까지 에이전트가 종료되지 않습니다.
-        </td>
-      </tr>
+          <td>
+            에이전트 정지 시 실행되는 콜백 함수
+          </td>
+        </tr>
+      </tbody>
     </table>
 
-    **예시:**
+    다음은 개체 종료 옵션을 보여주는 세부 정보 테이블입니다.
+
+    <table>
+      <thead>
+        <tr>
+          <th style={{ width: "180px" }}>
+            옵션 이름
+          </th>
+
+          <th style={{ width: "100px" }}>
+            유형
+          </th>
+
+          <th style={{ width: "100px" }}>
+            속성
+          </th>
+
+          <th style={{ width: "50px" }}>
+            기본값
+          </th>
+
+          <th style={{ width: "200px" }}>
+            설명
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            `collectPendingData`
+          </td>
+
+          <td>
+            `boolean`
+          </td>
+
+          <td>
+            선택 과목
+          </td>
+
+          <td>
+            `false`
+          </td>
+
+          <td>
+            종료하기 전에 보류 중인 데이터를 New Relic 수집기로 보낼지 여부를 에이전트에 알립니다.
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            `timeout`
+          </td>
+
+          <td>
+            `number`
+          </td>
+
+          <td>
+            선택 과목
+          </td>
+
+          <td>
+            `0`
+          </td>
+
+          <td>
+            강제 종료 전의 기본 시간입니다. `collectPendingData` 이 true이면 에이전트는 종료되기 전에 연결을 기다립니다. 이 시간 제한은 연결을 시도하는 동안 프로세스가 너무 오래 열려 있지 않도록 하기 위해 AWS Lambda와 같은 수명이 짧은 프로세스에 유용합니다.
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            `waitForIdle`
+          </td>
+
+          <td>
+            `boolean`
+          </td>
+
+          <td>
+            선택 과목
+          </td>
+
+          <td>
+            `false`
+          </td>
+
+          <td>
+            `true` 인 경우 활성 트랜잭션이 없을 때까지 에이전트가 종료되지 않습니다.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <DNT>
+      **Example:**
+    </DNT>
 
     ```js
     newrelic.shutdown({collectPendingData: true, timeout: 10000}, (error) => {
@@ -936,11 +1162,15 @@ New Relic 모듈에 대한 호출을 애플리케이션 코드에 직접 넣지 
       <thead>
         <tr>
           <th style={{ width: "200px" }}>
-            **선택적 규칙 속성**
+            <DNT>
+              **Optional rules attributes**
+            </DNT>
           </th>
 
           <th>
-            **설명**
+            <DNT>
+              **Description**
+            </DNT>
           </th>
         </tr>
       </thead>
@@ -1113,7 +1343,7 @@ New Relic 모듈에 대한 호출을 애플리케이션 코드에 직접 넣지 
     id="example-ignoring-rule"
     title="규칙을 무시하는 예"
   >
-    **socket.io** 를 사용하는 경우 즉시 규칙을 무시하는 사용 사례가 있습니다. socket.io 롱 폴링이 응답 시간 메트릭을 지배하고 애플리케이션의 Apdex 메트릭에 영향을 주지 않도록 하려면 다음과 같은 규칙을 추가하십시오.
+    <DNT>**socket.io**</DNT> 사용하는 경우 즉시 규칙을 무시하는 사용 사례를 갖게 됩니다. Socket.io 장기 폴링이 응답 시간 지표를 지배하고 앱의 Apdex 지표에 영향을 미치지 않도록 하려면 다음과 같은 규칙을 추가하세요.
 
     ```js
     // newrelic.js
@@ -1138,13 +1368,13 @@ New Relic의 Node.js 에이전트를 사용하여 규칙을 명명하고 무시�
     id="addnamingrule"
     title={<InlineCode>newrelic.addNamingRule(패턴, 이름)</InlineCode>}
   >
-    **rules.name** 의 프로그래밍 방식 버전입니다. 명명 규칙이 추가되면 노드 프로세스가 다시 시작될 때까지 제거할 수 없습니다. Node.js 에이전트의 구성을 통해 추가할 수도 있습니다. 두 매개변수가 모두 필요합니다.
+    <DNT>**rules.name**</DNT> 의 프로그래밍 방식 버전입니다. 명명 규칙이 추가되면 Node.js 프로세스가 다시 시작될 때까지 제거할 수 없습니다. Node.js 에이전트의 설정을 통해 추가할 수도 있습니다. 두 가지 유효성 검사가 모두 필요합니다.
   </Collapser>
 
   <Collapser
     id="addignoringrule"
     title={<InlineCode>newrelic.addIgnoringRule(패턴)</InlineCode>}
   >
-    **rules.ignore** 의 프로그래밍 방식 버전입니다. 무시 규칙이 추가되면 노드 프로세스가 다시 시작될 때까지 제거할 수 없습니다. Node.js 에이전트의 구성을 통해 추가할 수도 있습니다. 이 매개변수는 필수입니다.
+    <DNT>**rules.ignore**</DNT> 의 프로그래밍 방식 버전입니다. 무시 규칙이 추가되면 Node.js 프로세스가 다시 시작될 때까지 제거할 수 없습니다. Node.js 에이전트의 설정을 통해 추가할 수도 있습니다. 이 조치가 필요합니다.
   </Collapser>
 </CollapserGroup>

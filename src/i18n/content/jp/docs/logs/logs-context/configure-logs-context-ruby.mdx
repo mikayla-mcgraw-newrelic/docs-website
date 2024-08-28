@@ -1,25 +1,23 @@
 ---
-title: 'Ruby:コンテキストでのログの設定'
+title: コンテキスト内の Ruby エージェント ログ
 tags:
   - Logs
   - Enable log management in New Relic
   - Logs in context for Ruby
 metaDescription: 'For apps monitored by the Ruby agent, learn how to link log data with related data across the rest of the New Relic platform.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-コンテキスト内のAPMログは、ログをアプリ、ホスト、およびその他のエンティティのすべてのテレメトリデータに接続します。このすべてのデータを1つのツールにまとめることで、次のことが可能になります。
+Ruby <InlinePopover type="apm"/>エージェントを使用すると、 <DNT>**logs in context**</DNT>を取得できます。これにより、他の New Relic データのコンテキストでアプリのログを表示できます。 この機能の一般的な情報については、 [「コンテキスト内の APM ログ」](/docs/apm/new-relic-apm/getting-started/get-started-logs-context)を参照してください。
 
-* タイムクリティカルな問題のトラブルシューティングを行うときに、何千ものログのノイズをカットして、最も関連性の高いログのみが自動的に表示されるようにします。
-* 複数のタイプのテレメトリデータ内をナビゲートし、データを元の問題に関連付けます。
-* UIの同じ場所から、より詳細な情報に簡単にドリルダウンできます。
-* 問題を特定して解決するために必要なログ行を見つけます。
-
-例を含む詳細について[は、コンテキストでAPMログを](/docs/apm/new-relic-apm/getting-started/get-started-logs-context)開始する方法を学習してください。
+<Callout variant="tip">
+  Ruby ログがたくさんありますか? [それらを最適化および管理する方法については、チュートリアル](/docs/tutorial-large-logs/get-started-managing-large-logs/)をご覧ください。
+</Callout>
 
 ## コンテキストオプションの自動ログ [#automatic]
 
-アプリのログを送信し、メタデータをNew Relicに自動的にリンクするように、コンテキストでAPMログを構成する3つのオプションがあります。
+アプリのログとリンク メタデータを自動的に New Relic に送信するようにコンテキスト内の<InlinePopover type="apm"/>ログを構成するには、3 つのオプションがあります。
 
 <CollapserGroup>
   <Collapser
@@ -28,13 +26,13 @@ translationType: machine
   >
     これは最も単純なアプローチであり、ログフォワーダーの設定にアクセスしたり関心を持ったりしていない開発者や、アプリのコンテキストでログやその他のリンクメタデータの機能を確認したいアカウントに最適です。多くのオーバーヘッド。
 
-    このオプションを使用すると、ログに`span.id` 、 `trace.id` 、 `hostname` 、 `entity.guid` 、および`entity.name`が含まれます。これらの属性は、ログをスパン、トレース、およびその他のテレメトリに自動的にリンクし、トラブルシューティングを容易にします。
+    このオプションを使用して、エージェントは`span.id` 、 `trace.id` 、 `hostname` 、 `entity.guid` 、および`entity.name`を追加します。[ログ転送の制限について学習します。](/docs/logs/logs-context/get-started-logs-context#forwarding-details)
 
-    ログ転送機能を備えたエージェントバージョン（ [Rubyエージェント8.6.0以降](https://docs.newrelic.com/docs/release-notes/agent-release-notes/ruby-release-notes/)）をインストールし、構成を更新して転送を有効にするだけです。
+    必要なのは、ログ転送機能を備えたエージェント バージョン ( [Ruby エージェント 8.6.0 以降](/docs/release-notes/agent-release-notes/ruby-release-notes/)) をインストールすることだけです。転送が無効になっている場合は、次の構成を使用できます。
 
     newrelic.yml：
 
-    ```
+    ```yml
     application_logging:
       forwarding:
         enabled: true
@@ -42,13 +40,15 @@ translationType: machine
 
     環境変数：
 
-    ```
+    ```ini
     NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED=true
     ```
 
-    このオプションは、将来のエージェントバージョンでデフォルトでオンになる可能性があります。
+    このオプションは、バージョン 8.7.0 以降ではデフォルトで有効になっています。ログ転送を無効にするには、値を`false`に設定する必要があります。
 
-    **オプションの調整：**
+    <DNT>
+      **Optional adjustments:**
+    </DNT>
 
     これを有効にすると、1分ごとにNewRelicに送信されるログの最大数も制御できます。デフォルト値は10,000です。 60秒のウィンドウで10,000を超えるログが受信されると、ログのサンプリングが開始されます。
 
@@ -56,7 +56,7 @@ translationType: machine
 
     newrelic.yml：
 
-    ```
+    ```yml
     application_logging:
       forwarding:
         max_samples_stored: 10000
@@ -64,11 +64,11 @@ translationType: machine
 
     環境変数：
 
-    ```
-    NEW_RELIC_APPLICATION_LOGGING_FORWARDING_MAX_SAMPLES_STORED: 10000
+    ```ini
+    NEW_RELIC_APPLICATION_LOGGING_FORWARDING_MAX_SAMPLES_STORED=10000
     ```
 
-    既存のログ転送ソリューションがあり、コンテキストで自動ログを使用するようにエージェントを更新している場合は**、手動ログ転送を必ず無効にしてください**。それ以外の場合、アプリは二重のログ行を送信します。アカウントによっては、これにより二重請求が発生する可能性があります。詳細については、手順に従って[特定のログフォワーダー](/docs/logs/forward-logs/enable-log-management-new-relic#log-forwarding)を無効にしてください。
+    既存のログ転送ソリューションがあり、エージェントをコンテキストで自動ログを使用するように更新する場合は、<DNT>**disable your manual log forwarder**</DNT>にしてください。そうしないと、アプリは二重のログラインを送信します。アカウントによっては、二重請求になる場合があります。詳細については、手順に従い、[特定のログフォワーダー](/docs/logs/forward-logs/enable-log-management-new-relic#log-forwarding)を無効にしてください。
   </Collapser>
 
   <Collapser
@@ -103,7 +103,7 @@ translationType: machine
 
        環境変数：
 
-       ```
+       ```ini
        NEW_RELIC_APPLICATION_LOGGING_LOCAL_DECORATING_ENABLED=true
        ```
 
@@ -124,13 +124,15 @@ translationType: machine
   >
     言語エージェントがログを転送および装飾できるようになる前は、アプリケーションを更新して`NewRelic::Agent::Logging::DecoratingFormatter`を使用してリンクメタデータを送信することにより、コンテキスト内でログを有効にすることができました。
 
-    このオプションは引き続きサポートされていますが、推奨されなくなりました。このアプローチを使用する手順について[は、コンテキストオプションの手動ログを](#configure-ruby)参照してください。
+    このオプションは引き続きサポートされていますが、おすすめしません。このアプローチを使用する手順について[は、コンテキストオプションの手動ログを](#configure-ruby)参照してください。
 
     また、この方法では、コンテキストでログを有効にする前に、ログフォワーダーをインストールする必要があります。ログフォワーダーがない場合は、NewRelicUIで[インフラストラクチャエージェント](/docs/logs/forward-logs/forward-your-logs-using-infrastructure-agent/)を使用するように求められます。
 
-    既存のログ転送ソリューションを使用することにし、後でエージェントを更新してコンテキストで自動ログを使用することにした場合は、必ず**手動ログ転送を無効にしてください**。それ以外の場合、アプリは二重のログ行を送信します。アカウントによっては、これにより二重請求が発生する可能性があります。詳細については、手順に従って[特定のログフォワーダー](/docs/logs/forward-logs/enable-log-management-new-relic#log-forwarding)を無効にしてください。
+    既存のログ転送ソリューションを使用し、後でエージェントを更新してコンテキスト内の自動ログを使用することにした場合は、必ず<DNT>**disable your manual log forwarder**</DNT>を実行してください。 そうしないと、アプリは二重のログ行を送信することになります。 アカウントによっては、二重請求が発生する可能性があります。 詳細については、[特定のログフォワーダー](/docs/logs/forward-logs/enable-log-management-new-relic#log-forwarding)を無効にする手順に従ってください。
   </Collapser>
 </CollapserGroup>
+
+<InstallFeedback/>
 
 ## データを保護する [#obfuscation]
 
@@ -142,16 +144,39 @@ translationType: machine
 
 ログデータを最大限に活用するには：
 
-* \[ [APMの**概要**\]ページ](/docs/apm/apm-ui-pages/monitoring/apm-summary-page-view-transaction-apdex-usage-data)で、 **Webトランザクションのタイム**チャートをクリックして、特定の時点に関連付けられたログを表示します。
-* エラーに関連するログを表示するには、アプリの\[[**エラー\]受信ボックス**](/docs/errors-inbox/errors-inbox)を確認してください。
+* [APM](/docs/apm/apm-ui-pages/monitoring/apm-summary-page-view-transaction-apdex-usage-data)
+
+  <DNT>
+    [**Summary**](/docs/apm/apm-ui-pages/monitoring/apm-summary-page-view-transaction-apdex-usage-data)
+  </DNT>
+
+  [ページ](/docs/apm/apm-ui-pages/monitoring/apm-summary-page-view-transaction-apdex-usage-data)で、
+
+  <DNT>
+    **Web transaction time**
+  </DNT>
+
+  チャートをクリックして、特定の時点に関連付けられたログを表示します。
+
+* アプリの
+
+  <DNT>
+    [**Errors inbox**](/docs/errors-inbox/errors-inbox)
+  </DNT>
+
+  をチェックして、エラーに関連するログを表示します。
+
 * [分散トレース](/docs/distributed-tracing/ui-data/understand-use-distributed-tracing-ui)を使用して、個々のトレースに関連付けられているログを確認します。
-* [Logs UI](/docs/logs/log-management/ui-data/use-logs-ui/)を使用して、プラットフォーム全体でより多くのログデータを探索します。
+
+* [ログ UI](/docs/logs/log-management/ui-data/use-logs-ui/)を使用して、プラットフォーム全体でさらに多くのログ データを探索します。
+
 * ログ出力と重大度に基づいて[アラート](/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-alert-conditions/)を設定します。
+
 * ログデータ専用のUIを使用し[てデータをクエリ](/docs/logs/ui-data/query-syntax-logs/)し、結果を含む[ダッシュボードを作成](/docs/query-your-data/explore-query-data/dashboards/introduction-dashboards/)します。
 
 ## トラブルシューティングのヒント [#troubleshooting]
 
-通常、コンテキストでAPMログを有効にした後、ログは1分以内に表示され始めます。アプリの**トリアージ>ログ**セクションを確認します。また、そこでエラーに関連する[ログパターン](/docs/logs/ui-data/find-unusual-logs-log-patterns)が表示されるようになります。
+通常、コンテキストで<InlinePopover type="apm"/>ログを有効にしてから 1 分以内にログが表示され始めます。 アプリの<DNT>**Triage > Logs**</DNT>セクションを確認してください。 また、そこにエラーに関連する[ログパターンも](/docs/logs/ui-data/find-unusual-logs-log-patterns)表示され始めます。
 
 エラーまたはトレースのログが表示されない場合は、アプリにログがない可能性があります。 UIページを更新するか、[選択した期間](/docs/new-relic-one/ui-data/basic-ui-features/#data-analysis)を変更してみてください。
 
@@ -163,119 +188,121 @@ APMログインコンテキストは、APMエージェントログデータを�
 
 手動プロセスを使用してRubyのコンテキストでログを設定する必要がある場合は、次の手順に従います。
 
-1. New Relic の [ロギングの設定がすでに完了していることを確認してください。これには、アプリケーションのログを収集し、New Relic に転送されるメタデータを拡張する、サポートされているログフォワーダーの設定が含まれます。](/docs/logs/enable-log-management-new-relic/enable-log-monitoring-new-relic/enable-log-management-new-relic/)
-2. [](/docs/logs/enable-log-management-new-relic/enable-log-monitoring-new-relic/enable-log-management-new-relic/)
-3. [](/docs/logs/enable-log-management-new-relic/enable-log-monitoring-new-relic/enable-log-management-new-relic/)[](/docs/agents/ruby-agent/installation/install-new-relic-ruby-agent/)をインストールするか、 [](/docs/agents/ruby-agent/installation/update-ruby-agent/)を最新の Ruby エージェントバージョンに更新し、 [分散型トレーシングを有効にする](/docs/distributed-tracing/enable-configure/quick-start/) 。 [Rubyエージェントのバージョン6.7.0以降を使用](/docs/release-notes/agent-release-notes/ruby-release-notes/) コンテキストのログを取得します。
-4. Railsアプリケーションの場合は、 [サポートされているRailsのバージョン](/docs/agents/ruby-agent/getting-started/ruby-agent-requirements-supported-frameworks/#web_frameworks) を使用してください。
-5. Rubyのコンテキストでログを設定する。
+1. [NewRelicでのロギングをすでに設定し](/docs/logs/enable-log-management-new-relic/enable-log-monitoring-new-relic/enable-log-management-new-relic/)ていることを確認してください。これには、アプリケーションログを収集し、NewRelicに転送されるメタデータを拡張するサポートされているログフォワーダーの構成が含まれます。
 
-<CollapserGroup>
-  <Collapser
-    id="enable-rails"
-    title="Ruby on Railsの標準的な構成"
-  >
-    Railsのロギングは2つのコンポーネントによって制御されています。
+2. [](/docs/agents/ruby-agent/installation/install-new-relic-ruby-agent/)をインストールするか、 [](/docs/agents/ruby-agent/installation/update-ruby-agent/)を最新の Ruby エージェントバージョンに更新し、 [分散型トレーシングを有効にする](/docs/distributed-tracing/enable-configure/quick-start/) 。 [Rubyエージェントのバージョン6.7.0以降を使用](/docs/release-notes/agent-release-notes/ruby-release-notes/) コンテキストのログを取得します。
 
-    * 設定してカスタマイズできるロガー `config.logger`
+3. Railsアプリケーションの場合は、 [サポートされているRailsのバージョン](/docs/agents/ruby-agent/getting-started/ruby-agent-requirements-supported-frameworks/#web_frameworks) を使用してください。
 
-    * `config.log_formatter`を設定してカスタマイズできるログフォーマッタ
+4. Rubyのコンテキストでログを設定する。
 
-      ほとんどの場合、Railsアプリケーションで`config.log_formatter`を`DecoratingFormatter`に設定して、コンテキストでログを構成する必要があります。 Rails構成の詳細については、 [rubyonrails.orgのドキュメント](https://guides.rubyonrails.org/configuring.html)を参照してください。
+   <CollapserGroup>
+     <Collapser
+       id="enable-rails"
+       title="Ruby on Railsの標準的な構成"
+     >
+       Railsのロギングは2つのコンポーネントによって制御されています。
 
-      アプリケーションの構成で、 `newrelic_rpm`を要求してから、次の行を追加します。
+       * 設定してカスタマイズできるロガー `config.logger`
 
-      ```
-      module ________
-        class Application < Rails::Application
+       * `config.log_formatter`を設定してカスタマイズできるログフォーマッタ
 
-        ...
+         ほとんどの場合、Railsアプリケーションで`config.log_formatter`を`DecoratingFormatter`に設定して、コンテキストでログを構成する必要があります。 Rails構成の詳細については、 [rubyonrails.orgのドキュメント](https://guides.rubyonrails.org/configuring.html)を参照してください。
 
-        config.log_formatter = ::NewRelic::Agent::Logging::DecoratingFormatter.new
-        end
-      end
-      ```
+         アプリケーションの構成で、 `newrelic_rpm`を要求してから、次の行を追加します。
 
-      この設定では、ログメッセージにNew Relicのフォーマッターを使用しますが、残りの設定は他のRailsの設定によって行われます。
-  </Collapser>
+         ```ruby
+         module ________
+           class Application < Rails::Application
 
-  <Collapser
-    id="incompabilities"
-    title="互換性のない宝石"
-  >
-    New Relicのデコレーションロガーは、以下のgemとの互換性がないことが知られています。
+           ...
 
-    * [伐採](https://rubygems.org/gems/logging)
-    * [セマンティックロガー](https://rubygems.org/gems/semantic_logger)
-    * [rails_stdout_logger](https://rubygems.org/gems/rails_stdout_logging)
-    * [レール\_12ファクタ](https://rubygems.org/gems/rails_12factor)
-  </Collapser>
+           config.log_formatter = ::NewRelic::Agent::Logging::DecoratingFormatter.new
+           end
+         end
+         ```
 
-  <Collapser
-    id="rails-adv-config"
-    title="Railsの高度な設定"
-  >
-    `log_formatter`オプションを設定してもニーズが満たされない場合は、Railsロガー全体をNewRelicロガーのインスタンスに置き換えてください。次のように、ロガーのコンストラクターにパラメーターを指定します。
+         この設定では、ログメッセージにNew Relicのフォーマッターを使用しますが、残りの設定は他のRailsの設定によって行われます。
+     </Collapser>
 
-    ```
-    module ________
-      class Application < Rails::Application
+     <Collapser
+       id="incompabilities"
+       title="互換性のない宝石"
+     >
+       New Relicのデコレーションロガーは、以下のgemとの互換性がないことが知られています。
 
-        ...
+       * [伐採](https://rubygems.org/gems/logging)
+       * [セマンティックロガー](https://rubygems.org/gems/semantic_logger)
+       * [rails_stdout_logger](https://rubygems.org/gems/rails_stdout_logging)
+       * [レール\_12ファクタ](https://rubygems.org/gems/rails_12factor)
+     </Collapser>
 
-        config.logger = ::NewRelic::Agent::Logging::DecoratingLogger.new(
-        "log/application.log", #etc...
-        )
-      end
-    end
-    ```
-  </Collapser>
+     <Collapser
+       id="rails-adv-config"
+       title="Railsの高度な設定"
+     >
+       `log_formatter`オプションを設定してもニーズが満たされない場合は、Railsロガー全体をNewRelicロガーのインスタンスに置き換えてください。次のように、ロガーのコンストラクターにパラメーターを指定します。
 
-  <Collapser
-    id="enable-non-rails"
-    title="Railsを使わないRubyの構成"
-  >
-    Rails以外のアプリケーションの場合は、次のように、Ruby標準`::Logger`の代わりに`DecoratingLogger`を使用します。
+       ```ruby
+       module ________
+         class Application < Rails::Application
 
-    ```
-    logger = ::NewRelic::Agent::Logging::DecoratingLogger.new(
-      'log/application.log', #etc...
-    )
-    ...
+           ...
 
-    logger.info(...)
-    ```
+           config.logger = ::NewRelic::Agent::Logging::DecoratingLogger.new(
+           "log/application.log", #etc...
+           )
+         end
+       end
+       ```
+     </Collapser>
 
-    `DecoratingLogger`は、Ruby標準`::Logger`のドロップイン置換です。それらのコンストラクターは同じパラメーターを受け入れます。
-  </Collapser>
+     <Collapser
+       id="enable-non-rails"
+       title="Railsを使わないRubyの構成"
+     >
+       Rails以外のアプリケーションの場合は、次のように、Ruby標準`::Logger`の代わりに`DecoratingLogger`を使用します。
 
-  <Collapser
-    id="lograge-adv-config"
-    title="ログラージの設定"
-  >
-    この拡張機能を [lograge gem](https://rubygems.org/gems/lograge) で設定するには、このドキュメントの [Ruby on Rails configuration](#enable-rails) の標準的な手順に従ってください。lograge gemのための追加の設定は必要ありません。
-  </Collapser>
+       ```ruby
+       logger = ::NewRelic::Agent::Logging::DecoratingLogger.new(
+         'log/application.log', #etc...
+       )
+       ...
 
-  <Collapser
-    id="adv-ruby-config"
-    title="その他のロギング拡張機能"
-  >
-    別のロギング実装または独自のカスタムロガーでロギング拡張機能を使用するには、 `DecoratingFormatter`を使用します。例えば：
+       logger.info(...)
+       ```
 
-    ```
-    module ________
-      class Application < Rails::Application
+       `DecoratingLogger`は、Ruby標準`::Logger`のドロップイン置換です。それらのコンストラクターは同じパラメーターを受け入れます。
+     </Collapser>
 
-        ...
+     <Collapser
+       id="lograge-adv-config"
+       title="ログラージの設定"
+     >
+       この拡張機能を [lograge gem](https://rubygems.org/gems/lograge) で設定するには、このドキュメントの [Ruby on Rails configuration](#enable-rails) の標準的な手順に従ってください。lograge gemのための追加の設定は必要ありません。
+     </Collapser>
 
-        config.logger = ::YourCustomLoggerImplementation.new(
-          $stdout,
-          formatter: ::NewRelic::Agent::Logging::DecoratingFormatter.new
-        )
-      end
-    end
-    ```
-  </Collapser>
-</CollapserGroup>
+     <Collapser
+       id="adv-ruby-config"
+       title="その他のロギング拡張機能"
+     >
+       別のロギング実装または独自のカスタムロガーでロギング拡張機能を使用するには、 `DecoratingFormatter`を使用します。例えば：
+
+       ```ruby
+       module ________
+         class Application < Rails::Application
+
+           ...
+
+           config.logger = ::YourCustomLoggerImplementation.new(
+             $stdout,
+             formatter: ::NewRelic::Agent::Logging::DecoratingFormatter.new
+           )
+         end
+       end
+       ```
+     </Collapser>
+   </CollapserGroup>
 
 5. ログアペンダーが正しく構成されていることを確認するには、アプリケーションを実行してから、クエリ演算子`has:span.id has:trace.id`を使用してNewRelicUIでログデータを確認します。
 
@@ -283,7 +310,7 @@ APMログインコンテキストは、APMエージェントログデータを�
 
 `/config/application.rb`または`/config/environments/development.rb`でロギングを構成した場合は、アプリケーションをローカルで実行し、ロギング出力を確認してください。次のような出力が表示されます。
 
-```
+```json
 {"entity.name":"your_app_name","entity.type":"SERVICE","hostname":"79bcbf8d","trace.id":"79bcbf8d","span.id":"00fc7d46","timestamp":1567701375543,"message":"example log message one","log.level":"DEBUG"}
 {"entity.name":"your_app_name","entity.type":"SERVICE","hostname":"79bcbf8d","trace.id":"79bcbf8d","span.id":"6754870b","timestamp":1567702843604,"message":"example log message two","log.level":"DEBUG"}
 ```

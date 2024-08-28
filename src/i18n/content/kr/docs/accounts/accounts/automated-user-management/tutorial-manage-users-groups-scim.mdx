@@ -6,6 +6,7 @@ tags:
   - Automated user management
   - New Relic user management
 metaDescription: 'New Relic SCIM API tutorial: automated user management of groups and users using the SCIM API.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -31,7 +32,7 @@ translationType: machine
 
 자동화된 사용자 관리를 사용한다는 것은 사용자 그룹을 New Relic으로 가져오는 것을 의미합니다. 즉, 사용자 관리 UI를 사용하여 사용자를 그룹에 추가할 수 없습니다. 그룹은 ID 제공자 측에서 생성 및 관리됩니다.
 
-사용자 그룹을 New Relic으로 가져오는 작업을 마쳤으면 **액세스 관리** UI를 사용하여 그룹에 특정 역할 및/또는 계정에 대한 액세스 권한을 부여하는 액세스 권한을 생성해야 합니다. 자세한 내용은 [사용자 관리 개념](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#understand-concepts) 을 참조하십시오.
+사용자 그룹을 뉴렐릭으로 가져오는 작업을 마친 후에는 <DNT>**Access management**</DNT> UI 사용하여 해당 그룹에 역할 및 계정에 대한 액세스 권한을 부여해야 합니다. 자세한 내용은 [사용자 관리 개념을](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#understand-concepts) 참조하세요.
 
 ## SCIM에 대한 인증 도메인 구성 [#configure-scim]
 
@@ -49,9 +50,9 @@ SCIM API 사용자 지정 응용 프로그램을 사용하거나 임시 요청�
 
 ## SCIM API에 연결 [#connect]
 
-SCIM API는 `https://scim-provisioning.service.newrelic.com/scim/v2` 에서 사용할 수 있으며 이 URL은 인증 도메인 설정 페이지에서 볼 수 있습니다. SCIM API에 액세스하려면 클라이언트가 각 요청에 **전달자 토큰** 을 포함해야 합니다. 인증 도메인 구성을 저장한 후 토큰이 표시됩니다.
+SCIM API는 `https://scim-provisioning.service.newrelic.com/scim/v2` 에서 사용할 수 있으며 이 URL은 인증 도메인 설정 페이지에서 볼 수 있습니다. SCIM API에 액세스하려면 클라이언트가 각 요청에 <DNT>**bearer token**</DNT> 을 포함해야 합니다. 인증 설정을 저장하면 해당 내용이 표시됩니다.
 
-타사 ID 공급자를 사용하는 경우 **Bearer 토큰 인증** 을 사용하도록 구성하고 API 액세스 토큰을 연결합니다. 이를 구성하는 데 도움이 필요하면 ID 공급자의 설명서를 참조하십시오. 구성이 완료되면 사용자 및 그룹을 가져올 수 있습니다.
+타사 ID 제공업체를 사용하는 경우 <DNT>**Bearer token authorization**</DNT> 사용하도록 구성하고 API 액세스 토큰을 연결하세요. 이를 구성하는 데 도움이 필요하면 ID 공급자의 설명서를 참조하세요. 구성이 완료되면 사용자 및 그룹을 가져오도록 모든 설정이 완료된 것입니다.
 
 전체 SCIM 프로토콜 RFC를 읽는 대신 가치 있는 세 가지 특정 섹션이 있습니다. 자세한 내용은 [RFC 7643 - SCIM 핵심 리소스 및 확장](https://datatracker.ietf.org/doc/html/rfc7643#section-4) 및 [RFC 7643 - JSON 표현](https://datatracker.ietf.org/doc/html/rfc7643#section-8) 을 참조하세요. 이 튜토리얼에서 사용되는 프로토콜에 대한 자세한 정보는 [RFC 7644 - SCIM 프로토콜](https://datatracker.ietf.org/doc/html/rfc7644) 을 참조하십시오.
 
@@ -61,7 +62,7 @@ SCIM API에 대한 모든 요청에 대해 `Authorization` 헤더에 전달자 �
 curl -X 'GET' -H 'Accept: application/json' -H "Authorization: Bearer $TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users'
 ```
 
-이 자습서의 나머지 부분에 있는 모든 요청은 API 액세스 토큰이 없거나 유효하지 않은 경우 **401 Unauthorized** 응답을 받습니다.
+API 액세스 토큰이 누락되었거나 유효하지 않은 경우 이 튜토리얼의 나머지 부분에 있는 모든 요청은 <DNT>**401 Unauthorized**</DNT> 응답을 받게 됩니다.
 
 예시 응답:
 
@@ -79,10 +80,18 @@ curl -X 'GET' -H 'Accept: application/json' -H "Authorization: Bearer $TOKEN" 'h
 
 ## 인증 도메인에서 사용자 생성 [#create-users]
 
-SCIM API를 사용하여 `POST` 요청을 `/scim/v2/Users` 에 보내 사용자를 생성할 수 있습니다. 다음 사용자 속성이 **필요합니다** .
+SCIM API를 사용하여 `POST` 요청을 `/scim/v2/Users` 에 보내 사용자를 생성할 수 있습니다. 다음 사용자 속성은 <DNT>**required**</DNT> 입니다.
 
-* `userName` 이 식별자는 인증 도메인 내에서 고유 **해야** 합니다. 사용자의 이메일 주소를 사용합니다.
+* `userName` 이 식별자
+
+  <DNT>
+    **must**
+  </DNT>
+
+  은 인증 도메인 내에서 고유해야 합니다. 사용자의 이메일 주소를 사용하세요.
+
 * `emails` `userName` 과 동일합니다. 사용자의 이메일 주소입니다. (이름이 `emails` 임에도 불구하고 이 절차에서는 하나만 입력하십시오.)
+
 * `active` 사용자가 New Relic 내에서 활성 또는 비활성 상태여야 하는지 여부를 나타내는 부울입니다.
 
 최상의 사용자 경험을 위해 다음 속성을 제공하는 것이 좋습니다.
@@ -179,12 +188,12 @@ EOF
 
 ## 인증 도메인에 그룹 생성 [#create-groups]
 
-SCIM API를 사용하여 `POST` 요청을 `/scim/v2/Groups` 에 보내 그룹을 생성할 수 있습니다. **필요한** 유일한 그룹 속성은 다음과 같습니다.
+SCIM API를 사용하여 `/scim/v2/Groups` 에 `POST` 요청을 보내 그룹을 만들 수 있습니다. 유일한 그룹 속성 <DNT>**required**</DNT> 은(는) 다음과 같습니다.
 
 * `displayName` 그룹 이름입니다.
 
 ```
-curl -X 'POST' -H 'Content-Type: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups' --data-binary @- <<EOF
+curl -X 'POST' -H 'Content-Type: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups' --data-binary @- <<EOF
 {
     "schemas": ["urn:ietf:params:scim:schemas:core:2.0:Group"],
     "displayName": "Example Group"
@@ -253,7 +262,7 @@ EOF
 이메일로 사용자를 검색하려면 `filter` 쿼리 매개변수를 사용하여 `/scim/v2/Users` 에 `GET` 요청을 보냅니다. `filter` 매개변수는 URL로 인코딩되어야 합니다.
 
 ```
-curl -X 'GET' -H 'Accept: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users' --get --data-urlencode 'filter=userName eq "bjensen@example.com"'
+curl -X 'GET' -H 'Accept: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users' --get --data-urlencode 'filter=userName eq "bjensen@example.com"'
 ```
 
 예시 응답:
@@ -300,7 +309,7 @@ curl -X 'GET' -H 'Accept: application/json' -H "Authorization: Bearer $<var>YOUR
 마찬가지로 `filter` 쿼리 매개변수를 사용하여 `/scim/v2/Groups` 에 `GET` 요청을 보내 이름으로 그룹을 검색합니다.
 
 ```
-curl -X 'GET' -H 'Accept: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups' --get --data-urlencode 'filter=displayName eq "Example Group"'
+curl -X 'GET' -H 'Accept: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups' --get --data-urlencode 'filter=displayName eq "Example Group"'
 ```
 
 예시 응답:
@@ -338,7 +347,7 @@ SCIM API는 사용자 업데이트를 위한 `PUT` 및 `PATCH` 메서드를 모�
 New Relic은 모든 사용자 속성이 요청 본문에 포함될 필요가 **없으며** 업데이트하려는 속성만 필요합니다. 사용자를 업데이트하려면 `/scim/v2/Users/${ID}` 에 `PUT` 요청을 보냅니다.
 
 ```
-curl -X 'PUT' -H 'Content-Type: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users/5a1d580f-323c-450c-8c62-479b5c9085d6' --data-binary @- <<EOF
+curl -X 'PUT' -H 'Content-Type: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users/5a1d580f-323c-450c-8c62-479b5c9085d6' --data-binary @- <<EOF
 {
   "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
   "timezone": "America/Chicago"
@@ -407,7 +416,7 @@ SCIM API는 그룹 업데이트를 위한 `PUT` 및 `PATCH` 메서드를 모두 
 그룹 구성원을 업데이트하려면 `/scim/v2/Groups/${ID}` 에 `PATCH` 요청을 보냅니다.
 
 ```
-curl -X 'PATCH' -H 'Content-Type: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups/df2b9a04-0426-4a3e-bf5f-54d5341f4e5b' --data-binary @- <<EOF
+curl -X 'PATCH' -H 'Content-Type: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups/df2b9a04-0426-4a3e-bf5f-54d5341f4e5b' --data-binary @- <<EOF
 {
   "schemas": [
     "urn:ietf:params:scim:api:messages:2.0:PatchOp"
@@ -455,7 +464,7 @@ EOF
 * `value` 그룹에서 제거할 각 사용자 ID와 함께 `{"value": "${USER_ID}"}` 목록으로 설정
 
 ```
-curl -X 'PATCH' -H 'Accept: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups/df2b9a04-0426-4a3e-bf5f-54d5341f4e5b' --data-binary @- <<EOF
+curl -X 'PATCH' -H 'Accept: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups/df2b9a04-0426-4a3e-bf5f-54d5341f4e5b' --data-binary @- <<EOF
 {
   "schemas": [
     "urn:ietf:params:scim:api:messages:2.0:PatchOp"
@@ -496,7 +505,7 @@ EOF
 인증 도메인에서 사용자를 제거하려면 `/scim/v2/Users/${ID}` 에 `DELETE` 요청을 보냅니다.
 
 ```
-curl -X 'DELETE' -H 'Accept: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users/d0f4d8e3-5413-4894-a8f9-de709994e18c'
+curl -X 'DELETE' -H 'Accept: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users/d0f4d8e3-5413-4894-a8f9-de709994e18c'
 ```
 
 예시 응답:
@@ -508,7 +517,7 @@ curl -X 'DELETE' -H 'Accept: application/json' -H "Authorization: Bearer $<var>Y
 마찬가지로 인증 도메인에서 그룹을 제거하려면 `DELETE` 요청을 `/scim/v2/Groups/${ID}` 에 보냅니다.
 
 ```
-curl -X 'DELETE' -H 'Accept: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups/df2b9a04-0426-4a3e-bf5f-54d5341f4e5b'
+curl -X 'DELETE' -H 'Accept: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Groups/df2b9a04-0426-4a3e-bf5f-54d5341f4e5b'
 ```
 
 예시 응답:
@@ -523,7 +532,7 @@ curl -X 'DELETE' -H 'Accept: application/json' -H "Authorization: Bearer $<var>Y
 
 * New Relic 사용자는 기본적으로 [기본 사용자](/docs/accounts/accounts-billing/new-relic-one-user-management/user-type) 로 시작하며 업그레이드할 수 있는 옵션이 있습니다. 자세한 내용은 [사용자 유형 관리](#manage-user-type) 를 참조하십시오.
 * [SAML SSO를 설정합니다](/docs/accounts/accounts-billing/new-relic-one-user-management/authentication-domains-saml-sso-scim-more/#saml) .
-* 사용자 그룹이 New Relic에 있으면 사용자에게 특정 역할 및 특정 계정에 대한 액세스 권한을 부여하는 액세스 권한을 할당해야 합니다. [액세스 권한 부여에 대해 자세히 알아보세요.](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#understand-concepts)
+* 사용자 그룹이 New Relic에 있으면 특정 역할과 특정 계정을 할당해야 합니다. [사용자 액세스 작동 방식에 대해 자세히 알아보세요.](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#understand-concepts)
 
 ## 선택 사항: 사용자 유형 관리 [#manage-user-type]
 
@@ -540,7 +549,7 @@ SCIM API 통합이 완료되면 New Relic에 가져온 모든 사용자는 기�
 새 `Basic user` 을 만들려면 `POST` 요청 `/scim/v2/Users` 을 보내고 맞춤 New Relic 스키마 확장을 포함합니다.
 
 ```
-curl -X 'POST' -H 'Content-Type: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users' --data-binary @- <<EOF
+curl -X 'POST' -H 'Content-Type: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users' --data-binary @- <<EOF
 {
     "schemas": [
       "urn:ietf:params:scim:schemas:core:2.0:User",
@@ -633,7 +642,7 @@ EOF
 사용자 유형을 업데이트하려면 `PUT` 요청 `scim/v2/Users/${ID}` 을 보내고 맞춤 New Relic 스키마 확장을 포함합니다.
 
 ```
-curl -X 'PUT' -H 'Content-Type: application/json' -H "Authorization: Bearer $<var>YOUR_TOKEN</var>" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users' --data-binary @- <<EOF
+curl -X 'PUT' -H 'Content-Type: application/json' -H "Authorization: Bearer $YOUR_TOKEN" 'https://scim-provisioning.service.newrelic.com/scim/v2/Users' --data-binary @- <<EOF
 {
     "schemas": [
       "urn:ietf:params:scim:schemas:core:2.0:User",

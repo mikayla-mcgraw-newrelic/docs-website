@@ -1,5 +1,5 @@
 ---
-title: NerdGraph APIによるサービスレベルの設定
+title: 'NerdGraph チュートリアル: サービスレベルの構成'
 tags:
   - Full-Stack Observability
   - Observe everything
@@ -9,6 +9,7 @@ tags:
   - Consume
   - NerdGraph
 metaDescription: Our new offer to create and consume SLI/SLOs using the NerdGraph API.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -17,40 +18,44 @@ New Relic を使用すると、アプリケーションに対して [サービ�
 UI以外にも、 [NerdGraph API Explorer](/docs/apis/nerdgraph/get-started/introduction-new-relic-nerdgraph/) を使用して、SLIとそのSLOの作成・編集を行うことができます。また、 [Terraform Service Level resource](https://registry.terraform.io/providers/newrelic/newrelic/latest/docs/resources/service_level) を使用して、この設定を自動化することもできます。
 
 <Callout variant="important">
-  サービスレベルを作成するには、ユーザーは [イベントからメトリックへのルールを変更および削除する機能](/docs/accounts/accounts-billing/new-relic-one-user-management/user-capabilities#insights)が必要です。
+  サービス レベルを作成するには、ユーザーは [イベント対メトリクス ルールを変更および削除する権限が](/docs/accounts/accounts-billing/new-relic-one-user-management/user-permissions#insights)必要です。
 </Callout>
 
 ## SLOでSLIを作る [#create-sli-slo]
 
-SLIとSLOの作成と編集 [SLIとSLOの設定における基本的な概念（SLIが関連するエンティティなど）については、](/docs/service-level-management/create-slm#sli-entity) を参照してください。また、APMサービスやブラウザアプリケーションの最も一般的な指標の例については、そのドキュメントを参照してください。
+SLI が関連付けられているエンティティなど、SLI および SLO 設定の基本的な概念については、 [「SLI および SLO の作成と編集」](/docs/service-level-management/create-slm#sli-entity)を参照してください。 また、そのドキュメントを参照して、 <InlinePopover type="apm" />サービスと<InlinePopover type="browser" />アプリケーションの最も一般的なインジケーターの例を見つけることもできます。
 
 以下は、 `serviceLevelCreate`ミューテーションクエリを使用してSLIを作成するNerdGraph呼び出しの例です。
 
-```
-mutation { 
+```graphql
+mutation {
   serviceLevelCreate(
-    entityGuid: "entityGuid", 
+    entityGuid: "entityGuid"
     indicator: {
-      name: "Latency below 0.25 seconds",
-      description: "The proportion of valid requests that were served faster than 0.25s, which is considered to correspond to a good experience.", 
+      name: "Latency below 0.25 seconds"
+      description: "The proportion of valid requests that were served faster than 0.25s, which is considered to correspond to a good experience."
       events: {
-        validEvents: {
+        validEvents: { 
           from: "Transaction", 
-          where: "entityGuid = 'entityGuid'"
-        }, 
+          where: "entityGuid = 'entityGuid'" 
+        }
         goodEvents: {
-          from: "Transaction", 
+          from: "Transaction"
           where: "entityGuid = 'entityGuid' and duration < 0.25"
-        }, 
-        accountId: accountId}, 
-        objectives: {
-          target: 99.5, 
-          timeWindow: {
-            rolling: {
-              count: 7, 
-              unit: DAY
-       }}}}) 
-  {
+        }
+        accountId: accountId
+      }
+      objectives: {
+        target: 99.5
+        timeWindow: { 
+          rolling: { 
+            count: 7, 
+            unit: DAY 
+          } 
+        }
+      }
+    }
+  ) {
     id
     description
   }
@@ -59,50 +64,98 @@ mutation {
 
 これらのフィールドを含んでいます。
 
-* **`entityGuid`** ：このSLIを関連付ける[エンティティ](https://docs-preview.newrelic.com/docs/service-level-management/create-slm#sli-entity)（APMサービス、ブラウザアプリケーションなど）のGUID。UIで、このGUIDはエンティティページの\[**メタデータの表示とタグの管理]**の下にあります。
+* <DNT>**`entityGuid`**</DNT>: この SLI[ を関連付けるテンプレート](https://docs-preview.newrelic.com/docs/service-level-management/create-slm#sli-entity) (たとえば、<InlinePopover type="apm" /> サービス、browser アプリケーション など ) の GUID。UI では、この GUID はエンティティ ページの<DNT>**See metadata and manage tags**</DNT>の下にあります。
 
-* **`description`** ：適切なイベントを決定する選択されたしきい値を含む詳細な説明を使用します。
+* <DNT>**`description`**</DNT>: 良いイベントを決定する選択された閾値を含む詳細な説明を使用します。
 
-  * 例えば、可用性のSLIの場合、"The proportion of valid requests that were served without errors "のような内容を含める。
+  * 例えば、可用性のSLIの場合、&quot;The proportion of valid requests that were served without errors &quot;のような内容を含める。
   * また、レイテンシーSLIの場合は、「良い体験に相当すると考えられる0.25秒よりも速く提供された有効なリクエストの割合」などの説明を記載します。
 
-* **`accountId`** ：APMサービスまたはブラウザアプリケーションが属するアカウントのID。SLI/SLO計算用のNRDBデータが含まれています。
+* <DNT>**`accountId`**</DNT>: <InlinePopover type="apm" />サービスまたはbrowserアプリケーションが属するアカウントの ID。これには、SLI/SLO 計算用の NRDB データが含まれます。
 
-* **`badEvents.from`** 、 **`badEvents.where`**
+* <DNT>**`badEvents.from`**</DNT>, <DNT>**`badEvents.where`**</DNT>
 
   * 不正なイベント`SELECT count(*) FROM badEvents.from WHERE badEvents.where`を定義するNRQLクエリには、これらの`FROM` }句と`WHERE`句が必要です。
   * 有効なイベントと不良なイベントからSLIを定義した場合は、 `goodEvents`オブジェクトを空のままにします。
 
-* **`goodEvents.from`** 、 **`goodEvents.where`**
+* <DNT>**`goodEvents.from`**</DNT>, <DNT>**`goodEvents.where`**</DNT>
 
   * 適切なイベント`SELECT count(*) FROM goodEvents.from WHERE goodEvents.where`を定義するNRQLクエリには、これらの`FROM` }句と`WHERE`句が必要です。
   * 有効で適切なイベントからSLIを定義した場合は、 `badEvents`オブジェクトを空のままにします。
 
-* **`validEvents.from`** 、 **`validEvents.where`**
-
+* <DNT>**`validEvents.from`**</DNT>, <DNT>**`validEvents.where`**</DNT>
   * これらは、有効なイベントを定義するNRQLクエリの`FROM`および`WHERE`句であり、結果は`SELECT count(*) FROM validEvents.from WHERE validEvents.where`になります。
 
-* **`name`** ：サービスレベルが何であるかを理解するのに役立つSLIの短いカテゴリ名。SLI定義に含まれる特定のパラメーターとフィルターを含めることをお勧めします。例：
+* <DNT>**`name`**</DNT>: サービスレベルの概要を理解するのに役立つ、SLI の短いカテゴリ名。 SLI 定義に関係する特定のオプションとフィルターを含めることをお勧めします。 例:
 
   * 入手方法
   * 4秒以下のレイテンシー
   * 0.1以下のデスクトップ用CLS
 
-* **`objectives`** ：SLIの目標（SLO）の配列。
+* <DNT>**`objectives`**</DNT>: SLI の目標 (SLO) の配列。
 
   * `target`：SLOの目標、最大100.00。このフィールドは、最大5桁の小数点以下をサポートします。
-
     * ユーザーが現在のエクスペリエンスに満足している場合は、SLOのパーセンテージを現在のベースラインに合わせて設定してください。例えば、SLIの良い出来事を判断するために使われるパーセンタイルです。
-
   * `timeWindow.rolling.count`：SLOを計算するために考慮される期間の長さ。サポートされている値は、 `1` 、 `7` 、 `14` 、 `28` 、および`30`です。
-
   * `timeWindow.rolling.unit`： `DAY`はサポートされている値です。
+
+### 使用 `SELECT` [#select-functions]
+
+オプションの `SELECT` 属性があり、デフォルトで `count(*)` に設定されます。より複雑なシナリオの場合は、 `select` を使用して、クエリするメトリックまたはイベント プロパティを明示的に指定できます。 `SELECT` では、 `SUM` 関数とワイルドカード (`%`) もサポートされています。より複雑な `SELECT` 構成の例を見てみましょう。
+
+```graphql
+mutation {
+  serviceLevelCreate(
+    entityGuid: "entityGuid"
+    indicator: {
+      name: "Success request"
+      description: "The proportion of success requests count is 99% that the total count"
+      events: { 
+        validEvents: { 
+          select: {
+            function: SUM
+            attribute: "http.request.status.%.count"
+          },
+          from: "Metric"
+        }
+        goodEvents: {
+          select: {
+            function: SUM
+            attribute: "http.request.status.2%.count"
+          },
+          from: "Metric"
+        }
+        accountId: accountId
+      }
+      objectives: {
+        target: 99.5
+        timeWindow: { 
+          rolling: { 
+            count: 7, 
+            unit: DAY 
+          } 
+        }
+      }
+    }
+  ) {
+    id
+    description
+  }
+}
+```
+
+`events` のプロパティ `validEvents` と `goodEvents` に `select`含まれていることに注目してください。選択では、機能を設定できます。
+
+* `COUNT`: デフォルトの関数。結果の数をカウントします。
+* `SUM`: 選択したイベント/メトリックのすべての値を合計します。
+
+この例のもう 1 つの重要な違いは、同じ形式ですべてのメトリクスの値をクエリするためにワイルドカード (`%`) を使用していることです。アプリケーションがステータス別のリクエスト数 (たとえば、 `http.request.status.200.count`、 `http.request.status.201.count`、 `http.request.status.400.count`など) をレポートしていると想像してください。クエリは、ワイルドカードを使用して一致するすべてのメトリクス名を合計します。
 
 ## APMサービスのSLIの構成を取得する [#retrieve-config]
 
 このクエリを使用して、 `id`を含むSLIの構成を取得します。
 
-```
+```graphql
 {
   actor {
     entity(guid: "entityGuid") {
@@ -112,7 +165,8 @@ mutation {
         indicators {
           createdAt
           createdBy {
-            email }
+            email
+          }
           description
           entityGuid
           id
@@ -122,26 +176,37 @@ mutation {
             timeWindow {
               rolling {
                 count
-                unit } } }
-          } } } } }
+                unit
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
 ## SLIのSLOの更新 [#update-slo]
 
 `serviceLevelUpdate`ミューテーションを使用して、SLIごとに1つ以上のSLOを定義します。SLIの`id`を取得するには、上記のクエリを使用します。
 
-```
+```graphql
 mutation {
   serviceLevelUpdate(
-    id: "indicators.id", 
+    id: "indicators.id"
     indicator: {
       objectives: {
-        target: 99.00, 
-        timeWindow: {
-          rolling: {
+        target: 99.00
+        timeWindow: { 
+          rolling: { 
             count: 7, 
-            unit: DAY }}}}) 
-  {
+            unit: DAY 
+          }
+        }
+      }
+    }
+  ) {
     id
   }
 }

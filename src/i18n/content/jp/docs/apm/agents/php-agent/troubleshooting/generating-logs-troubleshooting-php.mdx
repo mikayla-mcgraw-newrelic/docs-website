@@ -6,6 +6,7 @@ tags:
   - PHP agent
   - Troubleshooting
 metaDescription: Gather detailed log file information from your New Relic for PHP installation to diagnose issues.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -13,19 +14,49 @@ translationType: machine
 
 New Relic for PHP のインストール時に問題が発生したが、原因がわからない。
 
-## 解決策
+## 解決
 
 New Relic のログを監視することで、問題を診断できるかもしれません。New Relic PHP エージェントおよびデーモンは、それぞれ独自のログを持っています。ログを監視するには
 
 1. 両方のログの内容を確認します。
 
-   * **[デフォルトのエージェントログの場所](/docs/php/php-agent-phpini-settings#inivar-logfile)** : `/var/log/newrelic/php_agent.log`
-   * **[デフォルトのデーモンログの場所](/docs/php/php-agent-phpini-settings#inivar-daemon-logfile)** : `/var/log/newrelic/newrelic-daemon.log`
+   * <DNT>
+       **[Default agent log location](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-logfile)**
+     </DNT>
 
-2. エージェントのログレベルを `verbosedebug` に設定し、デーモンのログレベルを `debug` に設定してください。詳細については、こちらをご覧ください。
+     ： `/var/log/newrelic/php_agent.log`
 
-   * [エージェント **ログレベル** から **verbosedebug を設定する。**](https://docs.newrelic.com/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-loglevel)
-   * [デーモン **ログレベル** から **デバッグを設定する。**](https://docs.newrelic.com/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-daemon-loglevel)
+   * <DNT>
+       **[Default daemon log location](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-daemon-logfile)**
+     </DNT>
+
+     ： `/var/log/newrelic/newrelic-daemon.log`
+
+2. エージェントのログ レベルを`verbosedebug`に設定し、デーモンのログ レベルを`debug`に設定します。詳細については：
+
+   * [エージェント](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-loglevel)
+
+     <DNT>
+       [**loglevel**](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-loglevel)
+     </DNT>
+
+     [を](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-loglevel)
+
+     <DNT>
+       [**verbosedebug**](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-loglevel)
+     </DNT>
+
+   * [デーモン](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-daemon-loglevel)
+
+     <DNT>
+       [**loglevel**](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-daemon-loglevel)
+     </DNT>
+
+     [を設定しています](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-daemon-loglevel)
+
+     <DNT>
+       [**debug**](/docs/apm/agents/php-agent/configuration/php-agent-configuration/#inivar-daemon-loglevel)
+     </DNT>
 
 3. アプリを再起動します。
 
@@ -33,7 +64,7 @@ New Relic のログを監視することで、問題を診断できるかもし�
 
 5. ログを調べ、その情報をもとに問題を診断します。
 
-6. トラブルシューティングが終了したら、ログのレベルをリセットしてください。 `verbosedebug` または `debug` にはしないでください。
+6. トラブルシューティングが終了したら、ログのレベルをリセットします。`verbosedebug`または`debug`のままにしないでください。
 
 <Callout variant="caution">
   ログファイルのサイズに注意してください。アプリケーションによっては、あっという間に大きくなってしまうことがあります。

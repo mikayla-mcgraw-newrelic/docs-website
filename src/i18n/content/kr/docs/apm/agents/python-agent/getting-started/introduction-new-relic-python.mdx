@@ -5,6 +5,7 @@ tags:
   - Python agent
   - Getting started
 metaDescription: An introduction to New Relic application performance monitoring (APM) for Python applications.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -16,35 +17,45 @@ Python은 Django, Gunicorn, WSGI, CherryPy, uWSGI 등을 포함한 다양한 [�
 
 Python 에이전트를 [설치](#installation) 하면 앱에 대한 데이터 수집이 시작됩니다. [New Relic UI](/docs/new-relic-one/use-new-relic-one/get-started/introduction-new-relic-one) 에서 데이터를 차트 및 테이블로 볼 수 있습니다.
 
-**앱의 큰 그림 보기:**
+<DNT>
+  **View the big picture of your app:**
+</DNT>
 
 * 앱의 [Apdex(사용자 만족도)](/docs/apm/new-relic-apm/apdex/apdex-measuring-user-satisfaction) 를 모니터링합니다.
 * [요약 페이지](/docs/apm/applications-menu/monitoring/apm-overview-page) 를 사용하여 앱에 대한 높은 수준의 요약을 얻으십시오.
 * [분산 추적](/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing) 을 활성화하여 많은 서비스가 있는 아키텍처 전반의 활동을 확인합니다.
 * [인프라 모니터링](/docs/infrastructure/new-relic-infrastructure/getting-started/introduction-new-relic-infrastructure) 을 설치하고 앱에 대한 자세한 서버/호스트 데이터를 봅니다.
 
-**오류 및 문제를 신속하게 찾기:**
+<DNT>
+  **Find errors and problems quickly:**
+</DNT>
 
 * 귀하의 비즈니스와 관련된 [주요 거래](/docs/apm/transactions/key-transactions/key-transactions-tracking-important-transactions-or-events) 를 추적하십시오.
 * 중요한 메트릭에 대한 [사용자 지정 대시보드](/docs/dashboards/new-relic-dashboards/custom-dashboards/custom-dashboards) 를 만듭니다.
 * 사용자에게 영향을 [미치기](/docs/alerts/alert-policies/understanding-alert-policies/alerting-new-relic) 전에 오류나 문제가 발생하면 팀에 알립니다.
 * [배포 후](/docs/apm/applications-menu/events/deployments-page) 성능 보기 .
 
-**성능 세부정보로 드릴다운:**
+<DNT>
+  **Drill down into performance details:**
+</DNT>
 
 * 코드 수준 [트랜잭션 추적](/docs/apm/transactions/transaction-traces/transaction-traces) 을 검사합니다.
 * [데이터베이스 쿼리 추적을](/apm/transactions/transaction-traces/troubleshoot-sql-statements) 검사합니다.
 * [오류 추적](/docs/apm/applications-menu/events/view-apm-error-analytics) 을 검사합니다.
 * [스레드 프로파일러 세션](/docs/apm/applications-menu/events/thread-profiler-tool) 을 사용하여 샘플링된 스레드의 자세한 스택 추적 보기
 
-**APM 및 인프라 데이터에 대한 로그 보기:**
+<DNT>
+  **View logs for your APM and infrastructure data:**
+</DNT>
 
 로그와 애플리케이션의 데이터를 함께 가져와 문제 해결을 더 쉽고 빠르게 만듭니다. 다른 UI 페이지로 전환할 필요가 없습니다.
 
 * [컨텍스트의 로그를](/docs/logs/logs-context/configure-logs-context-python/) 사용하면 앱의 UI에서 직접 오류 및 추적과 관련된 로그 메시지를 볼 수 있습니다.
 * Kubernetes 클러스터와 같은 [인프라 데이터](/docs/logs/forward-logs/forward-your-logs-using-infrastructure-agent/) 컨텍스트에서 로그를 볼 수도 있습니다.
 
-**에이전트 계측 확장:**
+<DNT>
+  **Extend agent instrumentation:**
+</DNT>
 
 기타 유용한 도구는 다음과 같습니다.
 
@@ -52,11 +63,15 @@ Python 에이전트를 [설치](#installation) 하면 앱에 대한 데이터 �
   <thead>
     <tr>
       <th style={{ width: "200px" }}>
-        **도구**
+        <DNT>
+          **Tools**
+        </DNT>
       </th>
 
       <th>
-        **설명**
+        <DNT>
+          **Description**
+        </DNT>
       </th>
     </tr>
   </thead>
@@ -68,7 +83,7 @@ Python 에이전트를 [설치](#installation) 하면 앱에 대한 데이터 �
       </td>
 
       <td>
-        Python 에이전트를 [브라우저 모니터링](/docs/browser/new-relic-browser/getting-started/new-relic-browser) 과 통합하여 최종 사용자 브라우저 활동에 대한 가시성을 확보합니다.
+        Python 에이전트를 [<InlinePopover type="browser"/>](/docs/browser/new-relic-browser/getting-started/new-relic-browser)와 통합하여 최종 사용자 브라우저 활동에 대한 가시성을 확보합니다.
       </td>
     </tr>
 
@@ -88,7 +103,7 @@ Python 에이전트를 [설치](#installation) 하면 앱에 대한 데이터 �
       </td>
 
       <td>
-        [데이터 탐색기](/docs/query-your-data/explore-query-data/data-explorer/introduction-data-explorer) 와 함께 Python 에이전트를 사용하여 데이터를 구성, 쿼리 및 시각화하여 애플리케이션 성능 및 고객 경험에 대한 주요 질문에 답하십시오.
+        [metrics and events](/docs/query-your-data/explore-query-data/data-explorer/introduction-data-explorer)와 Python 에이전트를 사용하여 데이터를 정리, 쿼리 및 시각화하여 애플리케이션 성능과 고객 경험에 대한 주요 질문에 답할 수 있습니다.
 
         * [기본 트랜잭션 속성](/docs/insights/new-relic-insights/decorating-events/apm-default-attributes-insights) 을 사용하거나 [고유한 속성을 추가하십시오](/docs/insights/new-relic-insights/decorating-events/insights-custom-attributes) .
         * [NRQL(New Relic Query Language)](/docs/using-new-relic/data/understand-data/query-new-relic-data) 을 사용하여 데이터를 쿼리합니다.
@@ -115,14 +130,14 @@ Django, WSGI 및 Gunicorn을 포함하여 즉시 사용 가능한 여러 웹 프
   <ButtonLink
     role="button"
     to="/docs/agents/python-agent/getting-started/python-agent-quick-start"
-    variant="link"
+    variant="normal"
   >
     빠른 시작 가이드 읽기
   </ButtonLink>
 
   <ButtonLink
     role="button"
-    to="https://one.newrelic.com/launcher/nr1-core.settings?pane=eyJuZXJkbGV0SWQiOiJ0dWNzb24ucGxnLWluc3RydW1lbnQtZXZlcnl0aGluZyJ9&cards[0]=eyJuZXJkbGV0SWQiOiJzZXR1cC1uZXJkbGV0cy5zZXR1cC1weXRob24taW50ZWdyYXRpb24iLCJhY2NvdW50SWQiOjI2NDA0MDl9"
+    to="https://one.newrelic.com/marketplace/install-data-source?state=2a8ce851-ad2d-4587-0302-abfffe94d296"
     variant="primary"
   >
     파이썬 데이터 추가
@@ -153,4 +168,4 @@ Django, WSGI 및 Gunicorn을 포함하여 즉시 사용 가능한 여러 웹 프
 
 ## 소스 코드 확인 [#source-code]
 
-Python 에이전트는 오픈 소스 소프트웨어입니다. 즉 [, 소스 코드를 탐색하고](https://github.com/newrelic/newrelic-python-agent "링크가 새 창에서 열립니다.") 개선 사항을 보내거나 고유한 포크를 만들어 빌드할 수 있습니다. 자세한 내용은 [README](https://github.com/newrelic/newrelic-python-agent/blob/main/README.rst "링크가 새 창에서 열립니다.") 를 참조하십시오.
+Python 에이전트는 오픈소스 소프트웨어입니다.[ 소스 코드를 탐색하고](https://github.com/newrelic/newrelic-python-agent) 개선 사항을 보내거나 고유한 포크를 만들어 빌드할 수 있다는 의미입니다. 보다 자세한 내용은 [README](https://github.com/newrelic/newrelic-python-agent/blob/main/README.rst)를 참조하십시오.

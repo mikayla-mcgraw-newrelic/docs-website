@@ -4,15 +4,11 @@ tags:
   - Infrastructure
   - Install the infrastructure agent
   - Linux installation
+  - Windows installation
 metaDescription: New Relic's infrastructure agent automatically instruments Docker to collect container metrics and metadata.
+freshnessValidatedDate: never
 translationType: machine
 ---
-
-import azureExt01 from 'images/azure_ext01.png'
-
-import azureExt02 from 'images/azure_ext02.png'
-
-import azureExt03 from 'images/azure_ext03.png'
 
 [Microsoft Azure 확장](https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/overview) 을 사용하여 [인프라](/docs/welcome-new-relic-infrastructure) 에이전트를 설치할 수 있습니다.
 
@@ -25,34 +21,38 @@ import azureExt03 from 'images/azure_ext03.png'
   </Collapser>
 </CollapserGroup>
 
-New Relic은 이러한 확장을 사용하여 Infrastructure 에이전트의 설치를 용이하게 합니다. 이렇게 하면 에이전트를 수동으로 업데이트할 필요가 없으며 더 중요하게는 [Azure 확장 집합](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview) 으로 에이전트를 자동으로 확장할 수 있습니다.
+New Relic은 이러한 확장을 사용하여 인프라 에이전트의 설치를 용이하게 합니다. 이렇게 하면 에이전트를 수동으로 업데이트할 필요가 없으며, 더 중요한 것은 [Azure 확장 집합을](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview)사용하여 에이전트를 자동으로 확장합니다.
 
-## Azure 확장을 사용하여 Linux용 인프라 설치 [#install-infra-azure-extensions]
+## Azure 확장을 사용하여 인프라 설치 [#install-infra-azure-extensions]
 
-Azure 확장을 사용하여 에이전트를 설치하려면:
+지원되는 [운영 체제](/docs/infrastructure/install-infrastructure-agent/get-started/requirements-infrastructure-agent/)에서 Azure 확장을 사용하여 에이전트를 설치하려면 .
 
-1. 확장 집합을 사용하여 Azure VM, Azure 확장 집합 또는 Azure Service Fabric으로 이동하고 **확장** 탭을 선택합니다.
+1. 확장 집합을 사용하여 Azure VM, Azure 확장 집합 또는 Azure Service Fabric으로 이동하고 <DNT>**Extensions**</DNT> 탭을 선택합니다.
 
    <img
      title="azure_ext01.png"
      alt="azure_ext01.png"
-     src={azureExt01}
+     src="/images/infrastructure_screenshot-crop_azure-extensions-tab.webp"
    />
 
-2. **New Relic Infrastructure** 확장을 선택합니다.
+2. <DNT>**New Relic infrastructure**</DNT> 확장자를 선택합니다.
 
    <img
      title="azure_ext02.png"
      alt="azure_ext02.png"
-     src={azureExt02}
+     src="/images/infrastructure_screenshot-crop_azure-nr-infrastructure-extension.webp"
    />
 
-3. 지침에 따라 [New Relic 라이선스 키를 추가합니다.](/docs/accounts/accounts-billing/account-setup/new-relic-license-key)
+3. 지침에 따라 <InlinePopover type="licenseKey"/>추가하세요.
 
    <img
      title="azure_ext03.png"
      alt="azure_ext03.png"
-     src={azureExt03}
+     src="/images/infrastructure_screenshot-crop_azure-nr-license-key.webp"
    />
 
-4. 가도 돼!
+   <Callout variant="tip">
+     설치를 자동화하는 경우 `NR_LICENSE_KEY` 변수와 함께 <InlinePopover type="licenseKey"/>전달해야 합니다. [환경 변수](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#precedence) (`NRIA_` 형식)를 통해 설정을 사용하여 모든 에이전트 설정을 사용자 정의할 수 있습니다.
+   </Callout>
+
+<InstallFeedback/>

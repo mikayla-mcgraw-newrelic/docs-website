@@ -4,7 +4,8 @@ tags:
   - Infrastructure
   - Install the infrastructure agent
   - Linux installation
-metaDescription: Instructions for how to install New Relic Infrastructure for Linux systems using the tarball manual process.
+metaDescription: Instructions for how to install New Relic infrastructure monitoring for Linux systems using the tarball manual process.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -38,7 +39,7 @@ translationType: machine
       </td>
 
       <td>
-        [버전 1.4.0](/docs/release-notes/infrastructure-release-notes/infrastructure-agent-release-notes/new-relic-infrastructure-agent-140) 부터 인프라 에이전트 패키지에는 [실행 중인 에이전트의 문제](/docs/infrastructure/install-configure-manage-infrastructure/manage-your-agent/troubleshoot-running-agent) 를 해결하는 데 사용되는 추가 `newrelic-infra-ctl` 바이너리가 포함되어 있습니다. 이 바이너리는 에이전트를 실행하는 데 필요하지 않지만 경로에 추가하는 것이 좋습니다.
+        인프라 에이전트 패키지에는 [실행 중인 에이전트의 문제](/docs/infrastructure/install-configure-manage-infrastructure/manage-your-agent/troubleshoot-running-agent) 를 해결하는 데 사용되는 추가 `newrelic-infra-ctl` 바이너리가 포함되어 있습니다. 이 바이너리는 에이전트를 실행하는 데 필요하지 않지만 경로에 추가하는 것이 좋습니다.
       </td>
     </tr>
 
@@ -59,7 +60,7 @@ translationType: machine
 1. [패키지된 에이전트 파일](https://download.newrelic.com/infrastructure_agent/binaries/linux/) 을 다운로드하거나 특정 버전의 에이전트, 해당 체크섬을 자동으로 가져와 다운로드 후 확인하는 다음 명령을 사용합니다.`ARCH=amd64` 을 원하는 아키텍처(amd64, 386, arm64, arm)로 바꾸고 `V=1.27.4` 을 [최신 또는 특정 버전](https://github.com/newrelic/infrastructure-agent/releases/latest) 으로 바꿉니다.
 
    ```shell
-   V=1.27.4 ARCH=amd64; echo "https://download.newrelic.com/infrastructure_agent/binaries/linux/${ARCH}/newrelic-infra_linux_${V}_amd64.tar.gz" | { read    url; wget "${url}"{,.sum}; shasum -a 256 --check ${url##*/}.sum; }
+   V=1.27.4 ARCH=amd64; echo "https://download.newrelic.com/infrastructure_agent/binaries/linux/${ARCH}/newrelic-infra_linux_${V}_${ARCH}.tar.gz" | { read    url; wget "${url}"{,.sum}; shasum -a 256 --check ${url##*/}.sum; }
    ```
 
    버전 `1.27.4` 부터 `tar.gz` 패키지 GPG 서명을 제공합니다.[GitHub의 infra-agent 저장소에서](https://github.com/newrelic/infrastructure-agent/blob/master/docs/pgp-signed-release.md) 서명 절차 및 확인 지침을 확인할 수 있습니다.
@@ -115,6 +116,8 @@ translationType: machine
 * [에이전트 디렉토리를 구성하십시오](#agent-directory) .
 * [로그 파일을 구성합니다](#log-file) .
 * [에이전트 바이너리의 위치를 변경합니다](#agent-binary) .
+
+<InstallFeedback/>
 
 ## 서비스 스크립트 설치 [#install-service-script]
 
@@ -173,7 +176,7 @@ translationType: machine
 
     2. 서비스 스크립트를 활성화합니다.
 
-       ```
+       ```bash
        systemctl enable newrelic-infra.service
        ```
   </Collapser>
@@ -186,7 +189,7 @@ translationType: machine
 
     2. 다음 명령을 실행합니다.
 
-       ```
+       ```bash
        update-rc.d newrelic-infra defaults
        update-rc.d newrelic-infra enable
        ```
@@ -200,7 +203,7 @@ translationType: machine
 
     2. 다음 명령을 실행합니다.
 
-       ```
+       ```bash
        initctl reload-configuration
        ```
   </Collapser>
@@ -220,7 +223,7 @@ translationType: machine
 
 다른 위치를 지정하려면 `-config` 플래그 명령줄을 사용합니다. 예를 들어:
 
-```
+```bash
 usr/bin/newrelic-infra -config /whatever/path/custom_config_name.yml
 ```
 
@@ -296,7 +299,7 @@ usr/bin/newrelic-infra -config /whatever/path/custom_config_name.yml
 
       `chown` 명령을 사용하여 사용자에게 소유자 권한을 부여합니다. 예를 들어, 사용자 `nri-agent` 이 에이전트를 실행 중이고 `pid-file` 위치가 `/var/run/newrelic-infra-custom/nr.pid` 으로 설정된 경우 다음을 사용하여 사용자 권한을 부여할 수 있습니다.
 
-      ```
+      ```bash
       chown nri-agent:nri-agent /var/run/newrelic-infra-custom/
       ```
   </Collapser>
@@ -368,7 +371,7 @@ Linux 에이전트는 기본적으로 `root` 으로 실행되지만 더 적은 �
 
    2. tarball의 내용을 추출하고 루트 권한으로 다음 명령을 실행합니다.
 
-      ```
+      ```bash
       setcap CAP_SYS_PTRACE,CAP_DAC_READ_SEARCH=+ep ./newrelic-infra/usr/bin/newrelic-infra
       ```
 
@@ -390,7 +393,7 @@ Linux 에이전트는 기본적으로 `root` 으로 실행되지만 더 적은 �
 
 에이전트 디렉터리의 구조와 내용은 다음과 같습니다.
 
-* `LICENSE`: New Relic Infrastructure 에이전트 라이선스가 포함된 텍스트 파일입니다.
+* `LICENSE`: New Relic 인프라 에이전트 라이선스가 포함된 텍스트 파일입니다.
 * `custom-integrations`: 설치된 [사용자 정의 통합](/docs/integrations/integrations-sdk/getting-started/introduction-infrastructure-integrations-sdk) 을 저장하는 디렉토리.
 * `newrelic-integrations`: [New Relic 공식 통합](/docs/infrastructure/integrations/types-integrations) 을 저장하는 디렉토리.
 * `data`: 에이전트가 캐시 데이터(인벤토리)를 저장하는 디렉터리입니다.
@@ -462,5 +465,6 @@ Linux 에이전트는 기본적으로 `root` 으로 실행되지만 더 적은 �
 * 인프라 데이터에 주석을 달기 위해 [사용자 정의 속성](/docs/Infrastructure-configure-your-agent#conf-custom_attributes) 을 추가하십시오.
 * 서버가 Amazon EC2에서 호스팅되는 경우 [AWS 계정을 연결하십시오](/docs/infrastructure-amazon-aws-ec2-integration#connect) .
 * [로그 전달](/docs/logs/forward-logs/forward-your-logs-using-infrastructure-agent#tarball-install) 을 활성화합니다.
+* [Flex 실행 파일을 수동으로 추가하여](https://github.com/newrelic/nri-flex/releases) Flex 통합을 활성화합니다.
 * 다른 [인프라 통합](/docs/infrastructure/integrations-getting-started/getting-started/introduction-infrastructure-integrations) 을 추가하여 외부 서비스에서 데이터를 수집합니다.
 * 수동 [으로 시작, 중지, 다시 시작하거나 에이전트 상태를 확인합니다](/docs/infrastructure-start-stop-restart-check-agent-status#linux) .

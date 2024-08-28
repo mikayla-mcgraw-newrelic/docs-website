@@ -5,12 +5,11 @@ tags:
   - Go agent
   - Configuration
 metaDescription: How to change the configuration settings of New Relic Go agent.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-import goConfigPrecedence from 'images/go-config-precedence.png'
-
-Go 에이전트의 구성 설정을 편집하여 New Relic이 앱을 모니터링하는 방법의 일부 측면을 제어할 수 있습니다. 예를 들어:
+Go 에이전트에 대한 구성 설정을 편집하여 New Relic이 앱을 모니터링하는 방법의 일부 측면을 제어할 수 있습니다. 예를 들어:
 
 * 높은 보안 모드를 켭니다.
 * UI에서 필터링 및 정렬을 위한 사용자 정의 태그를 추가합니다.
@@ -25,7 +24,7 @@ Go 에이전트는 구성에 대해 이 우선 순위를 따릅니다. 사용하
 <img
   title="New Relic Go agent: config order of precedence"
   alt="New Relic Go agent: config order of precedence"
-  src={goConfigPrecedence}
+  src="/images/apm_diagram_Go-agent-config-precedence.webp"
 />
 
 <figcaption>
@@ -44,7 +43,7 @@ Go 에이전트는 구성에 대해 이 우선 순위를 따릅니다. 사용하
     [진행 중인 구성에](#in-process-config) 설명된 단계에 따라 신청 프로세스에서 `newrelic.NewApplication()` 를 계속 호출해야 합니다. 서버 측 구성 옵션 세트는 로컬로 설정된 옵션을 덮어씁니다. 서버 측에서 모든 구성 옵션을 사용할 수 있는 것은 아니므로 `newrelic.Config` 구조체를 계속 업데이트할 수 있습니다.
 
     <Callout variant="caution">
-      서버 측 구성이 활성화된 경우 에이전트는 UI에서 설정할 **수** 있는 `newrelic.Config` 구조체의 모든 값을 무시합니다. UI 값이 비어 있어도 에이전트는 이를 빈 값으로 처리하여 `newrelic.Config` 값을 사용하지 않습니다.
+      서버측 구성이 활성화된 경우 에이전트는 UI에서 설정할 **수** 있는 `newrelic.Config` 구조체의 모든 값을 무시합니다. UI 값이 비어 있어도 에이전트는 이를 빈 값으로 취급하여 `newrelic.Config` 값을 사용하지 않습니다.
     </Callout>
   </Collapser>
 
@@ -59,16 +58,18 @@ Go 에이전트는 구성에 대해 이 우선 순위를 따릅니다. 사용하
        ```go
        app, err := newrelic.NewApplication(
            newrelic.ConfigAppName("Your Application Name"),
-           newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+           newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
        )
        ```
+
+       `os.Getenv` 를 사용하여 `newrelic.ConfigLicense` 에 전달된 문자열 리터럴 값으로 하드 코딩하지 않고 환경에서 라이센스 키를 읽습니다. 라이선스 키 또는 기타 민감한 정보를 소스 코드에 넣지 않는 것이 좋습니다. 그럴 경우 SCM 리포지토리에 저장되고 승인되지 않은 당사자에게 공개될 수 있습니다.
 
     2. `newrelic.Config` 구조체의 값을 업데이트하여 `newrelic.ConfigOption` 을 사용하여 애플리케이션을 구성합니다. 이들은 `newrelic.Config` 구조체에 대한 포인터를 허용하는 함수입니다. 애플리케이션을 추가로 구성하려면 `newrelic.ConfigOption` 을 추가하세요. 예를 들어 사전 정의된 옵션 중 하나를 사용하여 공통 구성을 수행할 수 있습니다.
 
        ```go
        app, err := newrelic.NewApplication(
            newrelic.ConfigAppName("Your Application Name"),
-           newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+           newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
            // add debug level logging to stdout
            newrelic.ConfigDebugLogger(os.Stdout),
        )
@@ -79,7 +80,7 @@ Go 에이전트는 구성에 대해 이 우선 순위를 따릅니다. 사용하
        ```go
        app, err := newrelic.NewApplication(
            newrelic.ConfigAppName("Your Application Name"),
-           newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+           newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
            newrelic.ConfigDebugLogger(os.Stdout),
            func(config *newrelic.Config) {
            	// add more specific configuration of the agent within a custom ConfigOption
@@ -98,7 +99,7 @@ Go 에이전트 구성을 변경하려면 맞춤 `newrelic.ConfigOption` 내에�
 ```go
 app, err := newrelic.NewApplication(
     newrelic.ConfigAppName("Your Application Name"),
-    newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+    newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
     func(config *newrelic.Config) {
     	config.Enabled = false
     },
@@ -148,7 +149,7 @@ app, err := newrelic.NewApplication(
       </tbody>
     </table>
 
-    앱의 메트릭을 New Relic 계정과 연결하는 데 사용되는 New Relic [라이선스 키](/docs/subscriptions/license-key) 를 지정합니다. 라이선스와 앱 이름은 모두 [New Relic 설치 프로세스](/docs/agents/go-agent/get-started/get-new-relic-go#get-new-relic) 의 일부로 설정됩니다.
+    앱의 메트릭을 New Relic 계정과 연결하는 데 사용되는 New Relic [라이선스 키를](/docs/subscriptions/license-key)지정합니다. 라이센스와 앱 이름은 모두 [New Relic 설치 프로세스](/docs/apm/agents/go-agent/installation/install-new-relic-go/#get-new-relic)의 일부로 설정됩니다.
   </Collapser>
 
   <Collapser
@@ -189,14 +190,14 @@ app, err := newrelic.NewApplication(
       </tbody>
     </table>
 
-    New Relic UI에서 데이터를 집계하는 데 사용되는 [애플리케이션 이름](/docs/apm/new-relic-apm/installation-configuration/name-your-application) 입니다. [New Relic 설치 프로세스](/docs/agents/go-agent/get-started/get-new-relic-go#get-new-relic) 의 일부로 라이선스와 앱 이름을 모두 설정합니다.
+    New Relic UI에서 데이터를 집계하는 데 사용되는 [애플리케이션 이름](/docs/apm/agents/manage-apm-agents/app-naming/name-your-application/) 입니다. [New Relic 설치 프로세스](/docs/apm/agents/go-agent/installation/install-new-relic-go/#get-new-relic)의 일부로 라이선스와 앱 이름을 모두 설정합니다.
 
-    [동시에 여러 앱에](/docs/apm/new-relic-apm/installation-configuration/using-multiple-names-app) 데이터를 보고하려면 세미콜론으로 구분된 이름 목록을 지정하십시오. 세미콜론 자체 앞에 공백을 두지 마십시오. 예를 들어:
+    [동시에 여러 앱](/docs/apm/agents/manage-apm-agents/app-naming/use-multiple-names-app/)에 데이터를 보고하려면 세미콜론으로 구분된 이름 목록을 지정합니다. 세미콜론 자체 앞에 공백을 두지 마십시오. 예를 들어:
 
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("YOUR_APP_NAME;APP_GROUP_1;ALL_APPS"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
     )
     ```
   </Collapser>
@@ -239,7 +240,7 @@ app, err := newrelic.NewApplication(
       </tbody>
     </table>
 
-    `true` 일 때 에이전트는 앱에서 [New Relic 수집기](/docs/accounts-partnerships/education/getting-started-new-relic/glossary#collector) 로 데이터를 보냅니다.
+    `true` 일 때 에이전트는 앱에서 [New Relic 수집기](//docs/new-relic-solutions/get-started/glossary/#collector)로 데이터를 보냅니다.
 
     New Relic 모니터링을 끄려면 이것을 `false` 으로 설정하십시오.
 
@@ -248,10 +249,20 @@ app, err := newrelic.NewApplication(
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         func(config *newrelic.Config) {
         	config.Enabled = false
         },
+    )
+    ```
+
+    이 작업을 더 쉽게 하기 위해 `ConfigEnabled` 옵션을 사용할 수 있습니다.
+
+    ```go
+    app, err := newrelic.NewApplication(
+        newrelic.ConfigAppName("Your Application Name"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+    	      newrelic.ConfigEnabled(false),
     )
     ```
 
@@ -259,7 +270,7 @@ app, err := newrelic.NewApplication(
 
     * New Relic Go 에이전트는 New Relic 수집기와 통신하지 않습니다.
     * 에이전트는 고루틴을 생성하지 않습니다.
-    * 설치 중에는 라이센스 키가 필요하지 않습니다.
+    * 라이센스 키는 설치 중에 필요하지 않습니다.
   </Collapser>
 
   <Collapser
@@ -300,7 +311,7 @@ app, err := newrelic.NewApplication(
       </tbody>
     </table>
 
-    [태그](/docs/apm/new-relic-apm/maintenance/labels-categories-organize-your-apps-servers) 추가 .
+    [태그를](/docs/new-relic-solutions/new-relic-one/core-concepts/use-tags-help-organize-find-your-data/)추가합니다.
 
     <CollapserGroup>
       <Collapser
@@ -312,7 +323,7 @@ app, err := newrelic.NewApplication(
         ```go
         app, err := newrelic.NewApplication(
             newrelic.ConfigAppName("Your Application Name"),
-            newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+            newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
             func(config *newrelic.Config) {
                 config.Labels = map[string]string{
                     "Env":    "Dev",
@@ -355,7 +366,7 @@ app, err := newrelic.NewApplication(
 
         <tr>
           <th>
-            [에 설정](/docs/agents/go-agent/instrumentation/go-agent-configuration#options)
+            [에 설정](/docs/apm/agents/go-agent/configuration/go-agent-configuration/#options)
           </th>
 
           <td>
@@ -365,7 +376,7 @@ app, err := newrelic.NewApplication(
       </tbody>
     </table>
 
-    `Logger` 인터페이스를 사용하여 [Go 로그 파일을 특정 위치 또는 로깅 시스템에 쓸](/docs/agents/go-agent/instrumentation/go-agent-logging) 수 있습니다.
+    `Logger` 인터페이스를 사용하여 특정 위치 또는 로깅 시스템에 [Go 로그 파일을 작성할](/docs/apm/agents/go-agent/configuration/go-agent-logging/) 수 있습니다.
   </Collapser>
 
   <Collapser
@@ -410,7 +421,7 @@ app, err := newrelic.NewApplication(
       이 기능을 사용하려면 [엔터프라이즈 계층](https://www.newrelic.com/pricing) 이 필요합니다.
     </Callout>
 
-    [높은 보안 모드](/docs/accounts-partnerships/accounts/security/high-security) 는 특정 보안 설정을 적용하고 재정의되지 않도록 하여 에이전트가 민감한 데이터를 보내지 않도록 합니다. 높은 보안 모드는 다음을 수행합니다.
+    [높은 보안 모드는](/docs/accounts-partnerships/accounts/security/high-security) 특정 보안 설정을 적용하고 해당 설정이 재정의되는 것을 방지하므로 에이전트가 민감한 데이터를 보내지 않습니다. 높은 보안 모드는 다음을 수행합니다.
 
     * SSL 켜기
 
@@ -423,7 +434,7 @@ app, err := newrelic.NewApplication(
       ```go
       app, err := newrelic.NewApplication(
           newrelic.ConfigAppName("Your Application Name"),
-          newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+          newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
           func(config *newrelic.Config) {
               config.HighSecurity = true
           },
@@ -516,7 +527,7 @@ app, err := newrelic.NewApplication(
       </tbody>
     </table>
 
-    이것은 [APM UI에 표시되는 호스트 이름을](/docs/apm/new-relic-apm/maintenance/add-rename-remove-hosts#display_name) 설정합니다. 이것은 선택적 구성입니다.
+    [APM UI에 표시되는 호스트 이름을](/docs/apm/agents/manage-apm-agents/configuration/add-rename-remove-hosts/#display_name)설정합니다. 이는 선택적 구성입니다.
   </Collapser>
 
   <Collapser
@@ -557,7 +568,7 @@ app, err := newrelic.NewApplication(
       </tbody>
     </table>
 
-    이것은 New Relic 수집기와의 [http.Client](https://golang.org/pkg/net/http/#Client) 통신을 사용자 정의합니다. 이것은 프록시를 구성하는 데 사용할 수 있습니다.
+    이는 New Relic 수집기와 [http.Client](https://golang.org/pkg/net/http/#Client) 통신을 사용자 지정합니다. 이를 사용하여 프록시를 구성할 수 있습니다.
   </Collapser>
 
   <Collapser
@@ -602,7 +613,1149 @@ app, err := newrelic.NewApplication(
   </Collapser>
 </CollapserGroup>
 
-New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](/docs/codestream/start-here/codestream-new-relic/#repo-url) [하는 방법과 빌드 SHA 또는 릴리스 태그](/docs/codestream/start-here/codestream-new-relic/#buildsha) 를 오류 받은 편지함에 연결하는 방법을 참조하십시오.
+New Relic CodeStream을 사용하여 IDE에서 성능을 모니터링하는 경우 [리포지토리를 서비스와 연결](/docs/codestream/how-use-codestream/performance-monitoring/#repo-association) 하고 [빌드 SHA 또는 릴리스 태그를 오류와 연결할](/docs/codestream/how-use-codestream/performance-monitoring/#buildsha)수도 있습니다.
+
+## 환경에서 구성 [#configuring-from-the-environment]
+
+유연성을 높이기 위해 환경 변수를 애플리케이션의 소스 코드에 하드코딩하는 대신 설정하여 많은 구성 옵션을 설정할 수 있습니다. 이를 사용하려면 다른 구성 옵션 중에서 `ConfigFromEnvironment()` 에 대한 호출을 추가하세요.
+
+```go
+app, err := newrelic.NewApplication(
+   newrelic.ConfigAppName("Your Application Name"),
+   newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+   newrelic.ConfigFromEnvironment(),
+)
+```
+
+`newrelic.ConfigFromEnvironment()` 이 나타나는 옵션 목록의 지점에서 환경 변수를 읽고 `newrelic.Config` 구조체의 해당 항목이 업데이트됩니다. `ConfigFromEnvironment` 뒤에 나열된 추가 구성 옵션이 있는 경우 `ConfigFromEnvironment` 에 의해 설정된 값을 재정의할 수 있습니다.
+
+예를 들어 다음 환경 변수가 설정된 경우:
+
+```ini
+NEW_RELIC_LICENSE_KEY="your_license_key_here"
+NEW_RELIC_APP_NAME="Your Application Name"
+NEW_RELIC_CODE_LEVEL_METRICS_ENABLED="true"
+NEW_RELIC_CODE_LEVEL_METRICS_PATH_PREFIX="myproject/src"
+NEW_RELIC_LABELS="Env:Dev;Label2:label2;Label3:label3;Label4:label4"
+```
+
+다음 코드:
+
+```go
+app, err := newrelic.NewApplication(
+    newrelic.ConfigFromEnvironment(),
+)
+```
+
+하드 코딩된 것과 동일한 결과를 얻을 수 있습니다.
+
+```go
+app, err := newrelic.NewApplication(
+    newrelic.ConfigAppName("Your Application Name"),
+    newrelic.ConfigLicense("your_license_key_here"),
+    newrelic.ConfigCodeLevelMetricsEnabled(true),
+    newrelic.ConfigCodeLevelMetricsPathPrefix("myproject/src"),
+    func(config *newrelic.Config) {
+        config.Labels = map[string]string{
+            "Env":    "Dev",
+            "Label2": "label2",
+            "Label3": "label3",
+            "Label4": "label4",
+        }
+    },
+)
+```
+
+가능한 모든 구성 옵션이 환경 변수를 통해 설정되는 것은 아닙니다. 아래 축소기 [의 환경 변수 및 기능 표](#env-var-table) 에는 사용 가능한 모든 구성 기능과 해당 환경 변수가 나열되어 있습니다. 이름이 지정된 구성 옵션은 `Config` 구조의 해당 필드에 값을 직접 할당하여 설정할 수 있지만 가능하면 구성 함수 및/또는 환경 변수를 사용하는 것이 좋습니다.
+
+<CollapserGroup>
+  <Collapser
+    className="freq-link"
+    id="env-var-table"
+    title="환경 변수 및 함수 표"
+  >
+    다음은 테이블 사용 방법에 대한 몇 가지 팁입니다.
+
+    * 테이블에 환경 변수가 나열되어 있으면 명명된 환경 변수를 설정하여 해당 옵션을 설정할 수 있습니다. 에이전트가 모든 `NEW_RELIC_*` 환경 변수를 수락하도록 하는 `ConfigFromEnvironment()` 함수도 포함해야 합니다.
+
+    * 구성 기능이 나열되어 있으면 `ConfigFromEnvironment()` 대신 해당 기능을 사용하여 해당 옵션을 설정할 수 있습니다. `ConfigFromEnvironment()` 를 포함하여 프로그램에 나열된 구성 기능은 코드에 나타나는 순서대로 해결된다는 점을 명심하십시오. 즉, 환경 변수를 만들고 `ConfigFromEnvironment()` 함수를 호출하면 이전에 특정 함수를 사용하여 설정했을 수 있는 해당 구성을 덮어씁니다. `ConfigFromEnvironment()` 이후의 후속 구성 옵션은 이전 구성 기능 및 환경 변수를 재정의합니다.
+
+    * 각 기능을 사용하는 방법에 대한 자세한 내용은 여기 및 [Go 설명서 사이트](https://pkg.go.dev/github.com/newrelic/go-agent/v3@v3.20.0/newrelic#ConfigOption) 에서 설명서를 참조하세요.
+
+      <table>
+        <thead>
+          <tr>
+            <th>
+              구성 필드
+            </th>
+
+            <th>
+              구성 기능
+            </th>
+
+            <th>
+              환경 변수
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              `AppName`
+            </td>
+
+            <td>
+              `ConfigAppName`
+            </td>
+
+            <td>
+              `NEW_RELIC_APP_NAME`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ApplicationLogging.Enabled`
+            </td>
+
+            <td>
+              `ConfigAppLogForwardingEnabled`
+
+              `ConfigAppLogEnabled`
+
+              (아래 [참고 1](#table-note-one) 참조)
+            </td>
+
+            <td>
+              `NEW_RELIC_APPLICATION_LOGGING_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ApplicationLogging.Forwarding.Enabled`
+            </td>
+
+            <td>
+              `ConfigAppLogForwardingEnabled`
+
+              `ConfigAppLogDecoratingEnabled`
+
+              `ConfigAppLogMetricsEnabled`
+
+              (아래 [참고 1](#table-note-one) 참조)
+            </td>
+
+            <td>
+              `NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ApplicationLogging.Forwarding.MaxSamplesStored`
+            </td>
+
+            <td>
+              `ConfigAppLogForwardingEnabled`
+
+              `ConfigAppLogForwardingMaxSamplesStored`
+
+              (아래 [참고 1](#table-note-one) 참조)
+            </td>
+
+            <td>
+              `NEW_RELIC_APPLICATION_LOGGING_FORWARDING_MAX_SAMPLES_STORED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ApplicationLogging.LocalDecorating.Enabled`
+            </td>
+
+            <td>
+              `ConfigAppLogDecoratingEnabled`
+            </td>
+
+            <td>
+              `NEW_RELIC_APPLICATION_LOGGING_LOCAL_DECORATING_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ApplicationLogging.Metrics.Enabled`
+            </td>
+
+            <td>
+              `ConfigAppLogMetricsEnabled`
+            </td>
+
+            <td>
+              `NEW_RELIC_APPLICATION_LOGGING_METRICS_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Attributes.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Attributes.Exclude`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_ATTRIBUTES_EXCLUDE`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Attributes.Include`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_ATTRIBUTES_INCLUDE`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `BrowserMonitoring.Attributes.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `BrowserMonitoring.Attributes.Exclude`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `BrowserMonitoring.Attributes.Include`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `BrowserMonitoring.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `CodeLevelMetrics.Enabled`
+            </td>
+
+            <td>
+              `ConfigCodeLevelMetricsEnabled`
+            </td>
+
+            <td>
+              `NEW_RELIC_CODE_LEVEL_METRICS_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `CodeLevelMetrics.IgnoredPrefixes`
+            </td>
+
+            <td>
+              `ConfigCodeLevelMetricsIngoredPrefixes`
+            </td>
+
+            <td>
+              `NEW_RELIC_CODE_LEVEL_METRICS_IGNORED_PREFIXES`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `CodeLevelMetrics.PathPrefixes`
+            </td>
+
+            <td>
+              `ConfigCodeLevelMetricsPathPrefixes`
+            </td>
+
+            <td>
+              `NEW_RELIC_CODE_LEVEL_METRICS_PATH_PREFIXES`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `CodeLevelMetrics.RedactIgnoredPrefixes`
+            </td>
+
+            <td>
+              `ConfigCodeLevelMetricsRedactIgnoredPrefixes`
+            </td>
+
+            <td>
+              `NEW_RELIC_CODE_LEVEL_METRICS_REDACT_IGNORED_PREFIXES`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `CodeLevelMetrics.RedactPathPrefixes`
+            </td>
+
+            <td>
+              `ConfigCodeLevelMetricsRedactPathPrefixes`
+            </td>
+
+            <td>
+              `NEW_RELIC_CODE_LEVEL_METRICS_REDACT_PATH_PREFIXES`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `CodeLevelMetrics.Scope`
+            </td>
+
+            <td>
+              `ConfigCodeLevelMetricsScope`
+            </td>
+
+            <td>
+              `NEW_RELIC_CODE_LEVEL_METRICS_SCOPE`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `CrossApplicationTracer.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `CustomInsightsEvents.Enabled`
+            </td>
+
+            <td>
+              `ConfigCustomInsightsEventsEnabled`
+            </td>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `CustomInsightsEvents.MaxSamplesStored`
+            </td>
+
+            <td>
+              `ConfigCustomInsightsEventsMaxSamplesStored`
+            </td>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `DatastoreTracer.DatabaseNameReporting.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `DatastoreTracer.InstanceReporting.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `DatastoreTracer.QueryParameters.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `DatastoreTracer.SlowQuery.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `DatastoreTracer.SlowQuery.Threshold`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `DistributedTracer.Enabled`
+            </td>
+
+            <td>
+              `ConfigDistributedTracerEnabled`
+            </td>
+
+            <td>
+              `NEW_RELIC_DISTRIBUTED_TRACING_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `DistributedTracer.ExcludeNewRelicHeader`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `DistributedTracer.ReservoirLimit`
+            </td>
+
+            <td>
+              `ConfigDistributedTracerReservoirLimit`
+            </td>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Enabled`
+            </td>
+
+            <td>
+              `ConfigEnabled`
+            </td>
+
+            <td>
+              `NEW_RELIC_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ErrorCollector.Attributes.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ErrorCollector.Attributes.Exclude`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ErrorCollector.Attributes.Include`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ErrorCollector.CaptureEvents`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ErrorCollector.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ErrorCollector.IgnoreStatusCodes`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ErrorCollector.RecordPanics`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Error`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Heroku.DynoNamePrefixesToShorten`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Heroku.UseDynoNames`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `HighSecurity`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_HIGH_SECURITY`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `HostDisplayName`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_PROCESS_HOST_DISPLAY_NAME`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Host`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_HOST`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `InfiniteTracing.SpanEvents.QueueSize`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_INFINITE_TRACING_SPAN_EVENTS_QUEUE_SIZE`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `InfiniteTracing.TraceObserver.Host`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_INFINITE_TRACING_TRACE_OBSERVER_HOST`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `InfiniteTracing.TraceObserver.Port`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_INFINITE_TRACING_TRACE_OBSERVER_PORT`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Labels`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_LABELS`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `License`
+            </td>
+
+            <td>
+              `ConfigLicense`
+            </td>
+
+            <td>
+              `NEW_RELIC_LICENSE_KEY`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Logger`
+            </td>
+
+            <td>
+              `ConfigLogger`
+
+              `ConfigInfoLogger`
+
+              `ConfigDebugLogger`
+
+              (아래 [참고 2](#table-note-two) 참조)
+            </td>
+
+            <td>
+              `NEW_RELIC_LOG`
+
+              `NEW_RELIC_LOG_LEVEL`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ModuleDependencyMetrics.Enabled`
+            </td>
+
+            <td>
+              `ConfigModuleDependencyMetricsEnabled`
+            </td>
+
+            <td>
+              `NEW_RELIC_MODULE_DEPENDENCY_METRICS_ENABLED`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ModuleDependencyMetrics.IgnoredPrefixes`
+            </td>
+
+            <td>
+              `ConfigModuleDependencyMetricsIgnoredPrefixes`
+            </td>
+
+            <td>
+              `NEW_RELIC_MODULE_DEPENDENCY_METRICS_IGNORED_PREFIXES`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `ModuleDependencyMetrics.RedaceIgnoredPrefixes`
+            </td>
+
+            <td>
+              `ConfigModuleDependencyMetricsRedactIgnoredPrefixes`
+            </td>
+
+            <td>
+              `NEW_RELIC_MODULE_DEPENDENCY_METRICS_REDACT_IGNORED_PREFIXES`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `RuntimeSampler.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `SecurityPoliciesToken`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_SECURITY_POLICIES_TOKEN`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Segments.Attributes.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Segments.Attributes.Exclude`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Segments.Attributes.Include`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Segments.StackTraceThreshold`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Segments.Threshold`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ServerlessMode.AccountID`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ServerlessMode.ApdexThreshold`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ServerlessMode.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ServerlessMode.PrimaryAppID`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `ServerlessMode.TrustedAccountKey`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `SpanEvents.Attributes.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `SpanEvents.Attributes.Exclude`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `SpanEvents.Attributes.Include`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `SpanEvents.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionEvents.Attributes.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionEvents.Attributes.Exclude`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionEvents.Attributes.Include`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionEvents.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionEvents.MaxSamplesStored`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionTracer.Attributes.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionTracer.Attributes.Exclude`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionTracer.Attributes.Include`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionTracer.Enabled`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionTracer.Threshold.Duration`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `TransactionTracer.Threshold.IsApdexFailing`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Transport`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.BillingHostname`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_UTILIZATION_BILLING_HOSTNAME`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.DetectAWS`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.DetectAzure`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.DetectDocker`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.DetectGCP`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.DetectKubernetes`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.DetectPCF`
+            </td>
+
+            <td/>
+
+            <td/>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.LocalRAMMIB`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_UTILIZATION_TOTAL_RAM_MIB`
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              `Utilization.LogicalProcessors`
+            </td>
+
+            <td/>
+
+            <td>
+              `NEW_RELIC_UTILIZATION_LOGICAL_PROCESSORS`
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      ### 표 참고 1: [#table-note-one]
+
+      하위 기능을 활성화하기 위해 나열된 함수 중 하나를 호출하면 기본 기능도 활성화되고/하거나 다른 구성 값을 설정합니다.
+
+      * `ConfigAppLogForwardingEnabled(true)` `ApplicationLogging.Forwarding.Enabled=true` 를 설정하지만 `ApplicationLogging.Enabled=true` 도 설정합니다.
+      * `ConfigAppLogForwardingEnabled(false)` `ApplicationLogging.Forwarding.Enabled=false` 를 설정하지만 `ApplicationLogging.Forwarding.MaxSamplesStored=0` 도 설정합니다.
+      * `ConfigAppLogDecoratingEnabled(true)` `ApplicationLogging.LocalDecorating.Enabled=true` 를 설정하지만 `ApplicationLogging.Enabled=true` 도 설정합니다.
+      * `ConfigAppLogDecoratingEnabled(false)` `ApplicationLogging.LocalDecorating.Enabled=false` 을(를) 설정하지만 `ApplicationLogging.Enabled` 에는 영향을 미치지 않습니다.
+      * `ConfigAppLogMetricsEnabled(true)` `ApplicationLogging.Metrics.Enabled=true` 를 설정하지만 `ApplicationLogging.Enabled=true` 도 설정합니다.
+      * `ConfigAppLogMetricsEnabled(false)` `ApplicationLogging.Metrics.Enabled=false` 을(를) 설정하지만 `ApplicationLogging.Enabled` 에는 영향을 미치지 않습니다.
+
+        ### 표 참고 2: [#table-note-two]
+
+        `NEW_RELIC_LOG` 환경 변수를 통해 `Logger` 를 설정할 때 사용되는 로거 유형은 `NEW_RELIC_LOG_LEVEL` 값에 따라 다릅니다. 후자의 변수가 정의되고 값이 `debug` , `Debug` , `DEBUG` , `d` 또는 `D` 인 경우 표준 로거 대신 디버그 수준 로거가 사용됩니다. `NEW_RELIC_LOG` 은 `stdout` , `Stdout` , `STDOUT` , `stderr` , `Stderr` 또는 `STDERR` 값을 가질 수 있습니다.
+
+      <Callout variant="tip">
+        환경 변수는 `newrelic.ConfigFromEnvironment` 에서 읽을 수 있도록 비어 있지 않은 값을 가져야 합니다.
+      </Callout>
+  </Collapser>
+</CollapserGroup>
+
+## 버전 태그 설정 [#version-tag]
+
+NEW_RELIC_METADATA_SERVICE_VERSION을 설정하면 이벤트 데이터에 `tag.service.version` 태그가 생성됩니다. 이 컨텍스트에서 서비스 버전은 배포되는 코드의 버전이며 대부분의 경우 1.2.3과 같은 시맨틱 버전이지만 항상 그런 것은 아닙니다. 이 정보를 보내면 배포된 소프트웨어 버전별로 원격 분석을 패싯할 수 있으므로 오류를 생성하는 소프트웨어 버전을 빠르게 식별할 수 있습니다.
 
 ## 사용자 정의 이벤트 구성 [#custom-insights-events-settings]
 
@@ -647,14 +1800,14 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
       </tbody>
     </table>
 
-    `true` 일 때 에이전트 [는 맞춤 이벤트](/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents#go) 를 [New Relic](/docs/insights/new-relic-insights/understanding-insights/new-relic-insights) 으로 보냅니다. 이 설정은 맞춤 이벤트를 비활성화하는 [`HighSecurity`](/docs/go-agent-configuration#high_security) 에 의해 재정의됩니다.
+    `true` 일 때 에이전트는 사용자 정의 이벤트를 [New Relic](/docs/insights/new-relic-insights/understanding-insights/new-relic-insights) 으로 [보냅니다](/docs/data-apis/custom-data/custom-events/apm-report-custom-events-attributes/#go). 이 설정은 맞춤 이벤트를 비활성화하는 [`HighSecurity`](#high_security)에 의해 재정의됩니다.
 
     사용자 지정 이벤트를 비활성화하려면 [New Relic 구성](/docs/agents/go-agent/get-started/get-new-relic-go#get-new-relic) 이 시작된 후 Go 앱에 다음을 배치하세요.
 
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         func(config *newrelic.Config) {
             config.CustomInsightsEvents.Enabled = false
         },
@@ -762,7 +1915,7 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         func(config *newrelic.Config) {
             config.TransactionEvents.Attributes.Exclude = allAgentAttributeNames
         },
@@ -771,7 +1924,7 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
   </Collapser>
 
   <Collapser
-    id="transaction-events"
+    id="transaction-events-maxsamplesstored"
     title="TransactionEvents.MaxSamplesStored"
   >
     <table>
@@ -914,6 +2067,51 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
   </Collapser>
 
   <Collapser
+    id="error-group-callback"
+    title="ErrorCollector.ErrorGroupCallback"
+  >
+    <table>
+      <tbody>
+        <tr>
+          <th>
+            유형
+          </th>
+
+          <td>
+            오류그룹콜백
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            기본값
+          </th>
+
+          <td>
+            무
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            [에 설정](#options)
+          </th>
+
+          <td>
+            `newrelic.Config` 구조체
+          </td>
+
+          <td>
+            `newrelic.ConfigSetErrorGroupCallbackFunction` 구성 옵션
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    nil이 아닌 경우 에이전트는 수집 시간에 발견된 모든 오류에 사용자 정의 콜백 함수를 적용하고 오류 그룹을 적용합니다.
+  </Collapser>
+
+  <Collapser
     id="error-ignore-status"
     title="ErrorCollector.IgnoreStatusCodes"
   >
@@ -991,9 +2189,82 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
         ```go
         app, err := newrelic.NewApplication(
             newrelic.ConfigAppName("Your Application Name"),
-            newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+           newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
             func(config *newrelic.Config) {
                 config.ErrorCollector.IgnoreStatusCodes = []int{0, 5, 404, 418}
+            },
+        )
+        ```
+      </Collapser>
+    </CollapserGroup>
+  </Collapser>
+
+  <Collapser
+    id="error-expected-status"
+    title="ErrorCollector.ExpectStatusCodes"
+  >
+    <table>
+      <tbody>
+        <tr>
+          <th>
+            유형
+          </th>
+
+          <td>
+            정수
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            기본값
+          </th>
+
+          <td>
+            기본적으로 예상대로 오류 코드가 설정되지 않습니다.
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            [에 설정](#options)
+          </th>
+
+          <td>
+            `newrelic.Config` 구조체
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    오류로 예상되는 HTTP 응답 코드를 제어합니다.
+
+    예상되는 응답 코드는 애플리케이션의 apdex 또는 오류 경고에 영향을 미치지 않지만 여전히 기록됩니다.
+
+    이 함수의 기본 형식은 다음과 같습니다.
+
+    ```go
+    config.ErrorCollector.ExpectStatusCodes = []int{
+        100,
+        http.StatusAccepted,
+    }
+    ```
+
+    위에서 설명한 `http.StatusAccepted` 와 같은 HTTP로 응답 코드를 추가할 수도 있습니다.
+
+    <CollapserGroup>
+      <Collapser
+        id="error-example"
+        title="오류 코드를 무시하는 예"
+      >
+        0, 5, 404를 포함하는 기본 무시 목록에 HTTP 응답 코드 418을 추가하려면:
+
+        ```go
+        app, err := newrelic.NewApplication(
+            newrelic.ConfigAppName("Your Application Name"),
+           newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+            func(config *newrelic.Config) {
+                config.ErrorCollector.IgnoreStatusCodes = []int{100, http.StatusAccepted}
             },
         )
         ```
@@ -1054,7 +2325,7 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         func(config *newrelic.Config) {
             config.ErrorCollector.Attributes.Exclude = allAgentAttributeNames
         },
@@ -1322,7 +2593,7 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         func(config *newrelic.Config) {
             config.TransactionTracer.Segments.Attributes.Exclude = allSegmentAttributeNames
         },
@@ -1438,7 +2709,7 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         func(config *newrelic.Config) {
             config.TransactionTracer.Attributes.Exclude = allAgentAttributeNames
         },
@@ -1920,7 +3191,7 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("YOUR_NEW_RELIC_LICENSE_KEY"),
+        newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
         func(config *newrelic.Config) {
             config.TransactionTracer.Segments.Attributes.Exclude = allSpanAttributeNames
         },
@@ -1980,7 +3251,7 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
 
 ## 애플리케이션 로깅 설정 [#application-logging]
 
-에이전트에서 애플리케이션 로깅을 구성하기 위해 다음 설정을 사용할 수 있습니다.
+에이전트에서 애플리케이션 로깅을 구성하기 위해 다음 설정을 사용할 수 있습니다. 컨텍스트에서 Go 에이전트 로그 사용에 대한 팁은 컨텍스트에서 [Go 로그를](/docs/logs/logs-context/configure-logs-context-go) 참조하십시오.
 
 <Callout variant="important">
   Go 에이전트 버전 3.17.0 이상이 필요합니다.
@@ -2027,12 +3298,12 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
 
     `true` 인 경우 이러한 하위 기능 구성도 활성화된 경우 로그 이벤트 및 로깅 측정항목 수집을 활성화합니다.`false` 이면 로깅 계측 기능이 활성화되지 않습니다.
 
-    ConfigAppLogEnabled()를 호출하여 ApplicationLogging을 구성합니다.
+    `ConfigAppLogEnabled()` 를 호출하여 ApplicationLogging을 구성합니다.
 
     ```go
     app, err := newrelic.NewApplication(
         newrelic.ConfigAppLogEnabled(true),
-      )
+    )
     ```
   </Collapser>
 
@@ -2076,12 +3347,12 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
 
     `true` 인 경우 에이전트는 애플리케이션에서 내보낸 로그 레코드를 캡처하여 New Relic에 전달합니다. 이 설정을 적용하려면 `ApplicationLogging.Enabled` 도 `true` }여야 합니다.
 
-    ConfigAppLogForwardingEnabled()를 호출하여 로그 전달을 활성화합니다.
+    `ConfigAppLogForwardingEnabled()` 를 호출하여 로그 전달을 활성화합니다.
 
     ```go
-      app, err := newrelic.NewApplication(
+    app, err := newrelic.NewApplication(
         newrelic.ConfigAppLogForwardingEnabled(true),
-      )
+    )
     ```
   </Collapser>
 
@@ -2125,13 +3396,19 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
 
     New Relic에 분당 보낼 로그 레코드 수입니다. 이 설정은 로그 전달 기능을 사용할 때 전체 메모리 소비를 제어합니다.
 
-    ConfigAppLogForwardingMaxSamplesStored()를 호출하여 ApplicationLogging.Forwarding.MaxSamplesStored를 구성합니다.
+    `ConfigAppLogForwardingMaxSamplesStored()` }을(를) 호출하여 `ApplicationLogging.Forwarding.MaxSamplesStored` 를 구성합니다.
 
     ```go
-      app, err := newrelic.NewApplication(
+    app, err := newrelic.NewApplication(
         newrelic.ConfigAppLogForwardingMaxSamplesStored(1000),
-      )
+    )
     ```
+
+    전송되는 로그 라인의 양을 줄이려면 이 값을 더 낮게 설정하십시오(로그 샘플링이 발생할 수 있음). 더 많은 로그 라인을 보내려면 이 값을 더 높게 설정하십시오.
+
+    각 로그는 연결된 트랜잭션과 동일한 우선 순위를 받습니다. 트랜잭션 외부에서 발생하는 로그는 임의의 우선 순위를 받습니다. 일부 로그는 `MaxSamplesStored` 에 의해 제한되기 때문에 포함되지 않을 수 있습니다. 예를 들어, 로깅 `MaxSamplesStored` 이 10,000으로 설정되고 트랜잭션 1에 10,000개의 로그 항목이 있는 경우 트랜잭션 1에 대한 로그 항목만 기록됩니다. 트랜잭션 1의 로그가 10,000개 미만이면 트랜잭션 1에 대한 모든 로그를 받습니다. 여전히 공간이 있으면 트랜잭션 2에 대한 모든 로그를 받는 식입니다.
+
+    샘플링된 트랜잭션에 대한 모든 로그가 기록된 후 `MaxSamplesStored` 의 한도에 도달하지 않은 경우 샘플링에 없는 트랜잭션에 대한 로그 메시지가 전송됩니다. 남아있는 경우 트랜잭션 외부의 로그 메시지가 기록됩니다.
   </Collapser>
 
   <Collapser
@@ -2174,12 +3451,187 @@ New Relic APM 및 CodeStream을 사용하는 경우 [리포지토리를 연결](
 
     `true` 인 경우 에이전트는 애플리케이션에서 전송 중인 로그 라인과 관련된 측정항목을 캡처합니다. 이 설정을 적용하려면 `ApplicationLogging.Enabled` 도 `true` }여야 합니다.
 
-    ConfigAppLogMetricsEnabled()를 호출하여 ApplicationLogging.Metrics.Enabled를 구성합니다.
+    `ConfigAppLogMetricsEnabled()` 를 호출하여 ApplicationLogging.Metrics.Enabled를 구성합니다.
 
     ```go
-      app, err := newrelic.NewApplication(
-        newrelic.ConfigAppLogConfigAppLogMetricsEnabled(true),
-      )
+    app, err := newrelic.NewApplication(
+        newrelic.ConfigAppLogMetricsEnabled(true),
+    )
+    ```
+  </Collapser>
+</CollapserGroup>
+
+## 모듈 종속성 메트릭 설정 [#mdm]
+
+모듈 종속성 메트릭은 Go 에이전트에서 다양한 방식으로 구성할 수 있습니다. 모듈 종속성 메트릭은 코드 종속성 관리를 용이하게 하기 위해 Go 애플리케이션에서 사용하는 가져온 모듈 목록을 보고합니다. 여기에는 앱 모듈의 버전 정보도 포함됩니다.
+
+<Callout variant="important">
+  Go 에이전트 버전 3.20.0 필요 또는 더 높게
+</Callout>
+
+<CollapserGroup>
+  <Collapser
+    id="mdm-enabled"
+    title="ModuleDependencyMetrics.Enabled"
+  >
+    <table>
+      <tbody>
+        <tr>
+          <th>
+            유형
+          </th>
+
+          <td>
+            부울
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            기본값
+          </th>
+
+          <td>
+            `true`
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            [에 설정](#options)
+          </th>
+
+          <td>
+            `newrelic.Config` 구조체
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    `true` 인 경우 모듈 종속성 데이터 수집을 활성화합니다. `false` 이면 모듈 종속성 정보가 수집되지 않습니다.
+
+    `ConfigModuleDependencyMetricsEnabled` 를 호출하여 ModuleDependencyMetrics를 구성합니다.
+
+    ```go
+    app, err := newrelic.NewApplication(
+        newrelic.ConfigModuleDependencyMetricsEnabled(true),
+    )
+    ```
+
+    `NewApplication` 에 대한 호출에 `ConfigFromEnvironment()` 를 삽입하여 환경 변수를 통해 Go 에이전트 옵션 설정을 활성화할 수 있습니다. 이 작업을 수행한 경우 환경 변수를 설정하여 모듈 종속성 메트릭 수집을 활성화하거나 비활성화할 수 있습니다.
+
+    ```ini
+    NEW_RELIC_MODULE_DEPENDENCY_METRICS_ENABLED=true
+    ```
+  </Collapser>
+
+  <Collapser
+    id="mdm-ignored-prefixes"
+    title="ModuleDependencyMetrics.IgnoredPrefixes"
+  >
+    <table>
+      <tbody>
+        <tr>
+          <th>
+            유형
+          </th>
+
+          <td>
+            문자열
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            기본값
+          </th>
+
+          <td>
+            `nil`
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            [에 설정](#options)
+          </th>
+
+          <td>
+            `newrelic.Config` 구조체
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    이 모듈 경로 접두사 목록은 에이전트가 보고한 종속성 정보에서 일부 모듈을 제외하도록 지정합니다. `import` 경로가 나열된 접두사 문자열로 시작하는 모든 모듈은 제외됩니다. 기본값은 발견된 모든 모듈을 보고하는 것을 의미하는 빈 목록입니다.
+
+    `ConfigModuleDependencyMetricsIgnoredPrefixes` 을 호출하여 제외할 경로 접두사 문자열 목록을 지정합니다.
+
+    ```go
+    app, err := newrelic.NewApplication(
+        newrelic.ConfigModuleDependencyMetricsIgnoredPrefixes("example.com/packageAlpha", "example.com/packageBeta"),
+    )
+    ```
+
+    `NewApplication` 호출에 `ConfigFromEnvironment()` 을 삽입하여 환경 변수를 통해 Go 에이전트 옵션 설정을 활성화한 경우 환경 변수를 설정하여 경로 접두사를 나열할 수 있습니다.
+
+    ```ini
+    NEW_RELIC_MODULE_DEPENDENCY_METRICS_IGNORED_PREFIXES="example.com/packageAlpha,example.com/packageBeta"
+    ```
+  </Collapser>
+
+  <Collapser
+    id="mdm-redact-ignored-prefixes"
+    title="ModuleDependencyMetrics.RedactIgnoredPrefixes"
+  >
+    <table>
+      <tbody>
+        <tr>
+          <th>
+            유형
+          </th>
+
+          <td>
+            부울
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            기본값
+          </th>
+
+          <td>
+            `true`
+          </td>
+        </tr>
+
+        <tr>
+          <th>
+            [에 설정](#options)
+          </th>
+
+          <td>
+            `newrelic.Config` 구조체
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    일반적으로 에이전트 구성의 일부로 설정한 모든 옵션이 보고되고 New Relic UI에 표시됩니다. `ConfigModuleDependencyIgnoredPrefixes` 옵션을 통해 보고되는 일부 모듈을 제외하도록 선택한 경우 구성 데이터에서도 수정할 수 있습니다. 예를 들어, 기밀을 이유로 모듈이 제외된 경우.
+
+    `ConfigModuleDependencyMetricsRedactIgnoredPrefixes` 를 호출하여 제외된 경로의 수정을 활성화하거나 비활성화합니다. `true` 인 경우 제외된 모듈 접두사 목록이 보고되지 않습니다. `false` 이면 보고됩니다.
+
+    ```go
+    app, err := newrelic.NewApplication(
+        newrelic.ConfigModuleDependencyMetricsRedactIgnoredPrefixes(false),
+    )
+    ```
+
+    `NewApplication` 호출에 `ConfigFromEnvironment()` 을 삽입하여 환경 변수를 통해 Go 에이전트 옵션 설정을 활성화한 경우 환경 변수를 설정하여 경로 접두사를 나열할 수 있습니다.
+
+    ```ini
+    NEW_RELIC_MODULE_DEPENDENCY_METRICS_REDACT_IGNORED_PREFIXES=false
     ```
   </Collapser>
 </CollapserGroup>

@@ -5,158 +5,144 @@ tags:
   - On-host integrations
   - On-host integrations list
 metaDescription: 'New Relic''s HAProxy integration: what data it reports and how to configure it.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-import guidedInstallCli from 'images/guided-install-cli.png'
-
 当社のHAProxy [統合](/docs/integrations/host-integrations/getting-started/introduction-host-integrations) は、HAProxyインスタンスからインベントリやメトリクスを収集してNew Relicプラットフォームに送信し、HAProxyサーバー、フロントエンド、バックエンドの主要なパフォーマンスメトリクスを集約して可視化することができます。
 
-インテグレーションのインストールと、当社がどのようなデータを収集するかについてお読みください。
+統合をインストールし、収集するデータを確認するために読んでください。
 
-## 互換性および要件 [#comp-req]
+## 互換性と要件 [#comp-req]
 
-本製品は、HAProxyバージョン1.3～2.2に対応しています。
+インストレーション前に、以下の要件を満たしていることを確認してください。
 
-インテグレーションをインストールする前に、以下の要件を満たしていることを確認してください。
-
+* NewRelicアカウント。持っていませんか？[無料でお申し込み頂けます！](https://newrelic.com/signup)クレジットカードは必要ありません。
+* HAProxy バージョン 1.3 - 3.x。
 * HAProxy統計ページが有効になり、アクセスできるようになりました。
-
-* **HAProxyがKubernetesまたはAmazon ECS上で** 実行されていない場合は、 [HAProxyを実行しているホストにインフラストラクチャエージェント](/docs/infrastructure/install-infrastructure-agent/get-started/install-infrastructure-agent-new-relic) をインストールする必要があります。それ以外の場合は
-
-  * Kubernetesで実行されている場合は、[これらの要件](/docs/monitor-service-running-kubernetes#requirements)をご覧ください。
-  * ECSで実行されている場合は、[これらの要件](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)をご覧ください。
 
 ## クイックスタート [#quick]
 
-ガイド付きインストールで、HAProxy インスタンスをすばやくインスツルメントし、テレメトリーデータを送信します。ガイド付きインストールでは、お客様の環境に合わせてカスタマイズされたCLIコマンドを作成し、New Relic CLIとインフラストラクチャエージェントのダウンロードとインストールを行います。
+Kubernetes または ECS 環境で HAProxy を実行していない場合は、ガイド付きインストールをお勧めします。ガイド付きインストールでは、インフラストラクチャ エージェントと CLI を使用して HAProxy 統合をセットアップし、環境内で実行されている他のアプリケーションとログ ソースを検出して、どのアプリケーションを計測する必要があるかを推奨します。
 
-<img
-  title="The guided install CLI."
-  alt="A screenshot of the guided install CLI."
-  src={guidedInstallCli}
-/>
+ガイド付きインストールは、ほとんどの設定と連動します。ただし、ご希望に添えない場合は、以下の他のインストールオプションがあります。
 
-始める準備はできていますか？ボタンの1つをクリックし、試行してください。
+始める準備はできていますか？使用する[データセンターの地域](/docs/accounts/accounts-billing/account-setup/choose-your-data-center)に応じて、該当するボタンをクリックします。インストールが完了したら、本ドキュメントに戻って設定オプションを確認してください。
 
 <ButtonGroup>
   <ButtonLink
     role="button"
-    to="https://one.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoiaGFwcm94eS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiIsImFjdGl2ZUNvbXBvbmVudCI6IlZUU09Db21tYW5kIiwiYWN0aXZlRW52aXJvbm1lbnQiOiJoYXByb3h5LW9wZW4tc291cmNlLWludGVncmF0aW9uIn0="
+    to="https://one.newrelic.com/marketplace/install-data-source?state=6c028963-3596-edf4-83dd-26b9f6e43c5a"
     variant="primary"
   >
-    ガイド付きインストール
+    ガイド付きインストール（米国オプション）
   </ButtonLink>
 
   <ButtonLink
     role="button"
-    to="https://one.eu.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoiaGFwcm94eS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiIsImFjdGl2ZUNvbXBvbmVudCI6IlZUU09Db21tYW5kIiwiYWN0aXZlRW52aXJvbm1lbnQiOiJoYXByb3h5LW9wZW4tc291cmNlLWludGVncmF0aW9uIn0="
+    to="https://one.eu.newrelic.com/marketplace/install-data-source?state=6c028963-3596-edf4-83dd-26b9f6e43c5a"
     variant="primary"
   >
-    EUガイド付きインストール
+    ガイド付きインストール（EUオプション）
   </ButtonLink>
 </ButtonGroup>
 
-ガイド付きインストールでは、インフラストラクチャエージェントを使用してHAProxyの統合を設定します。それだけでなく、お客様の環境で稼働している他のアプリケーションやログソースを検出し、どのアプリケーションを導入すべきかを推奨します。
+## インストールしてアクティブ化する [#install]
 
-ガイド付きインストールは、ほとんどのセットアップに対応しています。しかし、この方法がお客様のニーズに合わない場合は、以下の他の方法でHAProxyインスタンスの監視を始めることができます。
-
-## インストールと有効化 [#install]
-
-HAProxyインテグレーションをインストールするには、お使いの環境に応じた手順に従ってください。
+ガイド付きインストールを使用しない場合は、ご使​​用の環境に応じた手順に従ってください。
 
 <CollapserGroup>
   <Collapser
     id="ecs-install"
     title="ECS"
   >
-    [ECSで実行しているサービスを監視する](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)をご覧ください。
+    [ECSで実行されているモニターサービスを](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)参照してください。
   </Collapser>
 
-  ' '
+  ''
 
   <Collapser
     id="k8s-install"
     title="Kubernetes"
   >
-    [Kubernetesで実行しているサービスを監視する](/docs/monitor-service-running-kubernetes)をご覧ください。
+    [Kubernetesで実行されているモニターサービスを](/docs/monitor-service-running-kubernetes)参照してください。
   </Collapser>
 
   <Collapser
     id="linux-install"
     title="Linux"
   >
-    1. [インテグレーションのインストール](/docs/install-integrations-package) の指示に従って、ファイル名 `nri-haproxy` を使用してください。
+    1. [インフラストラクチャ エージェントをインストールし](/docs/integrations/host-integrations/installation/install-infrastructure-host-integrations/#install)、 `INTEGRATION_FILE_NAME`変数を`nri-haproxy`に置き換えます。
 
-    2. ディレクトリをintegrationsフォルダに変更します。
+    2. ディレクトリを統合フォルダに変更します。
 
        ```
        cd /etc/newrelic-infra/integrations.d
        ```
 
-    3. サンプルの設定ファイルのコピー：
+    3. サンプル構成ファイルをコピーします。
 
        ```
        sudo cp haproxy-config.yml.sample haproxy-config.yml
        ```
 
-    4. `haproxy-config.yml` ファイルを [configuration settings](#config) で説明されているように編集します。
-
-    5. [Infrastructureエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    4. [構成設定](#config)の説明に従って、 `haproxy-config.yml`ファイルを編集します。
   </Collapser>
 
   <Collapser
     id="windows-install"
-    title="Windows"
+    title="ウィンドウズ"
   >
-    1. `nri-haproxy` .MSIインストーラーイメージを以下からダウンロードしてください。
+    1. [インフラストラクチャ エージェントをインストールし](/docs/integrations/host-integrations/installation/install-infrastructure-host-integrations/#install)、 `INTEGRATION_FILE_NAME`変数を`nri-haproxy`に置き換えます。
 
-       [http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-haproxy/nri-haproxy-amd64.msi](http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-haproxy/nri-haproxy-amd64.msi)
+    2. `nri-haproxy` .MSIインストーラーイメージを以下からダウンロードします。
 
-    2. インストールするには、Windowsのコマンドプロンプトで次のコマンドを実行します。
+       [https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-haproxy/nri-haproxy-amd64.msi](https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-haproxy/nri-haproxy-amd64.msi)
+
+    3. Windowsコマンドプロンプトからインストールするには、次のコマンドを実行します。
 
        ```
-       msiexec.exe /qn /i <var>PATH\TO\</var>nri-haproxy-amd64.msi
+       msiexec.exe /qn /i PATH\TO\nri-haproxy-amd64.msi
        ```
 
-    3. インテグレーションのディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、以下を実行してサンプル設定ファイルのコピーを作成します。
+    4. Integrationsディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、次のコマンドを実行してサンプル構成ファイルのコピーを作成します。
 
        ```
        cp haproxy-config.yml.sample haproxy-config.yml
        ```
 
-    4. `haproxy-config.yml` 設定ファイルを [設定を使って編集する](#config).
-
-    5. [Infrastructureエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    5. [構成設定](#config)を使用して`haproxy-config.yml`構成ファイルを編集します。
   </Collapser>
 </CollapserGroup>
 
-追加の注：
+## 統合を更新する [#update]
 
-* **アドバンスト：**インテグレーションは[tarball書式](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball)で使用すると、パッケージマネージャ以外にもインストールできます。
-* **オンホストインテグレーションは、自動的にアップデートしません。**最善の結果を得るため、[インテグレーションパッケージの更新](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)と[Infrastructureエージェントの更新](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に実施してください。
+このインテグレーションは、自動更新しません。最善の結果を得るため、[インテグレーションパッケージの更新](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)と[Infrastructureエージェントの更新](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に実施してください。
 
-## インテグレーションの設定 [#config]
+## インストール後のタスク [#after-install]
 
-統合機能を設定するには、インストール方法に応じていくつかの方法があります。
+インストールが完了したら、設定オプションを設定できます。インテグレーションを機能させるには、設定がいくつか必要ですが、オプションの設定もあります。
 
-* Kubernetes経由で有効な場合は、 [を参照してください。 Kubernetes上で実行されているサービスを監視する](/docs/monitor-service-running-kubernetes) 。
-* Amazon ECS経由で有効な場合は、 [ECS上で動作しているサービスの監視](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs) を参照してください。
-* オンホストでインストールした場合は、インテグレーションのYAML設定ファイル `haproxy-config.yml` で設定を編集してください。
+### 統合を構成する [#config]
 
-インテグレーションのYAML形式設定では、必要なログインクレデンシャルやデータの収集方法を設定できます。どのオプションを変更するかは、設定とプリファレンスにより異なります。
+ECSまたはKubernetesインテグレーションからこのインテグレーションを有効にした場合は、以下のドキュメントを参照してください。
 
-設定ファイルには、`間隔`、`タイムアウト`、`inventory_source`など、すべてのインテグレーションに適用される共通設定があります。これらの共通設定の詳細については、[設定形式](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics)ドキュメントを参照してください。
+* [Kubernetes](/docs/monitor-service-running-kubernetes)
+* [ECS](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)
 
-従来の設定/定義ファイルをまだお使いの場合は、[on-host integrations standard configuration format](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/) を参照してください。
+統合の YAML 形式構成では、必要なログイン資格情報を配置し、データの収集方法を構成できます。変更するオプションは、セットアップと設定によって異なります。
 
-HAProxyに関連する特定の設定は、構成ファイルの `env` セクションを使用して定義されます。これらの設定は、HAProxyインスタンスへの接続や、その他のセキュリティ設定や機能を制御します。
+構成ファイルには、 `interval` 、 `timeout` 、 `inventory_source`などのすべての統合に適用できる共通の設定があります。これらの一般的な設定についてすべて読むには、 [構成フォーマット](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics)のドキュメントを参照してください。
 
-## HAProxyインスタンスの設定 [#instance-settings]
+従来の構成/定義ファイルをまだ使用している場合は、 [オンホスト統合の標準構成形式の](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/)ヘルプを参照してください。
 
-HAProxyインテグレーションでは、メトリクス(**M**)とインベントリ(**I**)の両方の情報を収集します。表の中で、 **Applies To** の欄には、各コレクションで利用できる設定が記載されています。
+HAProxy に関連する特定の設定は、構成ファイルの`env`セクションを使用して定義されます。これらの設定は、HAProxy インスタンスへの接続、およびその他のセキュリティ設定と機能を制御します。
 
-' ' ' ' ' ' ' ' ' '
+### HAProxy 構成オプション [#config-options]
+
+Apacheインテグレーションは、メトリクスとインベントリの両方の情報を収集します。この表は、各設定オプションが何に適用されるかを示しています。
+
+'' '' '' '' ''
 
 <table>
   <thead>
@@ -174,7 +160,7 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
       </th>
 
       <th>
-        適用先
+        に適用されます
       </th>
     </tr>
   </thead>
@@ -182,7 +168,9 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
   <tbody>
     <tr>
       <td>
-        **STATS_URL**
+        <DNT>
+          **STATS_URL**
+        </DNT>
       </td>
 
       <td>
@@ -194,13 +182,15 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
       </td>
 
       <td style={{ "text-align": "center" }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **ユーザー名**
+        <DNT>
+          **USERNAME**
+        </DNT>
       </td>
 
       <td>
@@ -212,17 +202,19 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **パスワード**
+        <DNT>
+          **PASSWORD**
+        </DNT>
       </td>
 
       <td>
-        指定ユーザーのパスワード。
+        指定されたユーザーのパスワード。
       </td>
 
       <td>
@@ -230,17 +222,19 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **ha_proxy_cluster_name**
+        <DNT>
+          **HA_PROXY_CLUSTER_NAME**
+        </DNT>
       </td>
 
       <td>
-        監視対象のクラスターを一意に識別するためのユーザー定義の名前。 **必須**.
+        監視対象のクラスターを一意に識別するためのユーザー定義の名前。 <DNT>**Required**</DNT> 。
       </td>
 
       <td>
@@ -248,17 +242,19 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **メトリクス**
+        <DNT>
+          **METRICS**
+        </DNT>
       </td>
 
       <td>
-        `true` に設定すると、Metrics-only の収集が有効になります。
+        メトリックのみの収集を有効にするには、 `true`に設定します。
       </td>
 
       <td>
@@ -270,11 +266,13 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
 
     <tr>
       <td>
-        **インベントリ**
+        <DNT>
+          **INVENTORY**
+        </DNT>
       </td>
 
       <td>
-        `true` に設定すると、Inventory-only collection が有効になります。
+        インベントリのみの収集を有効にするには、 `true`に設定します。
       </td>
 
       <td>
@@ -286,17 +284,17 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
   </tbody>
 </table>
 
-これらの設定値は、以下の方法で定義することができます。
+これらの設定の値は、いくつかの方法で定義できます。
 
-* コンフィグファイルに直接値を追加します。
-* `{{}}` 表記を使用して、環境変数から値を置き換えます。これには、Infrastructure agent v1.14.0+が必要です。詳細はこちら [](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough)または下記の例 [](#example4)をご覧ください。
-* パスワードなどの機密情報が設定ファイルに平文で表示されないようにするには、secrets managementを使用します。詳細については、 [secrets management](/integrations/host-integrations/installation/secrets-management) を参照してください。
+* 設定ファイルに直接値を追加します（最も一般的な方法）。
+* `{{}}`表記を使用して、環境変数の値を置き換えます。これには、Infrastructureエージェントバージョン1.14.0以降が必要です。詳細については、[Infrastructure設定](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough)または[環境変数の例](#example5)を参照してください。
+* シークレット管理の使用。これを使用して、設定ファイルのプレーンテキストで公開されないようにパスワードなどの重要な情報を保護してください。詳細については、[シークレット管理](/docs/integrations/host-integrations/installation/secrets-management)を参照してください。
 
-## ラベル/カスタム属性 [#labels]
+## ラベル [#labels]
 
-また、ラベルを使ってメトリクスを装飾することもできます。このような場合は、次のようになります。また、ラベルを使用して、メトリクスの照会、フィルタリング、またはグループ化を行うことができます。
+さらに、メトリクスにラベルを付けることもできます。ラベルを使用すると、属性（キーや値のペア）をメトリクスに追加して、メトリクスのクエリを挙げ、フィルターをかけ、グループ化を行うことができます。
 
-デフォルトのサンプル設定ファイルにはラベルの例が含まれていますが、お好みのラベルを削除、変更、または追加することができます。
+デフォルトのサンプル設定ファイルにはラベルの例が含まれていますが、必須ではないため、選択したラベルを削除、変更、お好きな設定を新規追加することができます。
 
 ```
  labels:
@@ -304,12 +302,14 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
    role: load_balancer
 ```
 
-## 設定の例 [#examples]
+## 構成例 [#examples]
+
+以下に、YAML設定の例をいくつか示します。
 
 <CollapserGroup>
   <Collapser
     id="basic-config"
-    title="基本設定"
+    title="基本構成"
   >
     これは、ローカルホストからMetricsとInventoryを収集するための基本的な構成です。
 
@@ -331,9 +331,9 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
 
   <Collapser
     id="envvar-replacement"
-    title="環境変数の置き換え"
+    title="環境変数の置換"
   >
-    この設定では、環境変数 `HAPROXY_STATS` を使用して、統合の STATS_URL 設定を入力します。
+    この構成では、環境変数`HAPROXY_STATS`を使用して、統合の STATS_URL 設定を入力します。
 
     ```
     integrations:
@@ -353,9 +353,9 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
 
   <Collapser
     id="multi-instance"
-    title="マルチインスタンス監視"
+    title="マルチインスタンスモニタリング"
   >
-    この構成では、同じ統合から複数のHAProxyサーバーを監視します。1つ目のインスタンス(`STATUS_URL: https://1st_haproxy-instance/stats`)はメトリクスとインベントリを収集し、2つ目のインスタンス(`STATUS_URL: https://2nd_haproxy-instance/stats`)はメトリクスのみを収集します。
+    この構成は、同じ統合から複数の HAProxy サーバーを監視します。最初のインスタンス ( `STATUS_URL: https://1st_haproxy-instance/stats` ) は指標とインベントリを収集し、2 番目のインスタンス ( `STATUS_URL: https://2nd_haproxy-instance/stats` ) は指標のみを収集します。
 
     ```
     integrations:
@@ -398,9 +398,9 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
   </Collapser>
 </CollapserGroup>
 
-## データの検索と使用 [#find-and-use]
+## データを見つけて使用する [#find-and-use]
 
-この統合のデータは、専用の New Relic [ダッシュボード](/docs/integrations/new-relic-integrations/getting-started/infrastructure-integration-dashboards-charts) に報告されます。
+この統合からのデータは、 <DNT>**[one.newrelic.com](https://one.newrelic.com/all-capabilities) > Infrastructure > Third-party services > HAProxy**</DNT>にアクセスすると見つかります。
 
 メトリクスは以下の [イベントタイプに付けられています](/docs/using-new-relic/data/understand-data/new-relic-data-types#events-new-relic) 。
 
@@ -408,17 +408,17 @@ HAProxyインテグレーションでは、メトリクス(**M**)とインベン
 * `HAProxyFrontendSample`
 * `HAProxyServerSample`
 
-トラブルシューティング目的で、またはカスタムのチャートとダッシュボードを作成するために、[このデータのクエリ](/docs/using-new-relic/data/understand-data/query-new-relic-data)を行えます。
+トラブルシューティングの目的で、またはカスタムチャートとダッシュボードを作成するために、[このデータをクエリ](/docs/using-new-relic/data/understand-data/query-new-relic-data)できます。
 
-データの検索・使用方法の詳細については、 [インテグレーションデータを理解する](/docs/infrastructure/integrations/find-use-infrastructure-integration-data)を参照してください。
+データの検索と使用方法の詳細については、 [「統合データについて」](/docs/infrastructure/integrations/find-use-infrastructure-integration-data)を参照してください。この統合のデータは、専用の New Relic [ダッシュボード](/docs/integrations/new-relic-integrations/getting-started/infrastructure-integration-dashboards-charts)にレポートされます。
 
 ## メトリックデータ [#metrics]
 
-HAProxyインテグレーションでは、以下のメトリックデータ属性を収集します。各メトリック名の前には、 `backend.` 、 `frontend.` 、 `server.` のように、カテゴリインジケータとピリオドが付けられます。
+HAProxy 統合は、次のメトリック データ属性を収集します。各指標名には、 `backend.` 、 `frontend.` 、 `server.`などのカテゴリ インジケータとピリオドがプレフィックスとして付けられます。
 
 ### HAProxyバックエンドのサンプルメトリクス [#backend-sample]
 
-これらの属性は、 `HAProxyBackendSample` イベントタイプに付けられています。
+これらの属性は、 `HAProxyBackendSample`イベントタイプに関連付けられています。
 
 <table>
   <thead>
@@ -450,7 +450,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024回のリクエストにおける平均接続時間（単位：ミリ秒）。
+        最後の 1024 リクエストにわたる平均接続時間 (秒単位)。
       </td>
     </tr>
 
@@ -460,7 +460,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024件のリクエストの平均キュータイム（単位：ミリ秒）。
+        最後の 1024 リクエストの平均キュー時間 (秒単位)。
       </td>
     </tr>
 
@@ -470,7 +470,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024回のリクエストの平均応答時間（単位：ミリ秒）。
+        最後の 1024 リクエストの平均応答時間 (秒単位)。
       </td>
     </tr>
 
@@ -480,7 +480,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024回のリクエストの平均総セッション時間（単位：ミリ秒）。
+        最後の 1024 リクエストにわたる平均合計セッション時間 (秒単位)。
       </td>
     </tr>
 
@@ -516,7 +516,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.betweenThatBypassedCompressorPerSecond`
+        `backend.bytesThatBypassedCompressorPerSecond`
       </td>
 
       <td>
@@ -526,7 +526,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.couningRequestErrorsPerSecond`
+        `backend.connectingRequestErrorsPerSecond`
       </td>
 
       <td>
@@ -546,7 +546,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `バックエンド.cookieName`
+        `backend.cookieName`
       </td>
 
       <td>
@@ -606,7 +606,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.http100ResponsPerSecond`
+        `backend.http100ResponsesPerSecond`
       </td>
 
       <td>
@@ -616,7 +616,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.http200ResponsPerSecond`
+        `backend.http200ResponsesPerSecond`
       </td>
 
       <td>
@@ -626,7 +626,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.http300ResponsPerSecond`
+        `backend.http300ResponsesPerSecond`
       </td>
 
       <td>
@@ -636,7 +636,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.http400ResponsPerSecond`
+        `backend.http400ResponsesPerSecond`
       </td>
 
       <td>
@@ -646,7 +646,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.http500ResponsPerSecond`
+        `backend.http500ResponsesPerSecond`
       </td>
 
       <td>
@@ -656,7 +656,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.httpOtherResponsPerSecond`
+        `backend.httpOtherResponsesPerSecond`
       </td>
 
       <td>
@@ -676,7 +676,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.httpResponseByEmittedByCompressorPerSecond`
+        `backend.httpResponseBytesEmittedByCompressorPerSecond`
       </td>
 
       <td>
@@ -716,7 +716,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.maxeudRequestsWithoutServer`
+        `backend.maxQueuedRequestsWithoutServer`
       </td>
 
       <td>
@@ -746,7 +746,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `バックエンド・モード`
+        `backend.mode`
       </td>
 
       <td>
@@ -796,7 +796,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.responseDenied.securityConcernPerSecond`
+        `backend.responsesDenied.securityConcernPerSecond`
       </td>
 
       <td>
@@ -836,7 +836,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.timSinceLastSessionAssignedInSeconds`
+        `backend.timeSinceLastSessionAssignedInSeconds`
       </td>
 
       <td>
@@ -846,7 +846,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `backend.timSinceLastUpDownTransitionInSeconds`
+        `backend.timeSinceLastUpDownTransitionInSeconds`
       </td>
 
       <td>
@@ -870,7 +870,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        バックエンドの種類 `0` = フロントエンド、 `1` = バックエンド、 `2` = サーバー、 `3` = ソケット/リスナー。
+        バックエンドのタイプ。`0` = フロントエンド、 `1` = バックエンド、 `2` = サーバー、 `3` = ソケット/リスナー。
       </td>
     </tr>
 
@@ -888,7 +888,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
 ### HAProxyフロントエンドのサンプルメトリクス [#frontend-sample]
 
-これらの属性は、 `HAProxyFrontendSample` イベントタイプに付けられています。
+これらの属性は、 `HAProxyFrontendSample`イベントタイプに関連付けられています。
 
 <table>
   <thead>
@@ -946,7 +946,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `frontend.http100ResponsPerSecond`
+        `frontend.http100ResponsesPerSecond`
       </td>
 
       <td>
@@ -956,7 +956,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `frontend.http200ResponsPerSecond`
+        `frontend.http200ResponsesPerSecond`
       </td>
 
       <td>
@@ -966,7 +966,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `frontend.http300ResponsPerSecond`
+        `frontend.http300ResponsesPerSecond`
       </td>
 
       <td>
@@ -976,7 +976,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `frontend.http400ResponsPerSecond`
+        `frontend.http400ResponsesPerSecond`
       </td>
 
       <td>
@@ -986,7 +986,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `frontend.http500ResponsPerSecond`
+        `frontend.http500ResponsesPerSecond`
       </td>
 
       <td>
@@ -996,7 +996,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `frontend.httpOtherResponsPerSecond`
+        `frontend.httpOtherResponsesPerSecond`
       </td>
 
       <td>
@@ -1066,7 +1066,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `フロントエンド・モード`
+        `frontend.mode`
       </td>
 
       <td>
@@ -1126,7 +1126,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `frontend.responseDenied.securityConcernsPerSecond`
+        `frontend.responsesDenied.securityConcernsPerSecond`
       </td>
 
       <td>
@@ -1166,11 +1166,11 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `フロントエンド・タイプ`
+        `frontend.type`
       </td>
 
       <td>
-        フロントエンドの種類 `0` = フロントエンド、 `1` = バックエンド、 `2` = サーバー、 `3` = ソケット／リスナー。
+        フロントエンドのタイプ。`0` = フロントエンド、 `1` = バックエンド、 `2` = サーバー、 `3` = ソケット/リスナー。
       </td>
     </tr>
   </tbody>
@@ -1178,7 +1178,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
 ### HAProxyサーバのサンプルメトリクス [#server-sample]
 
-これらの属性は、 `HAProxyServerSample` イベントタイプに付けられています。
+これらの属性は、 `HAProxyServerSample`イベントタイプに関連付けられています。
 
 <table>
   <thead>
@@ -1206,11 +1206,11 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.agentDurationInSeconds`
+        `server.agentDurationSeconds`
       </td>
 
       <td>
-        最後のチェックが終了するまでの時間（単位：ミリ秒）。
+        最後のチェックが完了するまでにかかった時間 (秒単位)。
       </td>
     </tr>
 
@@ -1230,7 +1230,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        人間が読める短い説明 `agent_status`.
+        人間が読める短い`agent_status`の説明。
       </td>
     </tr>
 
@@ -1240,7 +1240,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024回のリクエストにおける平均接続時間（単位：ミリ秒）。
+        最後の 1024 リクエストにわたる平均接続時間 (秒単位)。
       </td>
     </tr>
 
@@ -1250,7 +1250,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024件のリクエストの平均キュータイム（単位：ミリ秒）。
+        最後の 1024 リクエストの平均キュー時間 (秒単位)。
       </td>
     </tr>
 
@@ -1260,7 +1260,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024回のリクエストの平均応答時間（単位：ミリ秒）。
+        最後の 1024 リクエストの平均応答時間 (秒単位)。
       </td>
     </tr>
 
@@ -1270,7 +1270,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        直近の1024回のリクエストの平均総セッション時間（単位：ミリ秒）。
+        最後の 1024 リクエストにわたる平均合計セッション時間 (秒単位)。
       </td>
     </tr>
 
@@ -1300,13 +1300,13 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        人間が読める短い説明 `check_status`.
+        人間が読める短い`check_status`の説明。
       </td>
     </tr>
 
     <tr>
       <td>
-        `server.conntingToBackendRequestErrorsPerSecond`
+        `server.connectingToBackendRequestErrorsPerSecond`
       </td>
 
       <td>
@@ -1376,7 +1376,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.failedchecksPerSecond`
+        `server.failedChecksPerSecond`
       </td>
 
       <td>
@@ -1426,7 +1426,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.http100ResponsPerSecond`
+        `server.http100ResponsesPerSecond`
       </td>
 
       <td>
@@ -1436,7 +1436,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.http200ResponsPerSecond`
+        `server.http200ResponsesPerSecond`
       </td>
 
       <td>
@@ -1446,7 +1446,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.http300ResponsPerSecond`
+        `server.http300ResponsesPerSecond`
       </td>
 
       <td>
@@ -1456,7 +1456,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.http400ResponsPerSecond`
+        `server.http400ResponsesPerSecond`
       </td>
 
       <td>
@@ -1466,7 +1466,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.http500ResponsPerSecond`
+        `server.http500ResponsesPerSecond`
       </td>
 
       <td>
@@ -1476,7 +1476,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.httpOtherResponsPerSecond`
+        `server.httpOtherResponsesPerSecond`
       </td>
 
       <td>
@@ -1490,17 +1490,17 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        サーバーがアクティブであるかどうか。 `0` = 非アクティブ、 `1` = アクティブ。
+        サーバーがアクティブかどうか。`0` = 非アクティブ、 `1` = アクティブ。
       </td>
     </tr>
 
     <tr>
       <td>
-        `サーバー.isBackup`
+        `server.isBackup`
       </td>
 
       <td>
-        サーバーがバックアップであるかどうか。 `0` = Not Backup, `1` = Backup。
+        サーバーがバックアップかどうか。`0` = バックアップなし、 `1` = バックアップ。
       </td>
     </tr>
 
@@ -1546,7 +1546,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `サーバー・モード`
+        `server.mode`
       </td>
 
       <td>
@@ -1606,7 +1606,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.responseDenied.securityConcernPerSecond`
+        `server.responsesDenied.securityConcernPerSecond`
       </td>
 
       <td>
@@ -1666,7 +1666,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `サーバー・ステータス`
+        `server.status`
       </td>
 
       <td>
@@ -1686,7 +1686,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.timSinceLastSessionAssignedInSeconds`
+        `server.timeSinceLastSessionAssignedInSeconds`
       </td>
 
       <td>
@@ -1696,7 +1696,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
 
     <tr>
       <td>
-        `server.timSinceLastUpDownTransitionInSeconds`
+        `server.timeSinceLastUpDownTransitionInSeconds`
       </td>
 
       <td>
@@ -1710,7 +1710,7 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
       </td>
 
       <td>
-        サーバーの種類。 `0` = フロントエンド、 `1` = バックエンド、 `2` = サーバー、 `3` = ソケット/リスナー。
+        サーバーのタイプ。`0` = フロントエンド、 `1` = バックエンド、 `2` = サーバー、 `3` = ソケット/リスナー。
       </td>
     </tr>
 
@@ -1726,9 +1726,9 @@ HAProxyインテグレーションでは、以下のメトリックデータ属�
   </tbody>
 </table>
 
-## インベントリデータ [#inventory]
+## 在庫データ [#inventory]
 
-HAProxy インテグレーションでは、HAProxy インスタンスの構成パラメータを取得します。このデータは、インフラストラクチャの [Inventory ページ](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure) 、 **config/haproxy** ソースの下にあります。インベントリデータについては、 [Understand integration data](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data) を参照してください。
+HAProxy 統合は、HAProxy インスタンスの設定問題をキャプチャします。 データは、インフラストラクチャ[インベントリ ページ](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure)の<DNT>**config/haproxy**</DNT>ソースの下にあります。 [インベントリデータの詳細については、「インテグレーション データを理解する」](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data)を参照してください。
 
 インテグレーションでは、以下の設定パラメータのデータを取得します。
 
@@ -1750,7 +1750,7 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
   <tbody>
     <tr>
       <td>
-        `アイディ`
+        `iid`
       </td>
 
       <td>
@@ -1770,7 +1770,7 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
 
     <tr>
       <td>
-        `スリム`
+        `slim`
       </td>
 
       <td>
@@ -1798,7 +1798,7 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
   <tbody>
     <tr>
       <td>
-        `アイディ`
+        `iid`
       </td>
 
       <td>
@@ -1828,7 +1828,7 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
 
     <tr>
       <td>
-        `スリム`
+        `slim`
       </td>
 
       <td>
@@ -1856,7 +1856,7 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
   <tbody>
     <tr>
       <td>
-        `アイディ`
+        `iid`
       </td>
 
       <td>
@@ -1880,13 +1880,13 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
       </td>
 
       <td>
-        設定された最大キュー。 `0` = 制限なし。
+        設定された最大キュー。`0` = 制限なし。
       </td>
     </tr>
 
     <tr>
       <td>
-        `サイド`
+        `sid`
       </td>
 
       <td>
@@ -1896,7 +1896,7 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
 
     <tr>
       <td>
-        `スリム`
+        `slim`
       </td>
 
       <td>
@@ -1906,6 +1906,6 @@ HAProxy インテグレーションでは、HAProxy インスタンスの構成�
   </tbody>
 </table>
 
-## ソースコードのチェック [#source-code]
+## ソースコードを確認してください [#source-code]
 
-このインテグレーションは、オープンソース・ソフトウェアです。つまり、 [そのソースコードを閲覧して](https://github.com/newrelic/nri-haproxy "新しいウィンドウにリンクが開きます。") 改良を送ったり、独自のフォークを作成して構築することができます。
+このインテグレーションはオープンソースソフトウェアです。つまり、[ソースコードを参照](https://github.com/newrelic/nri-apache/)して改善を送信したり、独自のフォークを作成して構築したりできます。

@@ -5,40 +5,33 @@ tags:
   - On-host integrations
   - On-host integrations list
 metaDescription: 'New Relic''s Varnish Cache integration: how to install it and configure it, and what data it reports.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-import guidedInstallCli from 'images/guided-install-cli.png'
-
 Varnish Cache [on-host integration](/docs/integrations/host-integrations/getting-started/introduction-host-integrations) は、Varnish Cache 環境のインベントリとメトリクスを収集し、New Relic に送信することで、その健全性を監視することができます。メトリクスは、インスタンス、ロック、メモリプール、ストレージ、バックエンドの各レベルで収集します。
 
-インテグレーションのインストールと、当社がどのようなデータを収集するかについてお読みください。
+統合をインストールし、収集するデータを確認するために読んでください。
 
-## 互換性および要件 [#comp-req]
+## 互換性と要件 [#comp-req]
 
 Varnish Cache 1.0以上に対応しています。
 
-インテグレーションをインストールする前に、以下の要件を満たしていることを確認してください。
+統合をインストールする前に、次の要件を満たしていることを確認してください。
 
-* [インフラストラクチャエージェントのインストール](/docs/infrastructure/install-infrastructure-agent/get-started/install-infrastructure-agent-new-relic).
+* [インフラストラクチャエージェントをインストールします](/docs/infrastructure/install-infrastructure-agent/get-started/install-infrastructure-agent-new-relic)。
 * Linux ディストリビューションまたは Windows バージョン [当社のインフラストラクチャ・エージェントと互換性がある](/docs/infrastructure/new-relic-infrastructure/getting-started/compatibility-requirements-new-relic-infrastructure) 。
 
 ## クイックスタート [#quick]
 
 ガイド付きインストールで、Varnish Cache 環境をすばやくインスツルメンテーションし、テレメトリーデータを送信します。ガイド付きインストールでは、お客様の環境に合わせてカスタマイズされたCLIコマンドを作成し、New Relic CLIとインフラストラクチャ・エージェントをダウンロードしてインストールします。
 
-<img
-  title="The guided install CLI."
-  alt="A screenshot of the guided install CLI."
-  src={guidedInstallCli}
-/>
-
-始める準備はできていますか？ボタンの1つをクリックし、試行してください。
+始める準備はできましたか？これらのボタンのいずれかをクリックして試してください。
 
 <ButtonGroup>
   <ButtonLink
     role="button"
-    to="https://one.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoidmFybmlzaC1jYWNoZS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiIsImFjdGl2ZUNvbXBvbmVudCI6IlZUU09Db21tYW5kIiwiYWN0aXZlRW52aXJvbm1lbnQiOiJ2YXJuaXNoLWNhY2hlLW9wZW4tc291cmNlLWludGVncmF0aW9uIn0="
+    to="https://one.newrelic.com/marketplace/install-data-source?state=eda6d17b-58b5-5e7a-18ca-3b4ce777ecff"
     variant="primary"
   >
     ガイド付きインストール
@@ -46,7 +39,7 @@ Varnish Cache 1.0以上に対応しています。
 
   <ButtonLink
     role="button"
-    to="https://one.eu.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoidmFybmlzaC1jYWNoZS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiIsImFjdGl2ZUNvbXBvbmVudCI6IlZUU09Db21tYW5kIiwiYWN0aXZlRW52aXJvbm1lbnQiOiJ2YXJuaXNoLWNhY2hlLW9wZW4tc291cmNlLWludGVncmF0aW9uIn0="
+    to="https://one.eu.newrelic.com/marketplace/install-data-source?state=eda6d17b-58b5-5e7a-18ca-3b4ce777ecff"
     variant="primary"
   >
     EUガイド付きインストール
@@ -57,7 +50,7 @@ Varnish Cache 1.0以上に対応しています。
 
 このガイド付きインストールは、ほとんどのセットアップに対応しています。Varnish Cache環境の監視を開始するには、以下の方法がありますので、ご利用ください。
 
-## インストールと有効化 [#install]
+## インストールしてアクティブ化する [#install]
 
 Varnish Cacheインテグレーションをインストールするには、以下の手順に従います。
 
@@ -66,73 +59,80 @@ Varnish Cacheインテグレーションをインストールするには、以�
     id="linux-install"
     title="Linuxのインストール"
   >
-    1. [インテグレーションのインストール](/docs/install-integrations-package) の指示に従って、ファイル名 `nri-varnish` を使用してください。
+    1. [インフラストラクチャ エージェントをインストールし](/docs/integrations/host-integrations/installation/install-infrastructure-host-integrations/#install)、 `INTEGRATION_FILE_NAME`変数を`nri-varnish`に置き換えます。
 
-    2. ディレクトリをintegrationsフォルダに変更します。
+    2. ディレクトリを統合フォルダに変更します。
 
        ```
        cd /etc/newrelic-infra/integrations.d
        ```
 
-    3. サンプルの設定ファイルのコピー：
+    3. サンプル構成ファイルのコピー：
 
        ```
        sudo cp varnish-config.yml.sample varnish-config.yml
        ```
 
-    4. `varnish-config.yml` ファイルを [構成設定](#config) で説明されているように編集します。
-
-    5. [Infrastructureエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    4. [構成設定](#config)の説明に従って、 `varnish-config.yml`ファイルを編集します。
   </Collapser>
 
   <Collapser
     id="windows-install"
-    title="Windowsインストール"
+    title="Windowsのインストール"
   >
-    1. `nri-varnish` .MSIインストーラーイメージをダウンロードします。
+    1. `nri-varnish` .MSIインストーラーイメージを以下からダウンロードします。
 
-       [http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-varnish/nri-varnish-amd64.msi](http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-varnish/nri-varnish-amd64.msi)
+       [https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-varnish/nri-varnish-amd64.msi](https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-varnish/nri-varnish-amd64.msi)
 
-    2. インストールするには、Windowsのコマンドプロンプトで次のコマンドを実行します。
+    2. Windowsコマンドプロンプトからインストールするには、次のコマンドを実行します。
 
        ```
-       msiexec.exe /qn /i <var>PATH\TO\</var>nri-varnish-amd64.msi
+       msiexec.exe /qn /i PATH\TO\nri-varnish-amd64.msi
        ```
 
-    3. インテグレーションのディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、以下を実行してサンプル設定ファイルのコピーを作成します。
+    3. Integrationsディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、次のコマンドを実行してサンプル構成ファイルのコピーを作成します。
 
        ```
        cp varnish-config.yml.sample varnish-config.yml
        ```
 
-    4. `varnish-config.yml` ファイルを [構成設定](#config) で説明されているように編集します。
-
-    5. [Infrastructureエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    4. [構成設定](#config)の説明に従って、 `varnish-config.yml`ファイルを編集します。
   </Collapser>
 </CollapserGroup>
 
-追加の注：
+その他の注意事項：
 
-* **Advanced:** また、 [統合機能をtarballファイルからインストールすることも可能です](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball) 。これにより、インストールと設定のプロセスを完全にコントロールすることができます。
-* **オンホストインテグレーションは、自動的にアップデートしません。**最善の結果を得るため、[インテグレーションパッケージの更新](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)と[Infrastructureエージェントの更新](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に実施してください。
+* <DNT>
+    **Advanced:**
+  </DNT>
 
-## インテグレーションの設定 [#config]
+  [tarball ファイルから統合をインストールする](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball)こともできます。 これにより、インストールと設定のプロセスを完全に制御できるようになります。
 
-インテグレーションのYAML形式設定では、必要なログインクレデンシャルやデータの収集方法を設定できます。どのオプションを変更するかは、設定とプリファレンスにより異なります。
+* <DNT>
+    **On-host integrations do not automatically update.**
+  </DNT>
 
-設定ファイルには、 `interval`, `timeout`, `inventory_source` など、すべての統合に適用される共通の設定があります。これらの共通設定については、 [Configuration Format](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics) のドキュメントを参照してください。
+  最善の結果を得るため、[インテグレーションパッケージの更新](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)と[Infrastructureエージェントの更新](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に実施してください。
+
+<InstallFeedback/>
+
+## 統合を構成する [#config]
+
+統合のYAML形式の構成では、必要なログイン資格情報を配置し、データの収集方法を構成できます。どのオプションを変更するかは、セットアップと設定によって異なります。
+
+構成ファイルには、 `interval` 、 `timeout` 、 `inventory_source`などのすべての統合に適用できる共通の設定があります。これらの一般的な設定の詳細については、 [構成フォーマット](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics)のドキュメントを参照してください。
 
 <Callout variant="important">
   従来の設定/定義ファイルを使用している場合は、こちらの [ドキュメント](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/) を参照してください。
 </Callout>
 
-Varnishに関連する特定の設定は、設定ファイルの `env` セクションを使用して定義されます。これらの設定は、Varnishインスタンスへの接続や、その他のセキュリティ設定や機能を制御します。有効な設定のリストは次のセクションで説明します。
+Varnish に関連する特定の設定は、構成ファイルの`env`セクションを使用して定義されます。これらの設定は、Varnish インスタンスへの接続、およびその他のセキュリティ設定と機能を制御します。有効な設定のリストについては、次のセクションで説明します。
 
 ### Varnish Cacheインスタンスの設定 [#instance-settings]
 
-Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベントリ(<strong> I</strong> )の両方の情報を収集します。以下の **Applies To** カラムをチェックして、それぞれの収集に使用できる設定を確認してください。
+Varnish Cache インテグレーションは、メトリクス ( <strong>M</strong> ) 情報とインベントリ ( <strong>I</strong> ) 情報の両方を収集します。 それぞれのコレクションに使用できる設定を確認するには、以下の<DNT>**Applies To**</DNT>列を確認してください。
 
-' '
+''
 
 <table>
   <thead>
@@ -150,7 +150,7 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
       </th>
 
       <th>
-        適用先
+        に適用されます
       </th>
     </tr>
   </thead>
@@ -158,11 +158,13 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
   <tbody>
     <tr>
       <td>
-        **INSTANCE_NAME**
+        <DNT>
+          **INSTANCE_NAME**
+        </DNT>
       </td>
 
       <td>
-        New Relic でこのインスタンスのデータを識別するためのユーザー定義名。 **必須**.
+        New Relic でこのインスタンスのデータを識別するためのユーザー定義の名前。 <DNT>**Required**</DNT> 。
       </td>
 
       <td>
@@ -170,23 +172,25 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
       </td>
 
       <td style={{ "text-align": "center" }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **params_config_file**
+        <DNT>
+          **PARAMS_CONFIG_FILE**
+        </DNT>
       </td>
 
       <td>
-        `varnish.params` 設定ファイルの場所です。この引数が省略された場合、以下の場所がチェックされます。
+        `varnish.params`構成ファイルの場所。この引数を省略すると、次の場所がチェックされます。
 
         * `/etc/default/varnish/varnish.params`
 
         * `/etc/sysconfig/varnish/varnish.params`
 
-          注意：Varnishの設定ファイルの場所や名前が異なる場合があります。詳細については、 [Different locations of the Varnish configuration file](https://book.varnish-software.com/4.0/chapters/Getting_Started.html#different-locations-of-the-varnish-configuration-file) を参照してください。Varnishのバージョンが6以下の場合、このパラメータは必要ありませんので、統合はメトリクス収集のみに設定してください。 [Varnish 6の例を参照してください](#example6).
+          注: Varnish 構成ファイルの場所と名前は異なる場合があります。詳細については、 [「Varnish 構成ファイルのさまざまな場所」を](https://book.varnish-software.com/4.0/chapters/Getting_Started.html#different-locations-of-the-varnish-configuration-file)参照してください。Varnish 6 以降の場合、このパラメータは必須ではないため、統合はメトリクス収集のみを目的として設定する必要があります。[ワニス 6 の例を](#example6)参照してください。
       </td>
 
       <td>
@@ -194,17 +198,19 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
       </td>
 
       <td style={{ "text-align": "center" }}>
-        I
+        私
       </td>
     </tr>
 
     <tr>
       <td>
-        **VARNISH_NAME**
+        <DNT>
+          **VARNISH_NAME**
+        </DNT>
       </td>
 
       <td>
-        `varnishd` デーモンをカスタム `-n` フラグで実行するときに使用する名前 **オプション**.
+        カスタム`-n`フラグを使用して`varnishd`デーモンを実行するときに使用される名前。 <DNT>**Optional**</DNT> .
       </td>
 
       <td>
@@ -218,11 +224,13 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
 
     <tr>
       <td>
-        **メトリクス**
+        <DNT>
+          **METRICS**
+        </DNT>
       </td>
 
       <td>
-        `true`に設定すると、メトリクスのみの収集が有効になります。
+        メトリックのみの収集を有効にするには、 `true`に設定します。
       </td>
 
       <td>
@@ -234,11 +242,13 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
 
     <tr>
       <td>
-        **インベントリ**
+        <DNT>
+          **INVENTORY**
+        </DNT>
       </td>
 
       <td>
-        `true`に設定すると、インベントリのみの収集が有効になります。
+        インベントリのみの収集を有効にするには、 `true`に設定します。
       </td>
 
       <td>
@@ -250,17 +260,17 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
   </tbody>
 </table>
 
-`varnish-config.yml` コマンドは、以下の引数を受け付けます。
+`varnish-config.yml`コマンドは次の引数を受け入れます:
 
-これらの設定値は、いくつかの方法で定義できます。
+これらの設定の値は、いくつかの方法で定義できます。
 
-* コンフィグファイルに直接値を追加する。これが最も一般的な方法です。
-* `{{}}` 表記を使用して環境変数から値を置き換えます。これには、インフラストラクチャエージェントv1.14.0+が必要です。詳しくはこちら [](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough).
-* シークレット管理の使用。これを使用して、設定ファイルのプレーンテキストで公開されないようにパスワードなどの重要な情報を保護してください。詳細については、[シークレット管理](/docs/integrations/host-integrations/installation/secrets-management)を参照してください。
+* 設定ファイルに直接値を追加します。これが最も一般的な方法です。
+* `{{}}`表記を使用して環境変数の値を置き換えます。これには、インフラストラクチャエージェントv1.14.0以降が必要です。詳細はこちらをご覧[ください](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough)。
+* シークレット管理を使用します。これを使用して、構成ファイルにプレーンテキストで公開されるパスワードなどの機密情報を保護します。詳細については、[シークレット管理](/docs/integrations/host-integrations/installation/secrets-management)を参照してください。
 
 ### ラベル/カスタム属性 [#labels]
 
-環境変数は、ライセンスキーなどのコンフィグ設定を制御するために使用することができ、その後、Infrastructureエージェントに引き継がれます。この機能の使用方法については、 [インフラストラクチャエージェントの設定](/docs/infrastructure/new-relic-infrastructure/configuration/configure-infrastructure-agent#passthrough) を参照してください。メトリクスは、ラベルを使ってさらに装飾することができます。<br/> デフォルトのサンプル・コンフィグ・ファイルにはラベルの例が含まれていますが、必須ではありませんので、お好みで削除、変更、または新しいものを追加することができます。
+環境変数は、 <InlinePopover type="licenseKey"/>などの構成設定を制御するために使用でき、その後、インフラストラクチャエージェントに渡されます。 この機能の使用方法については、 [「インフラストラクチャエージェントの構成」を](/docs/infrastructure/new-relic-infrastructure/configuration/configure-infrastructure-agent#passthrough)参照してください。 ラベルを使用してメトリクスをさらに装飾することができます。 ラベルを使用すると、メトリクスにキー値のペア属性を追加して、メトリクスのクエリ、フィルタリング、またはグループ化に使用できます。<br/> デフォルトのサンプル設定ファイルにはラベルの例が含まれていますが、必須ではないため、必要に応じてラベルを削除、変更、または追加することができます。
 
 ```
  labels:
@@ -270,7 +280,7 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
 
 ## 構成例 [#example-config]
 
-例 `varnish-config.yml` ファイルの設定。
+`varnish-config.yml`ファイル構成の例:
 
 <CollapserGroup>
   <Collapser
@@ -314,25 +324,25 @@ Varnish Cacheの統合では、メトリクス(<strong> M</strong> )とインベ
   </Collapser>
 </CollapserGroup>
 
-オンホストインテグレーション設定の一般的な構成の詳細については、[設定](/docs/integrations/integrations-sdk/file-specifications/host-integration-configuration-overview)を参照してください。
+オンホスト統合構成の一般的な構造の詳細については、「 [構成](/docs/integrations/integrations-sdk/file-specifications/host-integration-configuration-overview)」を参照してください。
 
-## データの検索と使用 [#find-and-use]
+## データを見つけて使用する [#find-and-use]
 
-インフラストラクチャーに統合データを見つけるには、 [**one.newrelic.com**](http://one.newrelic.com) **> インフラストラクチャー> サードパーティサービス** にアクセスし、Varnish Cache統合リンクの1つを選択します。
+New Relicでインテグレーション データを検索するには、<DNT>**[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) > Infrastructure > Third-party services**</DNT> に移動し、Varnish Cache インテグレーション リンクの 1 つを選択します。
 
 New Relic では、Varnish Cache のデータは以下のイベントタイプに添付されます。
 
-* `ヴァーニッシュ・サンプル`
+* `VarnishSample`
 * `VarnishLockSample`
 * `VarnishStorageSample`
 * `VarnishMempoolSample`
 * `VarnishBackendSample`
 
-データの検索・使用方法の詳細については、 [インテグレーションデータを理解する](/docs/infrastructure/integrations/find-use-infrastructure-integration-data)を参照してください。
+データを検索して使用する方法の詳細については、[統合データ](/docs/infrastructure/integrations/find-use-infrastructure-integration-data)についてを参照してください。
 
 ## メトリックデータ [#metrics]
 
-Varnish Cacheインテグレーションでは、以下のメトリックデータ属性を収集します。各メトリック名の前には、 `bans.` や `main.` のように、カテゴリー・インジケータとピリオドが付いています。
+Varnish Cache 統合は、次のメトリック データ属性を収集します。各メトリック名には、 `bans.`や`main.`などのカテゴリ インジケータとピリオドがプレフィックスとして付けられます。
 
 <Callout variant="tip">
   いくつかのメトリクスは、メトリクス名から想像されるように、合計ではなくレート（1秒あたり）として計算されます。どのメトリクスがレートとして計算されるかの詳細については、 [spec.csvファイルを参照してください。](https://github.com/newrelic/nri-varnish/blob/master/spec.csv).
@@ -438,7 +448,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `バックエンド・リクエスト`
+        `backend.requests`
       </td>
 
       <td>
@@ -448,7 +458,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `bans.追加`
+        `bans.added`
       </td>
 
       <td>
@@ -478,7 +488,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `bans.dead`
+        `bans.deleted`
       </td>
 
       <td>
@@ -528,7 +538,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `BAN.LURKERCON`
+        `bans.lurkerCon`
       </td>
 
       <td>
@@ -572,7 +582,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `obj.*` 変数を使った禁止事項の数。これらの禁止事項は、禁止者が洗える可能性があります。
+        `obj.*`変数を使用した禁止の数。これらの禁止は、禁止に潜む者によって洗い流される可能性があります。
       </td>
     </tr>
 
@@ -592,13 +602,13 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `req.*` 変数を使用している禁止事項の数です。これらの禁止事項は、禁止者が洗うことはできません。
+        `req.*`変数を使用する禁止の数。これらのバンは、バンラーカーによって洗浄することはできません。
       </td>
     </tr>
 
     <tr>
       <td>
-        `bans.test`
+        `bans.tested`
       </td>
 
       <td>
@@ -612,13 +622,13 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        猶予付きキャッシュヒットの数。grace付きキャッシュヒットとは、オブジェクトの有効期限が切れたキャッシュヒットのことです。これらのヒットは、 `cache_hit` カウンターにも含まれます。
+        猶予のあるキャッシュ ヒットの数。猶予のあるキャッシュ ヒットは、オブジェクトの有効期限が切れているキャッシュ ヒットです。これらのヒットは`cache_hit`カウンターにも含まれています。
       </td>
     </tr>
 
     <tr>
       <td>
-        `キャッシュ・ヒット数`
+        `cache.hits`
       </td>
 
       <td>
@@ -628,7 +638,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `キャッシュ・ミス`
+        `cache.misses`
       </td>
 
       <td>
@@ -648,7 +658,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `キャッシュ・パスヒット`
+        `cache.passHits`
       </td>
 
       <td>
@@ -658,7 +668,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `esi.エラーズ`
+        `esi.errors`
       </td>
 
       <td>
@@ -668,7 +678,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `esi.wannings`
+        `esi.warnings`
       </td>
 
       <td>
@@ -682,17 +692,17 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp.body` length/fetch が決定できませんでした。
+        `beresp.body`の長さ/フェッチを特定できませんでした。
       </td>
     </tr>
 
     <tr>
       <td>
-        `フェッチ.チャンク`
+        `fetch.chuncked`
       </td>
 
       <td>
-        `beresp.body` chunked.
+        `beresp.body`のチャンク。
       </td>
     </tr>
 
@@ -702,7 +712,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp.body` のcontent-lengthである。
+        content-length の`beresp.body` 。
       </td>
     </tr>
 
@@ -712,7 +722,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp.body` with EOF.
+        EOF 付きの`beresp.body` 。
       </td>
     </tr>
 
@@ -722,7 +732,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp` は失敗しました。
+        `beresp`が失敗しました。
       </td>
     </tr>
 
@@ -732,7 +742,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp` は、リクエストがHEADなのでボディがありません。
+        リクエストが HEAD であるため、本文のない`beresp` 。
       </td>
     </tr>
 
@@ -742,7 +752,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        体のない `beresp` 。
+        本体のない`beresp` 。
       </td>
     </tr>
 
@@ -752,7 +762,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp` は、1XX応答のため、ボディがありません。
+        1XX 応答のため、本体のない`beresp` 。
       </td>
     </tr>
 
@@ -762,7 +772,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp` は 204 レスポンスのためボディがありません。
+        204 応答のため、本文のない`beresp` 。
       </td>
     </tr>
 
@@ -772,7 +782,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp` は、304 レスポンスのためボディがありません。
+        304 応答のため、本体のない`beresp` 。
       </td>
     </tr>
 
@@ -782,7 +792,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `beresp` fetch failed, no thread available.
+        `beresp`のフェッチに失敗しました。利用可能なスレッドがありません。
       </td>
     </tr>
 
@@ -828,7 +838,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `lru.movie`
+        `lru.moved`
       </td>
 
       <td>
@@ -928,7 +938,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `メイン.ガンジップ`
+        `main.gunzip`
       </td>
 
       <td>
@@ -938,7 +948,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `メイン.ガンジップテスト`
+        `main.gunzipTest`
       </td>
 
       <td>
@@ -948,7 +958,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `メイン.gzip`
+        `main.gzip`
       </td>
 
       <td>
@@ -1078,7 +1088,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `メイン.合成レスポンズ`
+        `main.syntheticResponses`
       </td>
 
       <td>
@@ -1088,7 +1098,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `メイン.スレッド`
+        `main.threads`
       </td>
 
       <td>
@@ -1278,7 +1288,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `net.400エラー`
+        `net.400Errors`
       </td>
 
       <td>
@@ -1288,7 +1298,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `net.417エラー`
+        `net.417Errors`
       </td>
 
       <td>
@@ -1392,7 +1402,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションを閉じた数 `RESP_CLOSE`, (Backend/VCL requested close).
+        エラー`RESP_CLOSE`で終了したセッションの数 (バックエンド/VCL が終了を要求)。
       </td>
     </tr>
 
@@ -1402,7 +1412,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションが終了した数 `エラー RX_BAD` 、（Received bad req/resp.）
+        エラー`Error RX_BAD`で終了したセッションの数 (不正な要求/応答を受け取りました)。
       </td>
     </tr>
 
@@ -1412,7 +1422,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションが終了した数 `エラー RX_BODY`, (Failure receiving req.body).
+        エラー`Error RX_BODY` (req.body の受信に失敗) で終了したセッションの数。
       </td>
     </tr>
 
@@ -1422,7 +1432,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションを閉じた数 `REM_CLOSE`, (Client closed)。
+        エラー`REM_CLOSE`で閉じられたセッションの数 (クライアントが閉じられました)。
       </td>
     </tr>
 
@@ -1432,7 +1442,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラー `REQ_CLOSE` 、（クライアントがクローズを要求した）セッションクローズの数。
+        エラー`REQ_CLOSE`で終了したセッションの数 (クライアントが終了を要求しました)。
       </td>
     </tr>
 
@@ -1472,7 +1482,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションが終了した数 `TX_EOF` 、（EOF送信）。
+        エラー`TX_EOF` (EOF 送信) で閉じられたセッションの数。
       </td>
     </tr>
 
@@ -1482,7 +1492,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションを閉じた数 `TX_ERROR`, (Error transaction).
+        エラー`TX_ERROR` (エラー トランザクション) で終了したセッションの数。
       </td>
     </tr>
 
@@ -1492,7 +1502,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `timeout_linger` がトリガーした回数。
+        `timeout_linger`がトリガーされた回数。
       </td>
     </tr>
 
@@ -1502,7 +1512,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションが終了した数 `RX_JUNK`, (Received junk data)。
+        エラー`RX_JUNK`で終了したセッションの数 (ジャンク データを受信しました)。
       </td>
     </tr>
 
@@ -1512,7 +1522,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションが終了した数 `RX_OVERFLOW`, (Received buffer overflow)。
+        エラー`RX_OVERFLOW` (受信バッファ オーバーフロー) で終了したセッションの数。
       </td>
     </tr>
 
@@ -1522,7 +1532,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラー `OVERLOAD` 、(Out of some resource)でセッションが終了した数。
+        エラー`OVERLOAD`で終了したセッションの数 (一部のリソースが不足しています)。
       </td>
     </tr>
 
@@ -1532,7 +1542,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーが発生したセッションクローズの数 `PIPE_OVERFLOW`, (Session pipe overflow)。
+        エラー`PIPE_OVERFLOW` (セッション パイプ オーバーフロー) で終了したセッションの数。
       </td>
     </tr>
 
@@ -1542,13 +1552,13 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラー `TX_PIPE`, (Piped transaction) を伴うセッションクローズの数。
+        エラー`TX_PIPE`で終了したセッションの数 (パイプ処理されたトランザクション)。
       </td>
     </tr>
 
     <tr>
       <td>
-        `sess.queue`
+        `sess.queued`
       </td>
 
       <td>
@@ -1572,7 +1582,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションが閉じられた数 `REQ_HTTP10`, (Proto&lt; HTTP/1.1)。
+        エラー`REQ_HTTP10`で終了したセッションの数 (Proto &lt; HTTP/1.1)。
       </td>
     </tr>
 
@@ -1582,7 +1592,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラーでセッションが終了した数 `REQ_HTTP20`, (HTTP2 not accepted)。
+        エラー`REQ_HTTP20`で終了したセッションの数 (HTTP2 は受け入れられません)。
       </td>
     </tr>
 
@@ -1592,7 +1602,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラー `RANGE_SHORT` 、(Insufficient data for range)でセッションが終了した数。
+        エラー`RANGE_SHORT` (範囲のデータが不十分) で閉じられたセッションの数。
       </td>
     </tr>
 
@@ -1602,7 +1612,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        Number of session closes with error `RX_TIMEOUT`, (Receive timeout)と表示される。
+        エラー`RX_TIMEOUT` (受信タイムアウト) で終了したセッションの数。
       </td>
     </tr>
 
@@ -1612,13 +1622,13 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        エラー `VCL_FAILURE` 、（VCLの失敗）でセッションが閉じられた数。
+        エラー`VCL_FAILURE` (VCL 障害) で終了したセッションの数。
       </td>
     </tr>
 
     <tr>
       <td>
-        `セッション・コネクション`
+        `session.connections`
       </td>
 
       <td>
@@ -1628,7 +1638,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `セッション・ドロップス`
+        `session.drops`
       </td>
 
       <td>
@@ -1658,7 +1668,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `shm.series`
+        `shm.cycles`
       </td>
 
       <td>
@@ -1668,7 +1678,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `shm.flushs`
+        `shm.flushes`
       </td>
 
       <td>
@@ -1698,21 +1708,21 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `ワークスペース.バックエンドオーバーフロー`
+        `workspace.backendOverflow`
       </td>
 
       <td>
-        `workspace_backend` のスペースが足りなくなった回数。
+        `workspace_backend`のスペースがなくなった回数。
       </td>
     </tr>
 
     <tr>
       <td>
-        `ワークスペース.クライアントオーバーフロー`
+        `workspace.clientOverflow`
       </td>
 
       <td>
-        `workspace_client` のスペースが足りなくなった回数。
+        `workspace_client`のスペースがなくなった回数。
       </td>
     </tr>
 
@@ -1732,17 +1742,17 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
       </td>
 
       <td>
-        `workspace_session` のスペースが足りなくなった回数。
+        `workspace_session`のスペースがなくなった回数。
       </td>
     </tr>
 
     <tr>
       <td>
-        `ワークスペース.スレッドオーバーフロー`
+        `workspace.threadOverflow`
       </td>
 
       <td>
-        `workspace_thread` のスペースが足りなくなった回数。
+        `workspace_thread`のスペースがなくなった回数。
       </td>
     </tr>
   </tbody>
@@ -1750,7 +1760,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
 ### Varnishロックのサンプルメトリクス [#varnish-lock-sample]
 
-これらの属性は、 `VarnishLockSample` のイベントタイプを照会することで見つけることができます。
+これらの属性は、 `VarnishLockSample`イベントタイプを照会することで見つけることができます。
 
 <table>
   <thead>
@@ -1768,7 +1778,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
   <tbody>
     <tr>
       <td>
-        `Lock.Created`
+        `lock.created`
       </td>
 
       <td>
@@ -1778,7 +1788,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `ロック・破壊`
+        `lock.destroyed`
       </td>
 
       <td>
@@ -1800,7 +1810,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
 ### Varnishストレージのサンプルメトリクス [#varnish-storage-sample]
 
-これらの属性は、 `VarnishStorageSample` イベントタイプを照会することで見つけることができます。
+これらの属性は、 `VarnishStorageSample`イベントタイプを照会することで見つけることができます。
 
 <table>
   <thead>
@@ -1868,7 +1878,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `ストレージ.freeInBytes`
+        `storage.freeInBytes`
       </td>
 
       <td>
@@ -1878,7 +1888,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `storage.extractedInBytes`
+        `storage.outstandingInBytes`
       </td>
 
       <td>
@@ -1890,7 +1900,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
 ### Varnish mempool サンプルメトリクス [#varnish-mempool-sample]
 
-これらの属性は、 `VarnishMempoolSample` イベントタイプを照会することで見つけることができます。
+これらの属性は、 `VarnishMempoolSample`イベントタイプを照会することで見つけることができます。
 
 <table>
   <thead>
@@ -1908,7 +1918,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
   <tbody>
     <tr>
       <td>
-        `mempool.alcalledSizeInBytes`
+        `mempool.allocatedSizeInBytes`
       </td>
 
       <td>
@@ -1988,7 +1998,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `mempool.splus`
+        `mempool.surplus`
       </td>
 
       <td>
@@ -2008,7 +2018,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `メモリプールが小さすぎる`
+        `mempool.tooSmall`
       </td>
 
       <td>
@@ -2020,7 +2030,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
 ### Varnishバックエンドのサンプルメトリクス [#varnish-backend-sample]
 
-これらの属性は、 `VarnishBackendSample` のイベントタイプを照会することで確認できます。
+これらの属性は、 `VarnishBackendSample`イベントタイプを照会することで見つけることができます。
 
 <table>
   <thead>
@@ -2048,7 +2058,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `バックエンド・コネクションズ`
+        `backend.connections`
       </td>
 
       <td>
@@ -2068,7 +2078,7 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
 
     <tr>
       <td>
-        `backend.cohnsionsNotAttempted`
+        `backend.connectionsNotAttempted`
       </td>
 
       <td>
@@ -2178,12 +2188,12 @@ Varnish Cacheインテグレーションでは、以下のメトリックデー�
   </tbody>
 </table>
 
-## インベントリデータ [#inventory]
+## 在庫データ [#inventory]
 
-Varnish Cacheの統合では、設定パラメータを取得します。 `varnish.params` 設定ファイルを解析して、有効なパラメータをすべて取得します。
+Varnish Cache 統合は、構成パラメーターをキャプチャします。アクティブなすべてのパラメーターについて`varnish.params`構成ファイルを解析します。
 
-このデータは、 [インベントリページ](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure) 、 **config/varnish** ソースの下で利用できます。インベントリデータの詳細については、 [Understand integration data](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data) を参照してください。
+データは、 <DNT>**config/varnish**</DNT>ソースの下にある[インベントリ ページ](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure)で入手できます。 インベントリデータの詳細については、 [「インベントリデータを理解する」](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data)を参照してください。
 
-## ソースコードのチェック [#source-code]
+## ソースコードを確認してください [#source-code]
 
-このインテグレーションは、オープンソース・ソフトウェアです。つまり、 [そのソースコードを閲覧して](https://github.com/newrelic/nri-varnish "新しいウィンドウにリンクが開きます。") 改良を送ったり、独自のフォークを作成して構築することができます。
+この統合はオープン ソース ソフトウェアです。つまり[、ソース コードを参照して](https://github.com/newrelic/nri-varnish)改善を送信したり、独自のフォークを作成してビルドしたりできます。

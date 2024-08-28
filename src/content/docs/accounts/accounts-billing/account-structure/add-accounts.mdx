@@ -1,16 +1,34 @@
 ---
-title: Add accounts
+title: Add an account to your New Relic organization
 translate:
   - jp
 metaDescription: How to add accounts to your New Relic organization. 
+freshnessValidatedDate: never
 ---
 
-Some New Relic organizations have the ability to add more accounts to their organization. For why you'd want to do this, see [Organization structure](/docs/accounts/accounts-billing/account-structure/new-relic-account-structure). 
+Adding an account to your New Relic organization is one way to organize and separate data for specific teams or projects.
 
-How you add accounts to your New Relic organization depends on the type of [user model](/docs/accounts/original-accounts-billing/original-product-based-pricing/overview-user-models) your users are on: 
+## Requirements [#requirements]
 
-* Our newer user model: 
-  * To add an account from the UI: from the **Access management** UI page, click **Accounts**, and then click **Create account**. Learn more about [user management](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks#where).
-  * To add an account via API: see [Manage accounts with NerdGraph](/docs/apis/nerdgraph/examples/manage-accounts-nerdgraph).
-  * To learn about organization and account structure, see [Organization structure](/docs/accounts/accounts-billing/account-structure/new-relic-account-structure). 
-* Our original user model: see [Add accounts](/docs/accounts/original-accounts-billing/original-users-roles/parent-child-account-structure/#creating). 
+Requirements for adding an account to your New Relic organization:
+
+* Pro or Enterprise [edition](/docs/accounts/accounts-billing/new-relic-one-pricing-billing/new-relic-one-pricing-billing#editions)
+* User must be a core user or full platform user with [<DNT>**Organization settings**</DNT>](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts/#admin-settings).
+* Organizations with [partnership accounts](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partnership-accounts-users-subscriptions) must use the [Partnership API](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api).
+
+Some account naming rules:
+
+* Accounts are identified by their [account ID](/docs/accounts/accounts-billing/account-structure/account-id). There are no rules on account name uniqueness within an organization.
+* An account name can be a maximum of 255 characters.
+
+## Why add an account? [#why-add-accounts]
+
+For reasons to add accounts, see [Organization and account structure](/docs/accounts/accounts-billing/account-structure/new-relic-account-structure).
+
+## Add accounts [#add-accounts]
+
+To add an account from the UI: from the [<DNT>**Access management**</DNT> UI page](https://one.newrelic.com/admin-portal/organizations/organization-detail), click <DNT>**Accounts**</DNT>, and then click <DNT>**Create account**</DNT>. (If you're on our original user model, see [Add accounts](/docs/accounts/original-accounts-billing/original-users-roles/parent-child-account-structure/#creating).)
+
+To add an account via API: see [Manage accounts with NerdGraph](/docs/apis/nerdgraph/examples/manage-accounts-nerdgraph).
+
+To cancel an account, please [file a ticket with our global technical support team](/docs/new-relic-solutions/solve-common-issues/find-help-use-support-portal/#file-ticket).

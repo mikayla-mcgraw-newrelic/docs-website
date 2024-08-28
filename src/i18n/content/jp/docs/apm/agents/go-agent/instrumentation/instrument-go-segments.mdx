@@ -5,6 +5,7 @@ tags:
   - Go agent
   - Instrumentation
 metaDescription: 'With APM''s Go agent, you can set up segments, which measure the timing of specific blocks of code in your Golang app.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -12,28 +13,28 @@ New Relic for Go を使用すると、Go アプリケーションの [トラン�
 
 ## 機能やコードブロックの計測時間 [#go-segments]
 
-**セグメント** は、アプリケーションにおける [トランザクション](/docs/apm/transactions/intro-transactions/transactions-new-relic-apm) の特定の部分を指します。セグメントを計測することで、外部呼び出し、データストア呼び出し、キューへのメッセージ追加、バックグラウンドタスクなどの関数やコードブロックにかかる時間を計測することができます。
+<DNT>**Segments**</DNT> アプリケーション内の[トランザクション](/docs/apm/transactions/intro-transactions/transactions-new-relic-apm)の特定の部分です。 インストゥルメントされたセグメントによって、外部呼び出し、データストア呼び出し、キューへのメッセージの追加、バックグラウンドタスクなどの関数とコードブロックにかかる時間を測定できます。
 
-**例:** 出荷情報とクレジットカード情報の両方を処理する、チェックアウトプロセスに関連するトランザクションがあります。このトランザクションを、配送用のセグメントと支払い用のセグメントの2つに分割するようにアプリケーションを作成することができます。
+<DNT>**Example:**</DNT> 配送情報とクレジット カード情報の両方を処理するチェックアウト プロセスに関連付けられたトランザクションがあります。 アプリケーションを計量して、その現場を 2 つの部分、つまり配送用の 1 つのセグメントと支払い用の 1 つのセグメントに分割することができます。
 
 ## ブロック・オブ・コード・セグメント [#segment-code-block]
 
 [トランザクション](/docs/agents/go-agent/get-started/instrument-go-transactions) をインストルメントすると、そのトランザクション内の1つまたは複数のセグメントをインストルメントする準備が整います。
 
-コードの任意のブロックをセグメントとして計測するには、次のパターンを使用し、トランザクションに設定された変数名として [`txn`](/docs/agents/go-agent/get-started/instrument-go-transactions) を含めます。
+コードの任意のブロックをセグメントとして計測するには、次のパターンを使用し、トランザクションに設定された変数名として[`txn`](/docs/agents/go-agent/get-started/instrument-go-transactions)を含めます。
 
 ```go
 segment := newrelic.Segment{}
-segment.Name = "<var>mySegmentName</var>"
+segment.Name = "mySegmentName"
 segment.StartTime = txn.StartSegmentNow()
 // ... code you want to time here ...
 segment.End()
 ```
 
-`StartSegment` は便利なヘルパーです。セグメントを作成し、それを開始します。
+`StartSegment` 便利なヘルパーです。セグメントを作成して開始します。
 
 ```go
-segment := txn.StartSegment("<var>mySegmentName</var>")
+segment := txn.StartSegment("mySegmentName")
 // ... code you want to time here ...
 segment.End()
 ```
@@ -42,10 +43,10 @@ segment.End()
 
 関数をセグメントとしてインスツルメントすることは、任意のコードブロックをセグメントとしてインスツルメントすることと基本的に同じです。主な違いは、関数には個別の終わりがあるので、Go の [defer ステートメント](https://gobyexample.com/defer) を使用できることです。
 
-関数をセグメントとして計測するには、以下のコードを関数の先頭に追加し、トランザクションの変数名セットとして [`txn`](/docs/agents/go-agent/get-started/instrument-go-transactions) を含めます。
+関数をセグメントとして計測するには、関数の先頭に次のコードを追加し、トランザクションに設定された変数名として[`txn`](/docs/agents/go-agent/get-started/instrument-go-transactions)を含めます。
 
 ```go
-defer txn.StartSegment("<var>mySegmentName</var>").End()
+defer txn.StartSegment("mySegmentName").End()
 ```
 
 ## ネストセグメント [#go-nesting-segments]
@@ -55,8 +56,8 @@ defer txn.StartSegment("<var>mySegmentName</var>").End()
 以下は、あるセグメントが別のセグメントの中で始まり、終わる例です。
 
 ```go
-s1 := txn.StartSegment("<var>outerSegment</var>")
-s2 := txn.StartSegment("<var>innerSegment</var>")
+s1 := txn.StartSegment("outerSegment")
+s2 := txn.StartSegment("innerSegment")
 // s2 must end before s1
 s2.End()
 s1.End()
@@ -75,7 +76,7 @@ s.End()
 
 ## データストアのセグメント [#go-datastore-segments]
 
-Go アプリケーションのデータストア呼び出しを計測することができます。データストアセグメントは、New Relic の APM **Transactions breakdown** テーブルと **Databases** タブの [**Transactions** ページ](/docs/apm/applications-menu/monitoring/transactions-page) に表示されます。
+Go アプリケーション データストアの通話を計装できます。 データストア セグメントは、New Relic の[<DNT>**Transactions**</DNT>ページ](/docs/apm/applications-menu/monitoring/transactions-page)の APM <DNT>**Transactions breakdown**</DNT>テーブルと<DNT>**Databases**</DNT>タブに表示されます。
 
 MySQL、PostgreSQL、または SQLite データベース ドライバを使用している場合、Datastore セグメントを追加する最も簡単な方法は、あらかじめ組み込まれている統合パッケージを使用することです。それ以外の場合は、データベースを呼び出すたびに手動で Datastore セグメントを作成することができます。
 
@@ -146,7 +147,7 @@ MySQL、PostgreSQL、または SQLite データベース ドライバを使用�
     }
     ```
 
-    次に、 `ExecContext` 、 `QueryContext` 、 `QueryRowContext` [sql.DB](https://golang.org/pkg/database/sql/#DB) 、 [sql.Conn](https://golang.org/pkg/database/sql/#Conn) 、 [sql.Tx](https://golang.org/pkg/database/sql/#Tx) 、 [sql.Stmt](https://golang.org/pkg/database/sql/#Stmt) のメソッドを使用して、トランザクションを含むコンテキストを提供します。 `Exec` 、 `Query` 、 `QueryRow` への呼び出しは計測されません。
+    次に、 [sql.DB](https://golang.org/pkg/database/sql/#DB) 、 [sql.Conn](https://golang.org/pkg/database/sql/#Conn) 、 [sql.Tx](https://golang.org/pkg/database/sql/#Tx) 、および[sql.Stmt](https://golang.org/pkg/database/sql/#Stmt)の`ExecContext` 、 `QueryContext` 、および`QueryRowContext`メソッドを使用して、トランザクションを含むコンテキストを提供します。`Exec` 、 `Query` 、および`QueryRow`への呼び出しは計測されません。
 
     ```go
     ctx := newrelic.NewContext(context.Background(), txn)
@@ -156,15 +157,17 @@ MySQL、PostgreSQL、または SQLite データベース ドライバを使用�
     上記以外の [database/sql](https://golang.org/pkg/database/sql/) データベースを使用している場合は、 [InstrumentConnector](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#InstrumentConnector) 、 [InstrumentDriver](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#InstrumentDriver) 、 [DriverSegmentBuilder](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#DriverSegmentBuilder) を使用して、独自のインスツルメンテーションを記述することができます。統合パッケージは、この方法の例として機能します。
 
     <Callout variant="important">
-      MySQL、PostgreSQL、SQLiteのデータストア統合パッケージがGo Agent v2.8.0で追加され、Go v1.10以上が必要になりました。
+      MySQL、PostgreSQL、および SQLite のデータストア統合パッケージは、Go エージェント v2.8.0 で追加され、Go v1.10 以降が必要です。
     </Callout>
   </Collapser>
 
   <Collapser
     id=""
-    title={<>使用 <InlineCode>DatastoreSegment</InlineCode></>}
+    title={<>使用する <InlineCode>
+      DatastoreSegment
+    </InlineCode></>}
   >
-    基本的なセグメントと同様に、データストア・セグメントは、 `StartTime` フィールドが入力されたときに開始し、 `End` メソッドが呼び出されたときに終了します。データストア・セグメントを計測するには、監視したい関数の先頭に次のように記述します。
+    基本セグメントと同様に、データストア セグメントは、 `StartTime`フィールドにデータが入力されると開始し、 `End`メソッドが呼び出されると終了します。データストア セグメントを計測するには、監視する関数の先頭に次を配置します。
 
     ```go
     s := newrelic.DatastoreSegment{
@@ -187,8 +190,8 @@ MySQL、PostgreSQL、または SQLite データベース ドライバを使用�
 
     については、こちらをご覧ください。
 
-    * `Collection`, `Operation`, `DatabaseName`, その他のパラメータ値の割り当てを行います。 [GoDoc の New Relic データストアセグメントのドキュメント](https://godoc.org/github.com/newrelic/go-agent#DatastoreSegment) を参照してください。
-    * Available values for `Product`: See [New Relic documentation on GitHub](https://github.com/newrelic/go-agent/blob/master/datastore.go).
+    * `Collection` 、 `Operation` 、 `DatabaseName` 、およびその他のパラメーター値の割り当て: [GoDoc の New Relic データストア セグメントのドキュメントを](https://godoc.org/github.com/newrelic/go-agent#DatastoreSegment)参照してください。
+    * `Product`に使用できる値: [GitHub の New Relic ドキュメントを](https://github.com/newrelic/go-agent/blob/master/datastore.go)参照してください。
 
     関数呼び出し全体に渡るデータストア呼び出しをインストゥルメンテーションする場合、defer文を使用してインストゥルメンテーションを簡素化することができます。
 
@@ -214,16 +217,18 @@ MySQL、PostgreSQL、または SQLite データベース ドライバを使用�
 
 ## 外部セグメント [#go-external-segments]
 
-Web サービスやクラウド上のリソースなど、外部サービスへの Go アプリケーションの呼び出しや、その他のネットワーク呼び出しを計測することができます。外部セグメントは、New Relic の APM **Transactions breakdown** テーブルと [**External services** ページ](/docs/apm/applications-menu/monitoring/external-services-page) に表示されます。
+Web サービス、クラウド内のリソース、その他のネットワーク呼び出しなどの外部サービスへの Go アプリケーション呼び出しを計装できます。 外部セグメントは、New Relic の<InlinePopover type="apm"/> <DNT>**Transactions breakdown**</DNT>テーブルと[<DNT>**External services**</DNT>ページ](/docs/apm/applications-menu/monitoring/external-services-page)に表示されます。
 
 外部セグメントのインストルメントには2つの方法があります。
 
 <CollapserGroup>
   <Collapser
     id="start-external-segment"
-    title={<>使用 <InlineCode>StartExternalSegment()</InlineCode></>}
+    title={<>使用する <InlineCode>
+      StartExternalSegment()
+    </InlineCode></>}
   >
-    **推奨：** `StartExternalSegment` ヘルパーを使用してください。New Relic では、 [クロスアプリケーショントレーシングを使用して、アプリケーション間のアクティビティを追跡するために使用しています。](/docs/agents/go-agent/features/cross-application-tracing-go).
+    推奨事項: New Relic[ディストリビューティッド（分散）トレースを](/docs/agents/go-agent/features/distributed-tracing-go)使用してアプリケーション間のアクティビティをトレースするために `StartExternalSegment` ヘルパーを使用するため、これを使用します。
 
     ```go
     func external(txn *newrelic.Transaction, req *http.Request) (*http.Response, error) {
@@ -238,11 +243,13 @@ Web サービスやクラウド上のリソースなど、外部サービスへ�
 
   <Collapser
     id="new-round-tripper"
-    title={<>使用 <InlineCode>NewRoundTripper()</InlineCode></>}
+    title={<>使用する <InlineCode>
+      NewRoundTripper()
+    </InlineCode></>}
   >
-    `NewRoundTripper` は、 [http.RoundTripper](https://golang.org/pkg/net/http/#RoundTripper) を返します。これにより、 `StartExternalSegment` を呼び出すことなく、 `http.Client`'s `Transport` フィールドを変更することで、外部呼び出しを計測することができます。返された `RoundTripper` は、 [FromContext](https://godoc.org/github.com/newrelic/go-agent#FromContext) を使用して、リクエストのコンテキストで `Transaction` を探します。
+    `NewRoundTripper` [http.RoundTripper](https://golang.org/pkg/net/http/#RoundTripper)を返します。これにより、 `http.Client`の`Transport`フィールドを変更することで、 `StartExternalSegment`を呼び出さずに外部呼び出しを計測できます。返された`RoundTripper`は、 [FromContext](https://godoc.org/github.com/newrelic/go-agent#FromContext)を使用してリクエストのコンテキストで`Transaction`を探します。
 
-    ここでは、 `NewRoundTripper` インストルメントの例をご紹介します。
+    `NewRoundTripper`インストルメンテーションの例を次に示します。
 
     ```go
     client := &http.Client{}
@@ -258,16 +265,18 @@ Web サービスやクラウド上のリソースなど、外部サービスへ�
 
 ## メッセージ・プロデューサー・セグメント [#go-message-producer-segments]
 
-RabbitMQやKafkaなどのキューイングシステムにメッセージを追加するGoアプリケーションコールを計測することができます。メッセージプロデューサーのセグメントは、New Relic の APM **Transactions breakdown** に表示されます。
+RabbitMQ や Kafka などのキューイング システムにメッセージを追加する Go アプリケーション呼び出しを計算できます。 メッセージ プロデューサー セグメントは、New Relic の APM <DNT>**Transactions breakdown**</DNT>に表示されます。
 
 メッセージ・プロデューサー・セグメントを計測する方法は一つしかありません。
 
 <CollapserGroup>
   <Collapser
     id="start-external-segment"
-    title={<>使用 <InlineCode>MessageProducerSegment</InlineCode></>}
+    title={<>使用する <InlineCode>
+      MessageProducerSegment
+    </InlineCode></>}
   >
-    基本的なセグメントと同様に、メッセージ・プロデューサー・セグメントは、 `StartTime` フィールドが入力されたときに開始され、 `End` メソッドが呼び出されたときに終了します。メッセージ・プロデューサ・セグメントを計測するには、監視したい関数の先頭に次のように記述します。
+    基本セグメントと同様に、メッセージ プロデューサ セグメントは、 `StartTime`フィールドにデータが入力されると開始し、 `End`メソッドが呼び出されると終了します。メッセージ プロデューサ セグメントをインストルメント化するには、監視する関数の先頭に以下を配置します。
 
     ```go
     s := newrelic.MessageProducerSegment{
@@ -281,7 +290,7 @@ RabbitMQやKafkaなどのキューイングシステムにメッセージを追�
     s.End()
     ```
 
-    `Library`, `DestinationType`, `DestinationName`, `DestinationTemporary` フィールドの割り当てについては、GoDoc [New Relic message producer segment documentation on GoDoc](https://godoc.org/github.com/newrelic/go-agent#MessageProducerSegment) をご参照ください。
+    `Library` 、 `DestinationType` 、 `DestinationName` 、または`DestinationTemporary`フィールドの割り当ての詳細については[、GoDoc の New Relic メッセージ プロデューサー セグメントのドキュメントを](https://godoc.org/github.com/newrelic/go-agent#MessageProducerSegment)参照してください。
 
     関数呼び出し全体にまたがるメッセージ・プロデューサー・コールをインスツルメンテーションする場合、deferステートメントを使用してインスツルメンテーションを簡素化することができます。
 
@@ -298,7 +307,7 @@ RabbitMQやKafkaなどのキューイングシステムにメッセージを追�
     ```
 
     <Callout variant="important">
-      メッセージプロデューサーセグメントは、Go Agentバージョン2.14.0で追加されました。
+      メッセージ プロデューサー セグメントは、Go エージェント バージョン 2.14.0 で追加されました。
     </Callout>
   </Collapser>
 </CollapserGroup>

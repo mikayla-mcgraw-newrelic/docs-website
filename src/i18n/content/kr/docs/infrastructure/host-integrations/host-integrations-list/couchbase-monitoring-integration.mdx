@@ -5,10 +5,9 @@ tags:
   - On-host integrations
   - On-host integrations list
 metaDescription: New Relic's Couchbase integration collects and sends inventory and metric data from your Couchbase cluster to the New Relic platform.
+freshnessValidatedDate: never
 translationType: machine
 ---
-
-import guidedInstallCli from 'images/guided-install-cli.png'
 
 Couchbase [통합](/docs/integrations/host-integrations/getting-started/introduction-host-integrations) 은 Couchbase 클러스터에서 인벤토리 및 메트릭 데이터를 수집하여 New Relic 플랫폼으로 전송하여 Couchbase 환경의 상태를 빠르게 확인할 수 있습니다. 클러스터, 노드, 쿼리 엔진 및 버킷 수준에서 데이터를 수집하므로 문제의 원인을 추적할 수 있습니다.
 
@@ -18,48 +17,33 @@ Couchbase [통합](/docs/integrations/host-integrations/getting-started/introduc
 
 우리의 통합은 Couchbase 버전 4.0 이상과 호환됩니다.
 
-통합을 설치하기 전에 다음 요구 사항을 충족하는지 확인하십시오.
-
-* Couchbase가 Kubernetes에서 실행되고 **있지 않다면** Couchbase를 실행하는 호스트에 [인프라 에이전트를 설치](/docs/infrastructure/install-infrastructure-agent/get-started/install-infrastructure-agent-new-relic) 해야 합니다. 그렇지 않으면:
-
-  * Kubernetes에서 실행 중인 경우 [다음 요구 사항](/docs/monitor-service-running-kubernetes#requirements) 을 참조하십시오.
-  * ECS에서 실행하는 경우 [다음 요구 사항](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs) 을 참조하십시오.
-
 ## 빠른 시작 [#quick]
 
-Couchbase 클러스터를 신속하게 계측하고 설치 안내를 통해 원격 측정 데이터를 보내십시오. 가이드 설치는 New Relic CLI 및 인프라 에이전트를 다운로드하고 설치하는 사용자 환경에 대한 맞춤형 CLI 명령을 생성합니다.
+Kubernetes 또는 ECS 환경에서 Couchbase를 실행하지 않는 경우 안내 설치를 권장합니다. 안내식 설치에서는 인프라 에이전트와 CLI를 사용하여 Couchbase 통합을 설정하고, 귀하의 환경에서 실행 중인 다른 애플리케이션과 로그 소스를 검색한 다음 어떤 항목을 계측해야 하는지 추천합니다.
 
-<img
-  title="The guided install CLI."
-  alt="A screenshot of the guided install CLI."
-  src={guidedInstallCli}
-/>
+가이드 설치는 대부분의 설정에서 작동합니다. 그러나 필요에 맞지 않으면 아래에 다른 설치 옵션이 있습니다.
 
-시작할 준비가 되셨습니까? 이 버튼 중 하나를 클릭하여 사용해 보십시오.
+시작할 준비가 되셨습니까? 사용하는 [데이터 센터 지역](/docs/accounts/accounts-billing/account-setup/choose-your-data-center) 에 따라 관련 버튼을 클릭합니다. 설치가 완료되면 이 설명서로 돌아와서 구성 옵션을 검토하십시오.
 
 <ButtonGroup>
   <ButtonLink
     role="button"
-    to="https://one.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoiY291Y2hiYXNlLW9wZW4tc291cmNlLWludGVncmF0aW9uIiwiYWN0aXZlQ29tcG9uZW50IjoiVlRTT0NvbW1hbmQiLCJhY3RpdmVFbnZpcm9ubWVudCI6ImNvdWNoYmFzZS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiJ9"
+    to="https://one.newrelic.com/marketplace/install-data-source?state=7cd80f29-a702-ebb3-edcd-80cab8b61ee2"
     variant="primary"
   >
-    안내 설치
+    안내 설치, 미국 지역
   </ButtonLink>
 
   <ButtonLink
     role="button"
-    to="https://one.eu.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoiY291Y2hiYXNlLW9wZW4tc291cmNlLWludGVncmF0aW9uIiwiYWN0aXZlQ29tcG9uZW50IjoiVlRTT0NvbW1hbmQiLCJhY3RpdmVFbnZpcm9ubWVudCI6ImNvdWNoYmFzZS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiJ9"
+    to="https://one.eu.newrelic.com/marketplace/install-data-source?state=7cd80f29-a702-ebb3-edcd-80cab8b61ee2"
     variant="primary"
   >
-    EU 가이드 설치
+    가이드 설치, EU 지역
   </ButtonLink>
 </ButtonGroup>
 
-가이드 설치는 인프라 에이전트를 사용하여 Couchbase 통합을 설정합니다. 뿐만 아니라 사용자 환경에서 실행 중인 다른 애플리케이션 및 로그 소스를 검색한 다음 계측해야 하는 것을 추천합니다.
-
-안내 설치는 대부분의 설정에서 작동합니다. 그러나 귀하의 요구 사항에 적합하지 않은 경우 아래에서 다른 방법을 찾아 Couchbase 클러스터 모니터링을 시작할 수 있습니다.
-
-## 설치 및 활성화 [#install]
+## 설치 [#install]
 
 Couchbase 통합을 설치하려면 환경에 대한 지침을 따르십시오.
 
@@ -84,7 +68,7 @@ Couchbase 통합을 설치하려면 환경에 대한 지침을 따르십시오.
     id="linux-install"
     title="Linux"
   >
-    1. 파일 이름 `nri-couchbase` 을(를) 사용하여 [통합 설치](/docs/install-integrations-package) 지침을 따르십시오.
+    1. [인프라 에이전트를 설치하고](/docs/integrations/host-integrations/installation/install-infrastructure-host-integrations/#install) `INTEGRATION_FILE_NAME` 변수를 `nri-couchbase` 로 바꿉니다.
 
     2. 디렉토리를 통합 폴더로 변경하십시오.
 
@@ -99,8 +83,6 @@ Couchbase 통합을 설치하려면 환경에 대한 지침을 따르십시오.
        ```
 
     4. [구성 설정](#config) 에 설명된 대로 `couchbase-config.yml` 파일을 편집합니다.
-
-    5. [인프라 에이전트를 다시 시작하십시오](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status) .
   </Collapser>
 
   <Collapser
@@ -109,12 +91,12 @@ Couchbase 통합을 설치하려면 환경에 대한 지침을 따르십시오.
   >
     1. 다음에서 `nri-couchbase` .MSI 설치 프로그램 이미지를 다운로드합니다.
 
-       [http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi](http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi)
+       [https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi](https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi)
 
     2. Windows 명령 프롬프트에서 설치하려면 다음을 실행하십시오.
 
        ```
-       msiexec.exe /qn /i <var>PATH\TO\</var>nri-couchbase-amd64.msi
+       msiexec.exe /qn /i PATH\TO\nri-couchbase-amd64.msi
        ```
 
     3. Integrations 디렉터리 `C:\Program Files\New Relic\newrelic-infra\integrations.d\` 에서 다음을 실행하여 샘플 구성 파일의 복사본을 만듭니다.
@@ -124,39 +106,33 @@ Couchbase 통합을 설치하려면 환경에 대한 지침을 따르십시오.
        ```
 
     4. [구성 설정](#config) 에 설명된 대로 `couchbase-config.yml` 파일을 편집합니다.
-
-    5. [인프라 에이전트를 다시 시작하십시오](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status) .
   </Collapser>
 </CollapserGroup>
 
-추가 참고 사항:
+## 통합 업데이트 [#update]
 
-* **고급:** 통합은 패키지 관리자 외부에 설치할 수 있도록 [tarball 형식](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball) 으로도 제공됩니다.
-* **호스트 내 통합은 자동으로 업데이트되지 않습니다.** 최상의 결과를 얻으 [려면 통합 패키지](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package) 및 [인프라 에이전트](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent) 를 정기적으로 업데이트하십시오.
+이 통합은 자동으로 업데이트되지 않습니다. 최상의 결과를 얻으려면 [통합 패키지](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package) 와 [인프라 에이전트를](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent) 정기적으로 업데이트하십시오.
 
-## 구성 [#configuration]
+## 설치 후 작업 [#after-install]
+
+설치가 완료되면 구성 옵션을 설정할 수 있습니다. 통합이 작동하려면 일부 구성이 필요하고 일부는 선택 사항입니다.
 
 ### 통합 구성 [#config]
 
-설치 방법에 따라 통합을 구성하는 몇 가지 방법이 있습니다.
+ECS 또는 Kubernetes 통합을 통해 이 통합을 활성화한 경우 해당 문서를 참조하십시오.
 
-* Kubernetes를 통해 활성화된 경우: [Kubernetes에서 실행 중인 서비스 모니터링을](/docs/monitor-service-running-kubernetes) 참조하십시오.
-* Amazon ECS를 통해 활성화된 경우: [ECS에서 실행 중인 서비스 모니터링을](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs) 참조하십시오.
-* 호스트에 설치된 경우: 통합의 YAML 구성 파일 `couchbase-config.yml` 에서 구성을 편집합니다.
+* [Kubernetes](/docs/monitor-service-running-kubernetes)
+* [ECS](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)
 
-통합의 YAML 형식 구성은 필수 로그인 자격 증명을 배치하고 데이터 수집 방법을 구성할 수 있는 곳입니다. 변경하는 옵션은 설정 및 기본 설정에 따라 다릅니다.
+표준 온호스트 설치의 경우 이 통합은 YAML 구성 파일 `apache-config.yml` 과 함께 제공됩니다. 이 구성에서 필요한 로그인 자격 증명을 배치하고 데이터 수집 방법을 구성할 수 있습니다. 변경하는 옵션은 설정 및 기본 설정에 따라 다릅니다. 복사 및 편집할 수 있는 샘플 구성 파일 `apache-config.yml.sample` 과 함께 제공됩니다.
 
 구성 파일에는 `interval` , `timeout` , `inventory_source` 와 같은 모든 통합에 적용할 수 있는 공통 설정이 있습니다. 이러한 공통 설정에 대한 모든 내용을 보려면 [구성 형식](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics) 문서를 참조하십시오.
 
-<Callout variant="important">
-  레거시 구성/정의 파일을 계속 사용하고 있다면 이 [문서](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/) 에서 도움을 받으십시오.
-</Callout>
-
 Couchbase와 관련된 특정 설정은 구성 파일의 `env` 섹션을 사용하여 정의됩니다. 이러한 설정은 Couchbase 인스턴스에 대한 연결과 기타 보안 설정 및 기능을 제어합니다. 유효한 설정 목록은 이 문서의 다음 섹션에 설명되어 있습니다.
 
-### 카우치베이스 인스턴스 설정 [#instance-settings]
+#### Couchbase 구성 옵션 [#config-options]
 
-Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모두 수집합니다. 표에서 각 컬렉션에 사용할 수 있는 설정에 대해 **적용** 대상 열을 사용합니다.
+Couchbase 통합은 측정항목과 인벤토리 정보를 모두 수집합니다. 이 표에서는 각 구성 옵션이 적용되는 항목을 보여줍니다.
 
 ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' '
 
@@ -184,7 +160,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
   <tbody>
     <tr>
       <td>
-        **호스트 이름**
+        <DNT>
+          **HOSTNAME**
+        </DNT>
       </td>
 
       <td>
@@ -202,7 +180,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **포트**
+        <DNT>
+          **PORT**
+        </DNT>
       </td>
 
       <td>
@@ -220,7 +200,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **QUERY_PORT**
+        <DNT>
+          **QUERY_PORT**
+        </DNT>
       </td>
 
       <td>
@@ -238,7 +220,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **사용자 이름**
+        <DNT>
+          **USERNAME**
+        </DNT>
       </td>
 
       <td>
@@ -256,7 +240,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **비밀번호**
+        <DNT>
+          **PASSWORD**
+        </DNT>
       </td>
 
       <td>
@@ -274,7 +260,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **USE_SSL**
+        <DNT>
+          **USE_SSL**
+        </DNT>
       </td>
 
       <td>
@@ -292,7 +280,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **CA_BUNDLE_FILE**
+        <DNT>
+          **CA_BUNDLE_FILE**
+        </DNT>
       </td>
 
       <td>
@@ -310,7 +300,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **CA_BUNDLE_DIR**
+        <DNT>
+          **CA_BUNDLE_DIR**
+        </DNT>
       </td>
 
       <td>
@@ -328,7 +320,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **시간 초과**
+        <DNT>
+          **TIMEOUT**
+        </DNT>
       </td>
 
       <td>
@@ -346,7 +340,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **ENABLE_BUCKETS**
+        <DNT>
+          **ENABLE_BUCKETS**
+        </DNT>
       </td>
 
       <td>
@@ -364,7 +360,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **ENABLE_BUCKET_STATS**
+        <DNT>
+          **ENABLE_BUCKET_STATS**
+        </DNT>
       </td>
 
       <td>
@@ -382,7 +380,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **ENABLE_CLUSTER_AND_NODES**
+        <DNT>
+          **ENABLE_CLUSTER_AND_NODES**
+        </DNT>
       </td>
 
       <td>
@@ -400,7 +400,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **측정항목**
+        <DNT>
+          **METRICS**
+        </DNT>
       </td>
 
       <td>
@@ -416,7 +418,9 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
     <tr>
       <td>
-        **목록**
+        <DNT>
+          **INVENTORY**
+        </DNT>
       </td>
 
       <td>
@@ -434,13 +438,15 @@ Couchbase 통합은 메트릭( **M** ) 및 인벤토리( **I** ) 정보를 모�
 
 이러한 설정의 값은 여러 가지 방법으로 정의할 수 있습니다.
 
-* 구성 파일에 직접 값을 추가합니다. 이것은 가장 일반적인 방법입니다.
-* `{{}}` 표기법을 사용하여 환경 변수의 값 바꾸기. 이를 위해서는 인프라 에이전트 v1.14.0 이상이 필요합니다. [여기에서](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough) 자세한 내용을 읽거나 [아래](#envvar-replacement) 의 예를 참조하십시오.
-* 비밀 관리를 사용합니다. 이를 사용하여 구성 파일에서 일반 텍스트로 노출될 암호와 같은 민감한 정보를 보호하십시오. 자세한 내용은 [비밀 관리](/docs/integrations/host-integrations/installation/secrets-management) 를 참조하십시오.
+* 구성 파일에 직접 값을 추가합니다(가장 일반적인 방법).
+* `{{}}` 표기법을 사용하여 환경 변수의 값을 바꿉니다. 이를 위해서는 인프라 에이전트 버전 1.14.0 이상이 필요합니다. 자세한 정보는 [인프라 구성을](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough) 참조하거나 [환경 변수 예제를](#example5) 참조하십시오.
+* 비밀 관리 사용. 이를 사용하여 구성 파일에서 일반 텍스트로 노출되는 암호와 같은 민감한 정보를 보호하십시오. 자세한 내용은 [암호 관리를](/docs/integrations/host-integrations/installation/secrets-management) 참조하세요.
 
-### 라벨/맞춤 속성 [#labels]
+### 라벨 [#labels]
 
-레이블을 사용하여 메트릭을 추가로 꾸밀 수 있습니다. 레이블을 사용하면 키/값 쌍 속성을 메트릭에 추가할 수 있으며, 이 속성을 사용하여 메트릭을 쿼리, 필터링 또는 그룹화할 수 있습니다.<br/> 기본 샘플 구성 파일에는 레이블의 예가 포함되어 있습니다. 그러나 필수 항목이 아니므로 원하는 항목을 제거, 수정 또는 추가할 수 있습니다.
+레이블을 사용하여 메트릭을 추가로 꾸밀 수 있습니다. 라벨을 사용하면 측정항목에 속성(키/값 쌍)을 추가할 수 있으며 이를 사용하여 측정항목을 쿼리, 필터링 또는 그룹화할 수 있습니다.
+
+기본 샘플 구성 파일에는 레이블의 예가 포함되어 있지만 필수가 아니므로 선택한 레이블을 제거, 수정 또는 추가할 수 있습니다.
 
 ```
  labels:
@@ -1642,7 +1648,7 @@ Couchbase 통합은 다음 메트릭 데이터 속성을 수집합니다. 일부
 
 ## 인벤토리 데이터 [#inventory]
 
-Couchbase 통합은 Couchbase 데이터베이스의 구성 매개변수를 캡처합니다. 데이터는 **config/couchbase** 소스 아래의 인프라 [인벤토리 페이지](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure) 에서 사용할 수 있습니다. 인벤토리 데이터에 대한 자세한 내용은 데이터 [이해](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data) 를 참조하십시오.
+Couchbase 통합은 Couchbase 데이터베이스의 설정 이야기를 캡처합니다. 데이터는 <DNT>**config/couchbase**</DNT> 소스 아래 인프라 UI의 [인벤토리 페이지](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure) 에서 사용할 수 있습니다. 인벤토리 데이터에 대한 자세한 내용은 [데이터 이해를](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data) 참조하세요.
 
 통합은 다음 Couchbase 구성 매개변수에 대한 데이터를 캡처합니다.
 
@@ -1904,4 +1910,4 @@ Couchbase 통합은 Couchbase 데이터베이스의 구성 매개변수를 캡�
 
 ## 소스 코드 확인 [#source-code]
 
-이 통합은 오픈 소스 소프트웨어입니다. 즉 [, 소스 코드를 탐색하고](https://github.com/newrelic/nri-couchbase "링크가 새 창에서 열립니다.") 개선 사항을 보내거나 고유한 포크를 만들어 빌드할 수 있습니다.
+이 통합은 오픈 소스 소프트웨어입니다. 즉 [, 소스 코드를 탐색하고](https://github.com/newrelic/nri-apache/) 개선 사항을 보내거나 자신만의 포크를 만들어 빌드할 수 있습니다.

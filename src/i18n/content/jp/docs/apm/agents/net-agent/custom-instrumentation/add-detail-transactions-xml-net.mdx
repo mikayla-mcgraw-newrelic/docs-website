@@ -5,6 +5,7 @@ tags:
   - NET agent
   - Custom instrumentation
 metaDescription: 'New Relic .NET agent: Use an XML file to collect data from un-instrumented methods and to block instrumentation of methods you do not want instrumented.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -21,7 +22,7 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
 1. .NETエージェントがすべてのXMLファイルを読み取り、そのインストルメンテーションセットを定義するために使用するextensionsディレクトリに新しい`.xml`ファイルを作成します。 .NET Frameworkエージェントの場合は、次の場所を使用します。
 
    ```
-   C:\<mark>ProgramData</mark>\New Relic\.NET Agent\Extensions
+   C:\ProgramData\New Relic\.NET Agent\Extensions
    ```
 
    <Callout variant="important">
@@ -33,22 +34,22 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
 2. このテンプレートを[、サンプル](#sample)を例として使用して作成したファイルにコピーします。これは2つのメソッドをインストルメントしますが、インストルメンテーションファイルにメソッドを追加できます。
 
    <Callout variant="tip">
-     <var>AssemblyName</var> 、 <var>NameSpace.ClassName</var> 、および<var>MethodName</var>の値では、大文字と小文字が区別されます。
+     値`AssemblyName` 、 `NameSpace.ClassName` 、および`MethodName`は大文字と小文字が区別されます。
    </Callout>
 
-   ```
+   ```xml
    <?xml version="1.0" encoding="utf-8"?>
    <extension xmlns="urn:newrelic-extension">
      <instrumentation>
        <!-- These methods appear in the transactions breakdown table and in transaction traces -->
-       <tracerFactory metricName="<var>Category/Name</var>">
-         <match assemblyName="<var>AssemblyName</var>" className="<var>NameSpace.ClassName</var>">
-           <exactMethodMatcher methodName="<var>MethodName</var>" />
+       <tracerFactory metricName="Category/Name">
+         <match assemblyName="AssemblyName" className="NameSpace.ClassName">
+           <exactMethodMatcher methodName="MethodName" />
          </match>
        </tracerFactory>
-       <tracerFactory metricName="<var>Category/Name2</var>"> 
-          <match assemblyName="<var>AssemblyName</var>" className="<var>NameSpace.ClassName2</var>"> 
-           <exactMethodMatcher methodName="<var>MethodName2</var>" /> 
+       <tracerFactory metricName="Category/Name2"> 
+          <match assemblyName="AssemblyName" className="NameSpace.ClassName2"> 
+           <exactMethodMatcher methodName="MethodName2" /> 
           </match>
        </tracerFactory>
      </instrumentation>
@@ -80,24 +81,25 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
 トランザクションを無視するには：
 
 1. [カスタムインストルメンテーションを追加します](#procedures)。
+
 2. 名前が`NewRelic.Agent.Core.Tracer.Factories.IgnoreTransactionTracerFactory`の`tracerFactory`を追加します：
 
-```
-<tracerFactory name="<mark>NewRelic.Agent.Core.Tracer.Factories.IgnoreTransactionTracerFactory</mark>">
-  <match assemblyName="System.Web.Extensions" className="System.Web.Handlers.ScriptResourceHandler">
-   <exactMethodMatcher methodName="Throw404" />
-  </match>
-</tracerFactory>
-```
+   ```xml
+   <tracerFactory name="NewRelic.Agent.Core.Tracer.Factories.IgnoreTransactionTracerFactory">
+     <match assemblyName="System.Web.Extensions" className="System.Web.Handlers.ScriptResourceHandler">
+       <exactMethodMatcher methodName="Throw404" />
+     </match>
+   </tracerFactory>
+   ```
 
 ## 別のトランザクションで非同期作業を追跡する [#track-async]
 
 場合によっては、 `AsyncForceNewTransactionWrapper`インストルメンテーションを適用することで、非同期作業を個別のトランザクションとして追跡できます。
 
-```
-<tracerFactory name="<mark>AsyncForceNewTransactionWrapper</mark>">
-  <match assemblyName="<var>AssemblyName</var>" className="<var>Namespace.ClassName</var>">
-    <exactMethodMatcher methodName="<var>MethodName</var>" />
+```xml
+<tracerFactory name="AsyncForceNewTransactionWrapper">
+  <match assemblyName="AssemblyName" className="Namespace.ClassName">
+    <exactMethodMatcher methodName="MethodName" />
   </match>
 </tracerFactory>
 ```
@@ -110,7 +112,7 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
       </th>
 
       <th>
-        コメント
+        コメントコメント
       </th>
     </tr>
   </thead>
@@ -155,7 +157,7 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
   >
     次のメソッドは、 `AsyncForceNewTransactionWrapper`カスタムインストルメンテーションを使用してインストルメントできます。
 
-    ```
+    ```cs
     private void SyncMethod()
     {
     }
@@ -170,19 +172,19 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
     }
     ```
 
-    次のメソッドは、 `AsyncForceNewTransactionWrapper`カスタムインストルメンテーションを使用してインストルメント化する**ことはできません**。
+    次のメソッドは、 <DNT>**cannot**</DNT>カスタムインストゥルメンテーションを使用してインストゥルメントされます。 `AsyncForceNewTransactionWrapper`
 
-    ```
-    private <mark>async void</mark> AsyncMethod_Void()
+    ```cs
+    private async void AsyncMethod_Void()
     {
     }
 
-    <mark>[Transaction]</mark>
+    [Transaction]
     private void TransactionAttributedMethod()
     {
     }
 
-    <mark>[Trace]</mark>
+    [Trace]
     private void TracedAttributedMethod()
     {
     }
@@ -195,7 +197,7 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
   >
     次のメソッド呼び出しは、 `AsyncForceNewTransactionWrapper`インストルメンテーションで使用できます。
 
-    ```
+    ```cs
     Task.Run(SyncMethod);
 
     Task.Factory.StartNew(AsyncMethod_Task);
@@ -204,14 +206,14 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
     newThread.Start();
     ```
 
-    次のメソッド呼び出しは、 `AsyncForceNewTransactionWrapper`インストルメンテーションでは使用**できません**。
+    次のメソッド呼び出し<DNT>**cannot**</DNT>は、 `AsyncForceNewTransactionWrapper`インストゥルメンテーションで使用されます。
 
-    ```
-    SyncMethod();              //This is not an asynchronous call
+    ```cs
+    SyncMethod();              // This is not an asynchronous call
 
-    await AsyncMethod_Task();  //Not started with Task.Run, Task.Factor.StartNew, or new Thread()
+    await AsyncMethod_Task();  // Not started with Task.Run, Task.Factor.StartNew, or new Thread()
 
-    AsyncMethod_Void();        //Async Void is not supported
+    AsyncMethod_Void();        // Async Void is not supported
     ```
   </Collapser>
 </CollapserGroup>
@@ -220,10 +222,29 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
 
 この例では、2つのメソッドを計測し、別のメソッドを無視します。
 
-* **楽器**： `CustomInstrumentDemo.Controllers.FirstController.FirstExample()`
-* **楽器**： `CustomInstrumentDemo.Controllers.SecondController.SecondExample()`
-* **無視する**： `CustomInstrumentDemo.Controllers.SecondController.ThirdExample()`
-* **楽器**： `CustomInstrumentDemo.Controllers.SecondController.FourthExample(int id, string name)`
+* <DNT>
+    **Instrument**
+  </DNT>
+
+  ： `CustomInstrumentDemo.Controllers.FirstController.FirstExample()`
+
+* <DNT>
+    **Instrument**
+  </DNT>
+
+  ： `CustomInstrumentDemo.Controllers.SecondController.SecondExample()`
+
+* <DNT>
+    **Ignore**
+  </DNT>
+
+  ： `CustomInstrumentDemo.Controllers.SecondController.ThirdExample()`
+
+* <DNT>
+    **Instrument**
+  </DNT>
+
+  ： `CustomInstrumentDemo.Controllers.SecondController.FourthExample(int id, string name)`
 
 このカスタムインストルメンテーションスキームを実装するには、次のサンプルファイルとインストルメントされたメソッドを使用します。
 
@@ -234,28 +255,31 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
   >
     以下は、 `MyInstrumentation.xml`という名前のカスタムインストルメンテーションファイルの例です。
 
-    ```
+    ```xml
     <?xml version="1.0" encoding="utf-8"?>
     <extension xmlns="urn:newrelic-extension">
       <instrumentation>
         <!-- instrument CustomInstrumentDemo.Controllers.FirstController.FirstExample and creates metric named Custom/Foo1 -->
         <tracerFactory metricName="Custom/Foo1">
           <match assemblyName="CustomInstrumentDemo" className="CustomInstrumentDemo.Controllers.FirstController">
-            <exactMethodMatcher methodName="FirstExample" />        
+            <exactMethodMatcher methodName="FirstExample" />
           </match>
         </tracerFactory>
-         <!-- instrument CustomInstrumentDemo.Controllers.SecondController.SecondExample -->
+
+        <!-- instrument CustomInstrumentDemo.Controllers.SecondController.SecondExample -->
         <tracerFactory>
           <match assemblyName="CustomInstrumentDemo" className="CustomInstrumentDemo.Controllers.SecondController">
             <exactMethodMatcher methodName="SecondExample" />
           </match>
         </tracerFactory>
+
         <!-- ignore CustomInstrumentDemo.Controllers.SecondController.ThirdExample -->
         <tracerFactory name="NewRelic.Agent.Core.Tracer.Factories.IgnoreTransactionTracerFactory">
           <match assemblyName="CustomInstrumentDemo" className="CustomInstrumentDemo.Controllers.SecondController">
             <exactMethodMatcher methodName="ThirdExample" />
           </match>
         </tracerFactory>
+
         <!-- instrument CustomInstrumentDemo.Controllers.SecondController.FourthExample and creates metric named Custom/{value},
              where {value} is the value of the first string parameter of the instrumented method
              (in this case, the first string parameter is "name"). -->
@@ -275,7 +299,7 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
   >
     このコードには、[サンプルのカスタムインストルメンテーションファイル](#example-file)で指定されている3つのメソッドが含まれています。
 
-    ```
+    ```cs
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -285,48 +309,38 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
 
     namespace CustomInstrumentDemo.Controllers
     {
-
         public class FirstController : Controller
         {
-
             public ActionResult Foo1()
             {
                 ViewBag.Message = "Your Sample Page";
-
                 FirstExample();
-
                 return View();
             }
 
             public void FirstExample()
             {
                 int firstVar = 1;
-
                 for (int i = 0; i <= 500; i++)
-                    {
-                        firstVar *= 5;
-                        Thread.Sleep(50);
-                    } 
-
+                {
+                    firstVar *= 5;
+                    Thread.Sleep(50);
+                } 
             }
         }
 
         public class SecondController : Controller
         {
-
             public ActionResult Foo2()
             {
                 ViewBag.Message = "This view will include detailed information on the SecondExample method";
-
                 SecondExample();
-
                 return view;
             }
 
             public ActionResult Foo3()
             {
                 ViewBag.Message = "This view will be ignored because of the inclusion of the ThirdExample method";
-
                 ThirdExample();
             }
 
@@ -343,7 +357,6 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
                         reader.Read();
                     }
                 }
-
             }
 
             public void ThirdExample()
@@ -355,9 +368,8 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
                 }
                 catch (Exception ex)
                 {
-                    NewRelic.Api.Agent.NewRelic.<a href="/docs/agents/net-agent/net-agent-api/noticeerror-net-agent">NoticeError</a>(ex);
+                    NewRelic.Api.Agent.NewRelic.NoticeError(ex);
                 }
-
             }
 
             public void FourthExample(int id, string name)
@@ -374,12 +386,12 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
 
 トレーサーから作成されたメトリックは、一致したメソッドのクラス名とメソッド名を使用して名前が付けられます。この名前は`metricName`属性で上書きできます。 `metricName`を`Custom/`で始めます（たとえば、 `metricName="Custom/OrderSubmissions"` ）。
 
-```
+```xml
 <!-- instruments MyCompany.Order.Submit() and creates a metric named Custom/OrderSubmissions -->
-  <tracerFactory metricName="Custom/OrderSubmissions">
+<tracerFactory metricName="Custom/OrderSubmissions">
   <match assemblyName="MyCompany" className="MyCompany.Order">
     <exactMethodMatcher methodName="Submit" />
-  </match
+  </match>
 </tracerFactory>
 ```
 
@@ -392,7 +404,7 @@ New Relicは、メソッドトレーサーを使用してカスタムインス�
 
 `transactionNamingPriority`属性を使用して、トレーサートランザクションの名前付けを優先するようにエージェントに指示します。有効な値は`1`から`7`です。ここで、 `7`は`1`から`6`よりも優先されます。また、 `metricName`属性は`Custom/`で始まる必要があります（たとえば、 `metricName="Custom/instance"` ）。
 
-```
+```xml
 <!-- instructs the agent to create a metric for MyControllerBase.Execute and to name the transaction using this tracer's metric name -->
 <tracerFactory metricName="Custom/instance" transactionNamingPriority="7">
   <match assemblyName="MyCompany" className="MyCompany.MyControllerBase">

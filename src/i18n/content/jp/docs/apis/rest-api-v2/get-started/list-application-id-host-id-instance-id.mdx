@@ -5,6 +5,7 @@ tags:
   - REST API v2
   - Get started
 metaDescription: 'How to locate New Relic IDs, including the application ID, host ID, and instance ID, via the REST API Explorer.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -12,9 +13,9 @@ New Relic の [APM](/docs/apm/new-relic-apm/getting-started/introduction-new-rel
 
 IDは以下のものが考えられます。
 
-* アプリケーションID `$APP_ID` インスツルメンテッド・アプリごとに
-* ホストID `$HOST_ID` 各ホストの
-* Instance ID `$INSTANCE_ID` アプリのインスタンスが複数ある場合。
+* インストルメント化された各アプリのアプリケーション ID `$APP_ID`
+* 各ホストのホスト ID `$HOST_ID`
+* アプリのインスタンスが複数ある場合はインスタンス ID `$INSTANCE_ID`
 
 これらの ID を [New Relic API Explorer](/docs/apis/using-the-api-explorer) にリストアップするには、 [API キー](/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key) が必要です。
 
@@ -22,50 +23,97 @@ IDは以下のものが考えられます。
 
 API Explorerを使用して、特定の製品のすべてのプロダクトIDのリストを返すことができます。
 
-1. **[one.newrelic.com](http://one.newrelic.com) > APM> （アプリを選択）** にアクセスします。
-2. [rpm.newrelic.com/api/explore](https://rpm.newrelic.com/api/explore) のAPI Explorerにアクセスし、 **Select an account** のドロップダウンからアカウント名を選択します。
-3. サイドバーから、 **（製品カテゴリー）を選択> GETリスト**.を選択 **Send Request**.
-4. **Response** を参照して、プロダクト ID を探します。
+1. <DNT>
+     **[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) > APM & services > (select an app)**
+   </DNT>
+
+   に移動します。
+
+2. [rpm.newrelic.com/api/explore](https://rpm.newrelic.com/api/explore)のAPIエクスプローラーにアクセスし、 次に、
+
+   <DNT>
+     **Select an account**
+   </DNT>
+
+   ドロップダウンからアカウント名を選択します。
+
+3. サイドバーから
+
+   <DNT>
+     **(product category) > GET List**
+   </DNT>
+
+   を選択します。
+
+   <DNT>
+     **Send Request**
+   </DNT>
+
+   を選択します。
+
+4. <DNT>
+     **Response**
+   </DNT>
+
+   を参照して製品 ID を見つけます。
 
 REST APIコールに配置したプロダクトIDを使用してください。
 
 ## アプリケーションIDの一覧 [#locating_app_id]
 
-APM エージェントが監視する各アプリには、名前が割り当てられます。また、一意の `$APP_ID` がその名前に関連付けられています。 `$APP_ID` は、アプリに関するAPM情報を取得するための基本となるものです。 `$APP_ID` の一覧表示と使用、およびサマリーデータの取得についての詳細は、 [アプリIDの一覧表示](/docs/apis/rest-api-v2/application-examples-v2/listing-your-app-id-metric-data-v2) を参照してください。
+<InlinePopover type="apm"/>エージェントによって監視される各アプリには名前が割り当てられます。 その名前には一意の`$APP_ID`も関連付けられています。 `$APP_ID`は、アプリに関する<InlinePopover type="apm"/>情報を取得するための基本です。 `$APP_ID`一覧表示と使用、および概要データの取得の詳細については、 [「アプリ ID の一覧表示」](/docs/apis/rest-api-v2/application-examples-v2/listing-your-app-id-metric-data-v2)を参照してください。
 
 ## ホストIDの一覧表示 [#locating_host_id]
 
-`$HOST_ID` は、アプリを実行している特定のホストのAPMデータを取得するために使用します。物理サーバには複数のホストが存在する場合があります。例えば、物理サーバ上で動作するWebサーバプログラムは、複数の仮想ホストを持つように設定することができます。
+`$HOST_ID`は、アプリを実行している特定のホストの APM データを取得するために使用されます。物理サーバーには複数のホストがある場合があります。たとえば、物理サーバー上で実行されている Web サーバー プログラムは、複数の仮想ホストを持つように構成されている場合があります。
 
 ホストと物理サーバーのIDは同じではありません。ホストのIDはそれぞれ固有のもので、異なる項目を表しています。
 
-`$HOST_ID` を使用して、ホストのサマリーメトリクスと、特定のメトリクスのタイムスライス値を取得します。利用可能なメトリクスの詳細については、次のとおりです。
+`$HOST_ID`を使用して、ホストのサマリー メトリックと特定のメトリック タイムスライス値を取得します。利用可能な指標の詳細については、次を参照してください。
 
-1. **[rpm.newrelic.com](https://rpm.newrelic.com)** にアクセスしてください。
-2. [API Explorer](https://rpm.newrelic.com/api/explore/application_hosts/list) にアクセスし、 **Select an account** のドロップダウンからアカウント名を選択します。
-3. API Explorerの **アプリケーションホスト** ページにアクセスします。 [rpm.newrelic.com/api/explore/application_hosts/names](https://rpm.newrelic.com/api/explore/application_hosts/names).
+1. <DNT>
+     **[rpm.newrelic.com](https://rpm.newrelic.com)**
+   </DNT>
+
+   に移動します。
+
+2. [API エクスプローラー](https://rpm.newrelic.com/api/explore/application_hosts/list)に移動し、
+
+   <DNT>
+     **Select an account**
+   </DNT>
+
+   ドロップダウンからアカウント名を選択します。
+
+3. [rpm.newrelic.com/api/explore/application_hosts/names](https://rpm.newrelic.com/api/explore/application_hosts/names)にある API Explorer の
+
+   <DNT>
+     **Application host**
+   </DNT>
+
+   ページに移動します。
 
 <CollapserGroup>
   <Collapser
     id="host_id"
     title="REST API Explorerを使ったホストIDとサマリーデータの取得"
   >
-    API Explorer を使用して、特定のアプリケーションのすべての `$HOST_ID` のリストを返すには、 [`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id) .
+    API Explorer を使用して特定のアプリケーションのすべての`$HOST_ID`のリストを返すには、 [`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id)が必要です。
 
-    1. [API Explorer](https://rpm.newrelic.com/api/explore/application_hosts/list) にアクセスし、 **Select an account** のドロップダウンからアカウント名を選択します。
+    1. [API エクスプローラー](https://rpm.newrelic.com/api/explore/application_hosts/list)に移動し、 <DNT>**Select an account**</DNT>ドロップダウンからアカウント名を選択します。
 
-    2. 具体的には [`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id) を以下のコマンドで入力してください。
+    2. 次のコマンドに特定の[`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id)を入力します。
 
        ```
-       curl -X GET 'https://api.newrelic.com/v2/applications/<var>$APP_ID</var>/hosts.json' \
-            -H 'Api-Key:<a href="/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key"><var>$API_KEY</var></a>' -i
+       curl -X GET "https://api.newrelic.com/v2/applications/$APP_ID/hosts.json" \
+            -H "Api-Key:<a href='/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key'>$API_KEY</a>" -i
        ```
 
-       [EU リージョンのアカウント](/docs/using-new-relic/welcome-new-relic/getting-started/introduction-eu-region-data-center) を持っている場合、エンドポイントは `https://api.eu.newrelic.com` で始まります。
+       [EU 地域のアカウント](/docs/using-new-relic/welcome-new-relic/getting-started/introduction-eu-region-data-center)をお持ちの場合、エンドポイントは`https://api.eu.newrelic.com`で始まります。
 
-    3. Select **Send Request**.
+    3. <DNT>**Send Request**</DNT>を選択します。
 
-    4. **レスポンス** を参照して、 `{HOST_ID} を探します。` 各ホストの
+    4. <DNT>**Response**</DNT>を参照して、各ホストの`{HOST_ID}`を見つけます。
   </Collapser>
 
   <Collapser
@@ -116,7 +164,7 @@ APM エージェントが監視する各アプリには、名前が割り当て�
 
 ## インスタンスIDの一覧 [#locating_instance_id]
 
-インスタンス ID の意味は、使用している New Relic 言語エージェントによって異なります。この ID は REST API から一覧できます。Java の場合、APM の **Overview** ページから [インスタンス ID (JVM)](#UI) を表示することもできます。
+InstanceID の意味は、使用されているNew Relic言語エージェントによって異なります。 この ID は REST API から一覧表示できます。 Java[ JVM](#UI)の場合、APM の<DNT>**Overview**</DNT> ページから インスタンス ID ( ) を表示すること もできます。
 
 <table>
   <thead>
@@ -158,7 +206,7 @@ APM エージェントが監視する各アプリには、名前が割り当て�
       </td>
 
       <td>
-        New Relic の .NET Framework エージェントの場合、これは `AppDomain です。`
+        .NET Framework のエージェントの場合、これは `AppDomain`
       </td>
     </tr>
 
@@ -204,29 +252,29 @@ APM エージェントが監視する各アプリには、名前が割り当て�
   </tbody>
 </table>
 
-`{INSTANCE_ID}を使用して、インスタンスのサマリーメトリクスや特定のメトリクスのタイムスライス値を取得できます。` を参照してください。利用可能なメトリクスの詳細については、 [REST API Explorer Application Instance](https://rpm.newrelic.com/api/explore/application_instances/names) ページを参照してください。
+`{INSTANCE_ID}`を使用して、インスタンスのサマリー メトリックと特定のメトリック タイムスライス値を取得できます。使用可能なメトリックの詳細については、 [REST API エクスプローラーのアプリケーション インスタンス](https://rpm.newrelic.com/api/explore/application_instances/names)ページを使用してください。
 
 <CollapserGroup>
   <Collapser
     id="host_id"
     title="REST API Explorerを使ったインスタンスIDとサマリーデータの取得"
   >
-    API Explorer を使用して、特定のアプリケーションのすべての `$INSTANCE_ID` のリストを返すには、 [`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id) が必要です。
+    API Explorer を使用して特定のアプリケーションのすべての`$INSTANCE_ID`のリストを返すには、 [`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id)が必要です。
 
-    1. [API Explorer](https://rpm.newrelic.com/api/explore/application_hosts/list) にアクセスし、 **Select an account** のドロップダウンからアカウント名を選択します。
+    1. [API エクスプローラー](https://rpm.newrelic.com/api/explore/application_hosts/list)に移動し、 <DNT>**Select an account**</DNT>ドロップダウンからアカウント名を選択します。
 
-    2. 具体的には [`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id) を以下のコマンドで入力してください。
+    2. 次のコマンドに特定の[`$APP_ID`](/docs/apis/rest-api-v2/requirements/finding-product-id)を入力します。
 
        ```
-       curl -X GET 'https://api.newrelic.com/v2/applications/<var>$APP_ID</var>/hosts.json' \
-            -H 'Api-Key:<a href="/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key"><var>$API_KEY</var></a>' -i
+       curl -X GET "https://api.newrelic.com/v2/applications/$APP_ID/hosts.json" \
+            -H "Api-Key:<a href='/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key'>$API_KEY</a>" -i
        ```
 
-       [EU リージョンのアカウント](/docs/using-new-relic/welcome-new-relic/getting-started/introduction-eu-region-data-center) を持っている場合、エンドポイントは `https://api.eu.newrelic.com` で始まります。
+       [EU 地域のアカウント](/docs/using-new-relic/welcome-new-relic/getting-started/introduction-eu-region-data-center)をお持ちの場合、エンドポイントは`https://api.eu.newrelic.com`で始まります。
 
-    3. Select **Send Request**.
+    3. <DNT>**Send Request**</DNT>を選択します。
 
-    4. **Response** を参照して、各インスタンスの `$INSTANCE_ID` を探します。
+    4. <DNT>**Response**</DNT>を参照して、各インスタンスの`$INSTANCE_ID`を見つけます。
   </Collapser>
 
   <Collapser
@@ -274,31 +322,31 @@ APM エージェントが監視する各アプリには、名前が割り当て�
     id="UI"
     title="UIによるJavaインスタンスID（JVM）の取得"
   >
-    Javaアプリ：特定のJVMを探すには `$INSTANCE_ID` をNew Relicに登録します。
+    Java アプリ: New Relic で特定の JVM `$INSTANCE_ID`を見つけるには:
 
-    1. **[one.newrelic.com](http://one.newrelic.com) > APM> Applications> (select an app)> JVMs**.
+    1. <DNT>**[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) > APM & services > Applications > (select an app) > JVMs**</DNT>に移動します。
 
     2. インスタンスの名前を選択します。
 
-       URLでは、 `_i` 指定子の後の数字がJava JVMインスタンスを表します。
+       URL で、 `_i`指定子の後の数字は Java JVM インスタンスを表します。
 
        ```
-       https://rpm.newrelic.com/accounts/<var><a href="/docs/accounts-partnerships/accounts/account-setup/account-id">$ACCOUNT_ID</a></var>/applications/<var>$APP_ID</var>_i<var>$INSTANCE_ID</var>
+       https://rpm.newrelic.com/accounts/<a href="/docs/accounts-partnerships/accounts/account-setup/account-id">$ACCOUNT_ID</a>/applications/$APP_ID_i$INSTANCE_ID
        ```
   </Collapser>
 </CollapserGroup>
 
 ## REST API アプリケーションリストの例 [#app-list-example]
 
-次の例は、 `APP_ID` を使って、あるアプリケーションのすべてのID情報を探す方法を示しています。 [EUのアカウント](/docs/using-new-relic/welcome-new-relic/getting-started/introduction-eu-region-data-center) を持っている場合、エンドポイントは `https://api.eu.newrelic.com` で始まります。
+次の例は、 `APP_ID`を使用してアプリケーションのすべての ID 情報を見つける方法を示しています。[EU アカウント](/docs/using-new-relic/welcome-new-relic/getting-started/introduction-eu-region-data-center)をお持ちの場合、エンドポイントは`https://api.eu.newrelic.com`で始まります。
 
 ```
 curl -X GET 'https://api.newrelic.com/v2/applications.json' \
-     -H 'Api-Key:<a href="/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key"><var>$API_KEY</var></a>' -i \
+     -H "Api-Key:<a href='/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key'>$API_KEY</a>" -i \
      -d 'filter[ids]=1441'    <----<<<< {APP_ID}
 ```
 
-結果として得られた出力例は、5台のサーバーで実行されています。1 台のサーバが 2 台のバーチャルホストをホストしており、合計 6 台のホストが存在しています。出力には、 `links` のセクションに、 `application_instances` と `application_hosts` のアプリケーションがリストアップされています。
+結果の出力例は、5 つのサーバーで実行されています。1 つのサーバーが 2 つの仮想ホストをホストしており、合計 6 つのホストがあります。出力には、アプリケーションの`application_instances`と`application_hosts`をリストする`links`セクションが含まれます。
 
 ```
 {

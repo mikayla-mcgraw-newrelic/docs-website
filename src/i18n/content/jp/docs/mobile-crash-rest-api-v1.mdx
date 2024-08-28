@@ -1,5 +1,6 @@
 ---
 title: モバイルークラッシュREST API v1
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -21,10 +22,10 @@ APIを利用することができます。
 * あなたのNew Relic [アカウントID](/docs/accounts-partnerships/accounts/account-setup/account-id)
 * あなたのモバイルモニタリング [アプリケーションID](/docs/apis/rest-api-v2/requirements/finding-product-id#mobile)
 
-たとえば、
+例えば：
 
 ```
-https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_application_ID}</var>
+https://rpm.newrelic.com/accounts/{account_ID}/mobile/{mobile_application_ID}
 ```
 
 <Callout variant="tip">
@@ -43,7 +44,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
     **リソースのURLです。**
 
     ```
-    https://mobile-data-api.newrelic.com/v1/mobile-crashes​/<var>{account_id}</var>/<var>{mobile_application_id}</var>
+    https://mobile-data-api.newrelic.com/v1/mobile-crashes​/{account_id}/{mobile_application_id}
     ```
 
     **URLパラメータです。**
@@ -68,7 +69,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
       <tbody>
         <tr>
           <td>
-            `サイズ`
+            `size`
 
             オプションです。返すべきクラッシュタイプの数。
           </td>
@@ -84,7 +85,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `ソート`
+            `sort`
 
             オプションです。特定のプロパティでソートされた結果の順序： recent、occurrence-count、users-affected。
           </td>
@@ -100,7 +101,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `開始時間`
+            `startTime`
 
             任意です。エポックタイムスタンプ（単位：ミリ秒）。データを取得するためのタイム・ウィンドウを定義します。
           </td>
@@ -116,7 +117,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `エンドタイム`
+            `endTime`
 
             任意です。エポックタイムスタンプ（単位：ミリ秒）。データを取得するためのタイム・ウィンドウを定義します。
           </td>
@@ -177,7 +178,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -191,7 +192,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -205,7 +206,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -219,7 +220,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -233,7 +234,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -247,7 +248,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -261,7 +262,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -277,7 +278,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -293,7 +294,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -309,7 +310,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -345,7 +346,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -359,7 +360,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -373,7 +374,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -387,7 +388,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -401,7 +402,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -425,7 +426,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
     **リソースのURLです。**
 
     ```
-    https://mobile-data-api.newrelic.com/v1/mobile-crashes/<var>{account_id}</var>/<var>{mobile_application_id}</var>/<var>{crash_fingerprint}</var>
+    https://mobile-data-api.newrelic.com/v1/mobile-crashes/{account_id}/{mobile_application_id}/{crash_fingerprint}
     ```
 
     **URLパラメータです。**
@@ -466,7 +467,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `開始時間`
+            `startTime`
 
             任意です。エポックタイムスタンプ（単位：ミリ秒）。データを取得するためのタイム・ウィンドウを定義します。
           </td>
@@ -482,7 +483,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `エンドタイム`
+            `endTime`
 
             任意です。エポックタイムスタンプ（単位：ミリ秒）。データを取得するためのタイム・ウィンドウを定義します。
           </td>
@@ -498,7 +499,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `サイズ`
+            `size`
 
             オプションです。返すべきクラッシュの発生回数です。有効な範囲1 - 100
           </td>
@@ -514,7 +515,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `ソート`
+            `sort`
 
             オプションです。特定のプロパティでソートされた結果の順序。
           </td>
@@ -589,7 +590,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -603,7 +604,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -639,7 +640,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -653,7 +654,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -667,7 +668,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -681,7 +682,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -695,7 +696,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -723,7 +724,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
     **リソースのURLです。**
 
     ```
-    https://mobile-data-api.newrelic.com/v1/crash-details/<var>{account_id}</var>/<var>{application_id}</var>/<var>{occurrence_id}</var>
+    https://mobile-data-api.newrelic.com/v1/crash-details/{account_id}/{application_id}/{occurrence_id}
     ```
 
     **URLパラメータです。**
@@ -748,7 +749,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
       <tbody>
         <tr>
           <td>
-            `{occurrence_id}。`
+            `{occurrence_id}`
 
             必要です。取得するクラッシュ・オカレンスを指定するオカレンスID。
           </td>
@@ -764,7 +765,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `開始時間`
+            `startTime`
 
             任意です。エポックタイムスタンプ（単位：ミリ秒）。データを取得するためのタイム・ウィンドウを定義します。
           </td>
@@ -780,7 +781,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
 
         <tr>
           <td>
-            `エンドタイム`
+            `endTime`
 
             任意です。エポックタイムスタンプ（単位：ミリ秒）。データを取得するためのタイム・ウィンドウを定義します。
           </td>
@@ -851,7 +852,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -865,7 +866,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -943,7 +944,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -971,7 +972,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -985,7 +986,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -999,7 +1000,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -1013,7 +1014,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -1055,7 +1056,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -1081,7 +1082,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
     **リソースのURLです。**
 
     ```
-    https://mobile-data-api.newrelic.com/v1/thread-data/<var>{account_id}</var>/<var>{mobile_application_id}</var>/<var>{crash_fingerprint}</var>
+    https://mobile-data-api.newrelic.com/v1/thread-data/{account_id}/{mobile_application_id}/{crash_fingerprint}
     ```
 
     **URLパラメータです。**
@@ -1174,7 +1175,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -1188,7 +1189,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -1266,7 +1267,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -1294,7 +1295,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -1308,7 +1309,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -1322,7 +1323,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>
@@ -1336,7 +1337,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            ロング
+            長さ
           </td>
 
           <td>
@@ -1378,7 +1379,7 @@ https://rpm.newrelic.com/accounts/<var>{account_ID}</var>/mobile/<var>{mobile_ap
           </td>
 
           <td>
-            文字列
+            ストリング
           </td>
 
           <td>

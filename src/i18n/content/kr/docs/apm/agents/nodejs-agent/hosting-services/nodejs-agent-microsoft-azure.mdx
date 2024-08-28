@@ -5,10 +5,11 @@ tags:
   - Nodejs agent
   - Hosting services
 metaDescription: How to install APM for Node.js on Microsoft Azure Web Apps.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-New Relic의 Node.js 에이전트와 함께 호스팅 서비스로 Microsoft Azure Web Apps를 사용하기 위한 특별 고려 사항에 대해 알아보려면 계속 읽으십시오.
+New Relic의 Node.js 에이전트와 함께 Microsoft Azure Web Apps를 호스팅 서비스로 사용하기 위한 특별 고려 사항에 대해 알아보세요.
 
 ## 필요한 것 [#compatibility]
 
@@ -17,73 +18,55 @@ New Relic의 Node.js 에이전트와 함께 호스팅 서비스로 Microsoft Azu
 * Node.js용 Azure SDK를 설치합니다.
 * Git이 설치되어 있는지 확인합니다.
 
-## Node.js 에이전트 설치 [#install_nodejs]
+<Callout variant="important">
+  Node.js 에이전트는 Azure Functions에 대한 원격 분석을 제공할 수 없습니다. 대신 [Azure Functions 모니터링 통합을](/docs/infrastructure/microsoft-azure-integrations/azure-integrations-list/azure-functions-monitoring-integration/)사용해야 합니다.
+</Callout>
 
-Azure 애플리케이션에 New Relic Node.js 에이전트를 추가하려면:
+## Node.js 에이전트 설치 [#install_nodejs][#install_nodejs]
 
-1. 앱의 루트에 `package.json` 파일이 있는지 확인합니다. 없는 경우 명령줄을 통해 생성합니다.
+Azure 애플리케이션에 New Relic Node.js 에이전트를 추가하려면 `newrelic` 모듈이 먼저 로드되었는지 확인하고 Node.js `-r`/`--require` 플래그를 사용하여 다음을 실행합니다.
 
-   ```bash
-   touch package.json
-   ```
+```shell
+node -r newrelic server.js
+```
 
-2. `package.json` 파일에 다음을 추가합니다.
+<Callout variant="important">
+  Next.js 앱의 경우 다음과 같이 `NODE_OPTIONS` 통해 에이전트를 로드합니다.
 
-   ```json
-   {
-     "name": "node",
-     "version": "0.0.1",
-     "dependencies" : {
-       "newrelic" : "*"
-     },
-     "engine": {
-       "node": "10.18"
-     }
-   }
-   ```
+  ```shell
+  NODE_OPTIONS='-r newrelic' next start
+  ```
+</Callout>
 
-3. `server.js` 파일의 맨 위에 `require('newrelic');` 을 추가합니다. 예를 들어:
-
-   ```js
-   require('newrelic');
-
-   var http = require('http')
-   var port = process.env.PORT || 1337;
-   http.createServer(function(req, res) {
-     res.writeHead(200, { 'Content-Type': 'text/plain' });
-     res.end('Hello New Relic Node.js agent!\n');
-   }).listen(port);
-   ```
-
-## Azure에서 앱 설정 추가 [#azure_settings]
+## Azure에서 앱 설정 추가 [#azure_settings][#azure_settings]
 
 설치 후 Azure Web Apps에서 앱을 구성해야 합니다.
 
-1. **[Portal.azure.com](https://portal.azure.com)** 에 로그인합니다.
+1. <DNT>**[portal.azure.com](https://portal.azure.com)**</DNT> 에 로그인합니다.
 
-2. **App Services > (Node.js 앱 선택) > 구성을** 선택합니다 .
+2. <DNT>**App Services > (select a Node.js app) > Configure**</DNT> 선택합니다.
 
-3. **앱 설정** 에 다음을 추가합니다.
+3. <DNT>**app settings**</DNT> 에 다음을 추가합니다.
 
    * `new_relic_app_name`: 귀하의 Windows Azure 웹사이트 이름
-   * `new_relic_license_key`: 귀하의 New Relic [라이센스 키](/docs/subscriptions/license-key)
+   * `new_relic_license_key`: 당신의 뉴렐릭<InlinePopover type="licenseKey"/>
 
 4. 설정을 저장합니다.
 
 5. Node.js 앱을 다시 시작합니다.
 
-앱에 약간의 트래픽을 생성하고 몇 분 정도 기다리십시오. 기다린 후 **[one.newrelic.com](http://one.newrelic.com) > APM > (앱 선택)** 으로 이동하여 데이터를 확인하세요.
+앱에 트래픽을 생성하고 몇 분 정도 기다립니다. 기다린 후 <DNT>**[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) &amp;gt; APM &amp;amp; services &amp;gt; (select your app)**</DNT> 로 이동하여 데이터를 확인하세요.
 
-## 선택 사항: CLI를 사용하여 앱 설정 추가 [#app_settings]
+## 선택 사항: CLI를 사용하여 앱 설정 추가 [#app_settings][#app_settings]
 
-선택 사항: 다음은 CLI(Node SDK)를 사용하여 앱 설정을 추가하는 방법의 예입니다.
+선택 사항: 다음은 CLI(Node.js SDK)를 사용하여 앱 설정을 추가하는 방법의 예입니다.
 
-```
-azure account download "<var>YOUR_SUBSCRIPTION_NAME</var>"
-azure account import "<var>PATH_TO_PUBLISH_SETTINGS_FILE</var>"
-azure site config add "new_relic_app_name=<var>REPLACE_WITH_YOUR_APP_NAME</var>"
-azure site config add "new_relic_license_key=<var>REPLACE_WITH_YOUR_LICENSE_KEY</var>"
-azure site restart <var>AZURE_WEB_APP_NAME</var>
+```bash
+azure account download "YOUR_SUBSCRIPTION_NAME"
+azure account import "PATH_TO_PUBLISH_SETTINGS_FILE"
+azure site config add "new_relic_app_name=REPLACE_WITH_YOUR_APP_NAME"
+azure site config add "new_relic_license_key=REPLACE_WITH_YOUR_LICENSE_KEY"
+azure site restart AZURE_WEB_APP_NAME
 ```
 
 ## 환경 변수 사용 [#variables]

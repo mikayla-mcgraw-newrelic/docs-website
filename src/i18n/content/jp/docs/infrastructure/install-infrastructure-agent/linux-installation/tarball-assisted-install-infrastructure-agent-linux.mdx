@@ -5,6 +5,7 @@ tags:
   - Install the infrastructure agent
   - Linux installation
 metaDescription: Instructions for how to install New Relic's infrastructure agent for Linux systems using the tarball assisted process.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -23,7 +24,7 @@ translationType: machine
 1. [パッケージ化されたエージェントファイル](https://download.newrelic.com/infrastructure_agent/binaries/linux/)をダウンロードするか、次のコマンドを使用して、エージェントの特定のバージョンとそのチェックサムを自動的にフェッチし、ダウンロード後に検証します。`ARCH=amd64`を目的のアーキテクチャ（amd64、386、arm64、arm）に置き換え、 `V=1.27.4`を[最新または特定のバージョン](https://github.com/newrelic/infrastructure-agent/releases/latest)に置き換えます。
 
    ```shell
-   V=1.27.4 ARCH=amd64; echo "https://download.newrelic.com/infrastructure_agent/binaries/linux/${ARCH}/newrelic-infra_linux_${V}_amd64.tar.gz" | { read    url; wget "${url}"{,.sum}; shasum -a 256 --check ${url##*/}.sum; }
+   V=1.27.4 ARCH=amd64; echo "https://download.newrelic.com/infrastructure_agent/binaries/linux/${ARCH}/newrelic-infra_linux_${V}_${ARCH}.tar.gz" | { read    url; wget "${url}"{,.sum}; shasum -a 256 --check ${url##*/}.sum; }
    ```
 
    バージョン`1.27.4`以降、 `tar.gz`パッケージのGPG署名を提供します。[GitHubのインフラエージェントリポジトリで](https://github.com/newrelic/infrastructure-agent/blob/master/docs/pgp-signed-release.md)、署名手順と検証手順を確認できます。
@@ -72,9 +73,7 @@ translationType: machine
 
 このスクリプトは、自動的にサービスマネージャーを識別します。失敗した場合は、手動で更新するように促されます。
 
-<Callout variant="important">
-  [バージョン1.4.0](/docs/release-notes/infrastructure-release-notes/infrastructure-agent-release-notes/new-relic-infrastructure-agent-140)以降、インフラストラクチャエージェントパッケージには、実行中のエージェントのトラブルシューティングに役立つ追加の`newrelic-infra-ctl`バイナリが含まれています。このバイナリはエージェントの実行には必要ありませんが、パスに追加することをお勧めします。 [詳細については、ドキュメント](/docs/infrastructure/install-configure-manage-infrastructure/manage-your-agent/troubleshoot-running-agent)を参照してください。
-</Callout>
+<InstallFeedback/>
 
 ## インストールの設定 [#parameters]
 
@@ -143,7 +142,7 @@ translationType: machine
         デフォルト：
 
         ```
-        /etc/newrelic-infra/yml
+        /etc/newrelic-infra.yml
         ```
       </td>
     </tr>
@@ -186,7 +185,7 @@ translationType: machine
       </td>
 
       <td>
-        エージェントの特権レベル。可能な値は、 `ROOT` 、 `PRIVILEGED` 、または`UNPRIVILEGED`です。詳細については、 [エージェントの実行モード](/docs/infrastructure/new-relic-infrastructure/installation/install-infrastructure-linux#agent-mode-intro)に関するドキュメントを参照してください。
+        エージェントの特権レベル。可能な値は `ROOT`、 `PRIVILEGED` または `UNPRIVILEGED`です。詳細については、 [エージェントの実行モード](/docs/infrastructure/install-infrastructure-agent/linux-installation/linux-agent-running-modes/#set-mode)に関するドキュメントを参照してください。
 
         デフォルト：
 

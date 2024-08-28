@@ -5,15 +5,14 @@ tags:
   - On-host integrations
   - On-host integrations list
 metaDescription: 'New Relic''s IBM MQ integration: how to enable, configure it, and an explanation of what data it reports.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-import ibmmqDashboard from 'images/ibmmqDashboard.png'
+<Callout title="プレビュー">
+  この機能はまだ開発中ですが、ぜひお試しください。
 
-import linux from 'images/linux.png'
-
-<Callout title="公開プレビュー">
-  この機能は現在、公開プレビューです。
+  この機能は現在、弊社の[プレリリース ポリシー](/docs/licenses/license-information/referenced-policies/new-relic-pre-release-policy)に従ってプレビュー プログラムの一部として提供されています。
 </Callout>
 
 [IBM](https://www.ibm.com/products/mq) MQ[統合](/docs/integrations/host-integrations/getting-started/introduction-host-integrations)は、IBM MQからディメンションメトリックを収集して送信します。
@@ -23,14 +22,14 @@ import linux from 'images/linux.png'
 <img
   title="IBM MQ quickstart dashboard"
   alt="Image of the dashboard available through the IBM MQ quickstart"
-  src={ibmmqDashboard}
+  src="/images/infrastructure_screenshot-crop_ibmmq-dashboard.webp"
 />
 
 <figcaption>
   [New Relic IBM MQ Monitorクイックスタート](https://one.newrelic.com/nr1-core?state=c95ed954-7277-e44d-7fd7-351a77b3ff37)を介してインストールされたダッシュボード。
 </figcaption>
 
-統合は、Prometheusエクスポーターを介してIBM MQ APIをスクレイピングすることによってデータを取得します。
+IBM MQ インフラストラクチャーからデータを取得するために、IBM MQ 統合では、構成で指定されたポートで Prometheus メトリックを公開するサード・パーティーの [Prometheus エクスポーター](https://github.com/ibm-messaging/mq-metric-samples/tree/master/cmd/mq_prometheus)を使用します。この統合は、これらのメトリクスを収集し、エンティティに変換し、フィルタリングして、New Relic に送信します。
 
 <Callout variant="important">
   IBM MQ統合は、ARM64アーキテクチャーをサポートしていません。
@@ -50,55 +49,384 @@ IBM MQモニター統合をインストールするには、以下のステッ�
 
 ### 対応するオペレーティング・システム [#supported-os]
 
-* Linux
+* リナックス<img style={{ width: '32px', height: '32px'}} class="inline" title="Linux" alt="Linux" src="/images/os_icon_linux.webp"/>
+* ウィンドウズ<img style={{ width: '32px', height: '32px'}} class="inline" title="Windows" alt="Windows" src="/images/os_icon_windows.webp"/>
 
-  <img style={{ width: '32px', height: '32px'}} class="inline" title="Linux" alt="Linux" src={linux}/>
+特定の Linux および Windows バージョンの包括的なリストについては、 [互換性のあるオペレーティング システム](/docs/infrastructure/install-infrastructure-agent/get-started/requirements-infrastructure-agent/#operating-systems)の表を確認してください。
 
-特定のLinuxバージョンの包括的なリストについては、 [互換性のあるオペレーティングシステム](/docs/infrastructure/install-infrastructure-agent/get-started/requirements-infrastructure-agent/#operating-systems)の表を確認してください。
+<Callout variant="important">
+  ARM64アーキテクチャには対応していません。
+</Callout>
 
-### システム要件 [#system-reqs]
+### システム要求 [#system-reqs]
 
 * [インフラストラクチャエージェント、最小バージョン1.24.0をインストールします](/docs/infrastructure/install-infrastructure-agent/get-started/install-infrastructure-agent-new-relic)。
-* Linux ディストリビューション [インフラストラクチャ・エージェントと互換性がある](/docs/infrastructure/new-relic-infrastructure/getting-started/compatibility-requirements-new-relic-infrastructure#operating-systems).
+* [インフラストラクチャ エージェントと互換性のある](/docs/infrastructure/new-relic-infrastructure/getting-started/compatibility-requirements-new-relic-infrastructure#operating-systems)Linux ディストリビューションまたは Windows バージョン。
 * エージェントボックス上の[IBM MQ再頒布可能クライアントライブラリ](https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/messaging/mqdev/redist/)。
-* `LD_LIBRARY_PATH`環境変数のライブラリパスを確認または追加します。
+* Linux の`LD_LIBRARY_PATH`環境変数でライブラリ パスを確認または追加するか、Windows で次[の手順](https://www.ibm.com/docs/en/ibm-mq/9.1?topic=windows-testing-communication-between-client-server)に従います。
 * MQで[キュー統計の監視](https://www.ibm.com/docs/en/capmp/8.1.4?topic=monitoring-enabling-queue-statistics-queue-manager-mq)が有効になっていることを確認します。
-* MQで読み取り専用権限を持つ[ユーザーを作成します](https://www.ibm.com/docs/en/mq-appliance/9.1?topic=commands-usercreate-create-user)。
 
 ## インストールしてアクティブ化する [#install]
 
 統合をインストールするには、ご使用の環境の指示に従ってください。
 
-### Linuxのインストール [#linux]
+<CollapserGroup>
+  <Collapser
+    id="linux-install"
+    title="Linuxのインストール"
+  >
+    1. [インフラストラクチャ エージェントをインストールし](/docs/integrations/host-integrations/installation/install-infrastructure-host-integrations/#install)、 `INTEGRATION_FILE_NAME`変数を`nri-ibmmq`に置き換えます。
 
-1. [統合をインストールする](/docs/install-integrations-package)ための指示に従い、ファイル名として`nri-ibmmq`を使用します。
+    2. を実行して、integrationsのコンフィギュレーション・フォルダーにディレクトリを変更します。
 
-2. を実行して、integrationsのコンフィギュレーション・フォルダーにディレクトリを変更します。
+       ```shell
+       cd /etc/newrelic-infra/integrations.d
+       ```
 
-   ```shell
-   cd /etc/newrelic-infra/integrations.d
-   ```
+    3. 以下を実行して、サンプルの設定ファイルをコピーします。
 
-3. 以下を実行して、サンプルの設定ファイルをコピーします。
+       ```shell
+       sudo cp ibmmq-config.yml.sample ibmmq-config.yml
+       ```
 
-   ```shell
-   sudo cp ibmmq-config.yml.sample ibmmq-config.yml
-   ```
+    4. お気に入りのエディタで `ibmmq-config.yml` 構成ファイルを編集します。[構成ファイルの例を](#examples)いくつか確認してください。
+  </Collapser>
 
-4. お気に入りのエディターで`ibmmq-config.yml`構成ファイルを編集します。いくつかの[優れた構成ファイルの例を](#examples)確認してください。
+  <Collapser
+    id="windows-install"
+    title="Windowsのインストール"
+  >
+    1. `nri-ibmmq` MSIインストーラーイメージを以下からダウンロードします。
 
-5. Infrastructureエージェントを再起動します。[さまざまなLinux環境でInfrastructureエージェントを再起動する](/docs/infrastructure/install-infrastructure-agent/manage-your-agent/start-stop-restart-infrastructure-agent/#linux)方法を参照してください。
+       [https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-ibmmq/nri-ibmmq-amd64.msi](https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-ibmmq/nri-ibmmq-amd64.msi)
+
+    2. Windowsコマンドプロンプトからインストールするには、次のコマンドを実行します。
+
+       ```
+       msiexec.exe /qn /i <var>PATH\TO\</var>nri-ibmmq-amd64.msi
+       ```
+
+    3. Integrationsディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、次のコマンドを実行してサンプル構成ファイルのコピーを作成します。
+
+       ```
+       copy ibmmq-config.yml.sample ibmmq-config.yml
+       ```
+
+    4. [構成設定](#config)の説明に従って、 `ibmmq-config.yml`ファイルを編集します。
+  </Collapser>
+</CollapserGroup>
 
 ### その他の環境 [#other-env]
 
 <CollapserGroup>
   <Collapser
     id="tarball"
-    title="Tarballによるインストール（上級者向け）"
+    title="tarballのインストール（高度）"
   >
-    また、 [tarball ファイルから統合機能をインストールすることもできます](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball) 。これにより、インストールと設定のプロセスを完全にコントロールすることができます。
+    [tarballファイルから統合をインストールする](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball)こともできます。これにより、インストールおよび構成プロセスを完全に制御できます。
   </Collapser>
 </CollapserGroup>
+
+<InstallFeedback/>
+
+## 統合を構成する [#config]
+
+統合を構成するには、統合のYAML構成ファイル`ibmmq-config.yml`の構成を編集します。統合のYAML形式の構成では、必要なログインクレデンシャルを配置し、データの収集方法を構成できます。どのオプションを変更するかは、設定と設定によって異なります。構成ファイルには、すべての統合に適用できる共通の設定があります。
+
+これらの一般的な設定についてすべて読むには、 [構成フォーマット](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics)のドキュメントを参照してください。
+
+### 権限 [#permissions]
+
+IBM MQ インフラストラクチャを監視するには、インテグレーション構成で指定された`username`に特定の権限を付与する必要があります。 これらの権限は、モニターのキュー、チャネル、トピックによって異なります。
+
+一般に、 `username`には次の権限が必要です。
+
+* `DISPLAY`と`INQUIRY`が有効になっており、キューマネージャーに接続できる
+* インテグレーション設定で指定されたチャネルにアクセスします（デフォルトでは`SYSTEM.DEF.SVRCONN` ）
+* `DISPLAY`権限を持つキュー`SYSTEM.DEFAULT.MODEL.QUEUE`および`SYSTEM.ADMIN.COMMAND.QUEUE`に対して特権コマンドを操作します。
+* トピック`SYSTEM.ADMIN.TOPIC`の`DISPLAY`と`SUBSCRIBE`でアクセスし、 `SYSTEM.BROKER.ADMIN.STREAM`
+
+特定の設定に応じて追加の権限が必要になる場合があることに注意してください。
+
+### IBM MQインスタンス設定 [#instance-settings]
+
+次の構成オプションを使用できます。
+
+<table>
+  <thead>
+    <tr>
+      <th style={{ width: "150px" }}>
+        設定
+      </th>
+
+      <th>
+        説明
+      </th>
+
+      <th style={{ width: "130px" }}>
+        デフォルト
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        <DNT>
+          **hostname**
+        </DNT>
+      </td>
+
+      <td>
+        IBM MQサービスのホスト名
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **port**
+        </DNT>
+      </td>
+
+      <td>
+        IBM MQサービスのポート
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **queue_manager**
+        </DNT>
+      </td>
+
+      <td>
+        キューマネージャー名
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **channel**
+        </DNT>
+      </td>
+
+      <td>
+        キュー・マネージャーへの接続に使用されるチャネル名。通常、次を使用できます `SYSTEM.DEF.SVRCONN`
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **username**
+        </DNT>
+      </td>
+
+      <td>
+        IBM MQ サービスに対して認証するためのユーザー名。パスワードが指定されていない場合、ユーザー/パスワード認証は無効になり、構成でユーザー名を指定する必要はありません。エクスポーターは、統合を実行するユーザー`clientID`として送信を接続します。エージェントのインストール モードに応じて、 `root`または`nri-agent`になります。
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **password**
+        </DNT>
+      </td>
+
+      <td>
+        IBM MQサービスに対して認証するためのパスワード
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **monitored_queues**
+        </DNT>
+      </td>
+
+      <td>
+        監視するキュー（ワイルドカードと除外する！は受け入れられます）
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **monitored_channels**
+        </DNT>
+      </td>
+
+      <td>
+        監視するチャネル（ワイルドカードと除外する！を使用できます）
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **monitored_topics**
+        </DNT>
+      </td>
+
+      <td>
+        監視するトピック（ワイルドカードと除外する！を使用できます）
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **monitored_subscriptions**
+        </DNT>
+      </td>
+
+      <td>
+        監視するサブスクリプション（ワイルドカードと除外する！は受け入れられます）
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **exporter_port**
+        </DNT>
+      </td>
+
+      <td>
+        スクラップエンドポイントを公開するポート。これが提供されない場合、エクスポーターを起動する際にランダムなポートが使用されます。
+      </td>
+
+      <td>
+        ランダムポート
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **scrape_timeout**
+        </DNT>
+      </td>
+
+      <td>
+        スクレイプリクエストがタイムアウトするまでの時間
+      </td>
+
+      <td>
+        5s
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **mqsslkeyr**
+        </DNT>
+      </td>
+
+      <td>
+        TLS の構成に必要 MQSSLKEYR は、ユーザーまたはサーバーに属するデジタル証明書を保持するキーストアの場所を指定します。`key.kdb`と`key.sth`の両方を指すには、拡張子なしで指定する必要があります。
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **ccdt_url**
+        </DNT>
+      </td>
+
+      <td>
+        ccdt ファイルへの TLS パスを構成する必要があります。MQCCDTURL と IBMMQ_CONNECTION_CCDTURL の 2 つの異なる環境変数が自動的に設定されます。
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **home**
+        </DNT>
+      </td>
+
+      <td>
+        IBMMQ クライアントには、HOME 環境変数で指定されたディレクトリーに書き込む許可が必要です。
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>
+          **ld_library_path**
+        </DNT>
+      </td>
+
+      <td>
+        エクスポーターが使用する IBMMQ クライアントの LD_LIBRARY_PATH 環境変数。
+      </td>
+
+      <td>
+        該当なし
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## ibmmq-config.ymlサンプルファイル [#examples]
 
@@ -119,6 +447,67 @@ IBM MQモニター統合をインストールするには、以下のステッ�
           channel: SYSTEM.DEF.SVRCONN
           username: your_mq_user
           password: your_mq_password
+          monitored_queues: '!SYSTEM.*,*'
+          monitored_channels: '*'
+          monitored_topics: '*'
+          monitored_subscriptions: '*'
+          exporter_port: 9157
+    ```
+  </Collapser>
+
+  <Collapser
+    id="monitor-two-instances"
+    title="異なるインスタンスを監視する"
+  >
+    これは、2 つのホストに接続して統合を 2 回実行する方法を示すメトリックを収集するために使用される基本構成と同じです。統合の各インスタンスは、別のポートでリッスンする追加のエクスポーターを生成することに注意してください。
+
+    ```yml
+    integrations:
+      - name: nri-ibmmq
+        config:
+          hostname: host1
+          port: 1414
+          queue_manager: QM1
+          channel: SYSTEM.DEF.SVRCONN
+          username: your_mq_user
+          password: your_mq_password
+          monitored_queues: '!SYSTEM.*,*'
+          monitored_channels: '*'
+          monitored_topics: '*'
+          monitored_subscriptions: '*'
+      - name: nri-ibmmq
+        config:
+          hostname: host2
+          port: 1414
+          queue_manager: QM1
+          channel: SYSTEM.DEF.SVRCONN
+          username: your_mq_user
+          password: your_mq_password
+          monitored_queues: '!SYSTEM.*,*'
+          monitored_channels: '*'
+          monitored_topics: '*'
+          monitored_subscriptions: '*'
+    ```
+  </Collapser>
+
+  <Collapser
+    id="PasswordLess-config"
+    title="パスワードなしの構成"
+  >
+    パスワードが指定されていない場合、ユーザー/パスワード認証は無効になり、構成でユーザー名を指定する必要はありません。
+
+    エクスポーターは、統合を実行しているユーザーを clientID として送信して接続を試みます。エージェントのインストール モードに応じて、「root」または「nri-agent」になります。
+
+    このようなユーザーは、パスワードを入力せずにキュー マネージャーにアクセスできる必要があります。
+
+    ```yml
+    integrations:
+      - name: nri-ibmmq
+        config:
+          hostname: localhost
+          port: 1414
+          queue_manager: QM1
+          channel: SYSTEM.DEF.SVRCONN
           monitored_queues: '!SYSTEM.*,*'
           monitored_channels: '*'
           monitored_topics: '*'
@@ -150,13 +539,34 @@ IBM MQモニター統合をインストールするには、以下のステッ�
           exporter_port: 9157
     ```
   </Collapser>
+
+  <Collapser
+    id="mtls-config"
+    title="mTLS と基本認証を使用した構成"
+  >
+    これは、mTLS のセットアップ方法を示す高度な構成です。`ccdt`ファイルは、 `transmissionSecurity`セクションの`certificateLabel`フィールドを通じてサーバーに提示する証明書を示す必要があります。証明書は、そのようなラベルが付いたキーストアにあり、サーバーによって信頼されている必要があります。さらに、キーストアには、サーバーによって提示された証明書を検証できる証明書が含まれている必要があります。
+
+    ```yml
+    integrations:
+      - name: nri-ibmmq
+        config:
+          queue_manager: QM1
+          channel: SYSTEM.DEF.SVRCONN
+          username: your_mq_user
+          password: your_mq_password
+          monitored_queues: 'DEV.QUEUE*,!DEV.QUEUE.1'
+          monitored_channels: '*'
+          monitored_topics: '*'
+          monitored_subscriptions: '*'
+          exporter_port: 9157
+
+          # Configuring mTLS
+          mqsslkeyr: "/key"
+          ccdt_url: "file:///ccdt.json"
+          home: /tmp
+    ```
+  </Collapser>
 </CollapserGroup>
-
-## 統合を構成する [#config]
-
-統合を構成するには、統合のYAML構成ファイル`ibmmq-config.yml`の構成を編集します。統合のYAML形式の構成では、必要なログインクレデンシャルを配置し、データの収集方法を構成できます。どのオプションを変更するかは、設定と設定によって異なります。構成ファイルには、すべての統合に適用できる共通の設定があります。
-
-これらの一般的な設定についてすべて読むには、 [構成フォーマット](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics)のドキュメントを参照してください。
 
 ## データを見つけて使用する [#find-and-use]
 
@@ -165,185 +575,9 @@ IBM MQモニター統合をインストールするには、以下のステッ�
 * メトリックは、エンティティ`IBMMQ_MANAGER`および`IBMMQ_QUEUE`のメトリックサンプルおよび[イベントタイプ](/docs/using-new-relic/data/understand-data/new-relic-data-types#events-new-relic)に添付されます。
 * トラブルシューティングの目的で、または[カスタムチャートやダッシュボード](/docs/query-your-data/explore-query-data/dashboards/introduction-dashboards/)を作成するために、 [NewRelicのデータをクエリ](/docs/using-new-relic/data/understand-data/query-new-relic-data)できます。
 
-### IBM MQインスタンス設定 [#instance-settings]
-
-IBM MQ統合は、以下の次元メトリックを収集します。
-
-<table>
-  <thead>
-    <tr>
-      <th style={{ width: "150px" }}>
-        設定
-      </th>
-
-      <th>
-        説明
-      </th>
-
-      <th style={{ width: "130px" }}>
-        デフォルト
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td>
-        **ホスト名**
-      </td>
-
-      <td>
-        IBM MQサービスのホスト名
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **port**
-      </td>
-
-      <td>
-        IBM MQサービスのポート
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **queue_manager**
-      </td>
-
-      <td>
-        キューマネージャー名
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **チャネル**
-      </td>
-
-      <td>
-        キュー・マネージャーへの接続に使用されるチャネル名。通常、次を使用できます `SYSTEM.DEF.SVRCONN`
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **ユーザー名**
-      </td>
-
-      <td>
-        IBM MQサービスに対して認証するためのユーザー名
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **パスワード**
-      </td>
-
-      <td>
-        IBM MQサービスに対して認証するためのパスワード
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **監視されたキュー**
-      </td>
-
-      <td>
-        監視するキュー（ワイルドカードと除外する！は受け入れられます）
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **monitor_channels**
-      </td>
-
-      <td>
-        監視するチャネル（ワイルドカードと除外する！を使用できます）
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **monitor_topics**
-      </td>
-
-      <td>
-        監視するトピック（ワイルドカードと除外する！を使用できます）
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **monitor_subscriptions**
-      </td>
-
-      <td>
-        監視するサブスクリプション（ワイルドカードと除外する！は受け入れられます）
-      </td>
-
-      <td>
-        該当なし
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **エクスポーター\_ポート**
-      </td>
-
-      <td>
-        スクラップエンドポイントを公開するポート。これが提供されない場合、エクスポーターを起動する際にランダムなポートが使用されます。
-      </td>
-
-      <td>
-        ランダムポート
-      </td>
-    </tr>
-  </tbody>
-</table>
-
 ### メトリックデータ [#metrics]
+
+`IBMMQ_MANAGER`と`IBMMQ_QUEUE`の 2 つのエンティティが作成されます。
 
 次のディメンションメトリックは、エクスポーターをスクレイピングしてキャプチャされ、エンティティ`IBMMQ_MANAGER`にリンクされます。
 
@@ -376,10 +610,10 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
       <td>
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
-        * 説明
+        * description
         * 職種名
         * プラットフォーム
         * qmgr
@@ -396,10 +630,10 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 種類
+        * タイプ
         * チャネル
         * connname
-        * 説明
+        * description
         * 職種名
         * プラットフォーム
         * qmgr
@@ -417,12 +651,12 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * 職種名
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
       </td>
@@ -440,12 +674,12 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       <td>
         * チャネル
         * connname
-        * 説明
+        * description
         * 職種名
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
       </td>
     </tr>
 
@@ -460,12 +694,12 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
       <td>
         * connname
-        * 説明
+        * description
         * 職種名
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
       </td>
     </tr>
@@ -484,10 +718,10 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -497,7 +731,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        チャネルステータス
+        [チャネルステータス](https://www.ibm.com/docs/en/ibm-mq/9.3?topic=constants-mqchs-command-format-channel-status)
       </td>
 
       <td>
@@ -505,10 +739,10 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -523,10 +757,10 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
       <td>
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
-        * 説明
+        * description
         * 職種名
         * プラットフォーム
         * qmgr
@@ -543,12 +777,12 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * 職種名
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
       </td>
@@ -567,10 +801,10 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
-        * 説明
+        * description
         * 職種名
       </td>
     </tr>
@@ -588,10 +822,10 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * rqmname
-        * 種類
+        * タイプ
         * チャネル
         * connname
-        * 説明
+        * description
         * 職種名
       </td>
     </tr>
@@ -2046,7 +2280,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 種類
+        * タイプ
         * プラットフォーム
         * qmgr
         * subid
@@ -2070,7 +2304,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * subid
         * サブスクリプション
         * トピック
-        * 種類
+        * タイプ
       </td>
     </tr>
 
@@ -2085,7 +2319,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
       <td>
         * トピック
-        * 種類
+        * タイプ
         * プラットフォーム
         * qmgr
         * subid
@@ -2106,7 +2340,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * トピック
-        * 種類
+        * タイプ
       </td>
     </tr>
 
@@ -2123,7 +2357,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * トピック
-        * 種類
+        * タイプ
       </td>
     </tr>
 
@@ -2140,7 +2374,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * トピック
-        * 種類
+        * タイプ
       </td>
     </tr>
 
@@ -2157,7 +2391,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * プラットフォーム
         * qmgr
         * トピック
-        * 種類
+        * タイプ
       </td>
     </tr>
   </tbody>
@@ -2193,7 +2427,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2215,7 +2449,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2229,7 +2463,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2250,7 +2484,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
       </td>
     </tr>
@@ -2268,7 +2502,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
       </td>
     </tr>
@@ -2283,7 +2517,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2301,7 +2535,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2323,7 +2557,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2337,7 +2571,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2357,7 +2591,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       <td>
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
       </td>
@@ -2374,7 +2608,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
       <td>
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2391,7 +2625,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2409,7 +2643,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2431,7 +2665,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2449,7 +2683,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2463,7 +2697,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2483,7 +2717,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       <td>
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
       </td>
@@ -2501,7 +2735,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       <td>
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
       </td>
@@ -2517,7 +2751,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2539,7 +2773,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2556,7 +2790,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
       </td>
     </tr>
@@ -2571,7 +2805,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2589,7 +2823,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2609,7 +2843,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       <td>
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
       </td>
@@ -2629,7 +2863,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2643,7 +2877,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2661,7 +2895,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2679,7 +2913,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2697,7 +2931,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2719,7 +2953,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2733,7 +2967,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2751,7 +2985,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2769,7 +3003,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2787,7 +3021,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2805,7 +3039,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2823,7 +3057,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2841,7 +3075,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2860,7 +3094,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
       <td>
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2880,7 +3114,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
       </td>
     </tr>
@@ -2895,7 +3129,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2913,7 +3147,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -2934,7 +3168,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
       </td>
     </tr>
@@ -2953,7 +3187,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2971,7 +3205,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
       </td>
     </tr>
 
@@ -2988,7 +3222,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
         * qmgr
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
       </td>
     </tr>
@@ -3005,7 +3239,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       <td>
         * キュー
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
       </td>
@@ -3022,7 +3256,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
       <td>
         * 利用方法
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -3039,7 +3273,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -3057,7 +3291,7 @@ IBM MQ統合は、以下の次元メトリックを収集します。
       </td>
 
       <td>
-        * 説明
+        * description
         * プラットフォーム
         * qmgr
         * キュー
@@ -3069,6 +3303,6 @@ IBM MQ統合は、以下の次元メトリックを収集します。
 
 ## ソースコードを確認してください [#source-code]
 
-このインテグレーションは、オープンソース・ソフトウェアです。つまり、 [そのソースコードを閲覧して](https://github.com/newrelic/newrelic-prometheus-exporters-packages "リンクが新しいウィンドウで開きます。") 改良点を送ったり、自分でフォークを作って構築することができます。
+この統合はオープン ソース ソフトウェアです。これは[、そのソース コードを参照して](https://github.com/newrelic/newrelic-prometheus-exporters-packages)改善を送信したり、独自のフォークを作成してビルドしたりできることを意味します。
 
 さらに、この統合は、コミュニティによって作成されたオープンソースエクスポーターを活用します。

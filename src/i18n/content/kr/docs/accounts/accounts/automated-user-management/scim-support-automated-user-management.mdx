@@ -5,6 +5,7 @@ tags:
   - Accounts and billing
   - Automated user management
 metaDescription: New Relic has a SCIM service provider to easily manage the users in your New Relic account.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -12,7 +13,7 @@ ID 제공자로부터 New Relic 사용자의 프로비저닝 및 관리를 설�
 
 ## 누가 SCIM API를 사용해야 합니까? [#when-to-use]
 
-New Relic 앱(Azure AD, Okta 및 OneLogin)이 있는 ID 공급자가 있는[경우 해당](/docs/accounts/accounts/automated-user-management/automated-user-provisioning-single-sign) . SCIM API는 해당 ID 제공자를 사용하지 않거나 앱에서 사용할 수 없는 추가 구성(예: **사용자 유형 관리** )에 SCIM API를 사용하려는 조직을 위한 것입니다. 추가 제한 사항:
+뉴렐릭 앱(Azure AD, Okta 및 OneLogin)이 있는 ID 공급자가 있는 경우 [해당 가이드를](/docs/accounts/accounts/automated-user-management/automated-user-provisioning-single-sign) 참조하세요. SCIM API 해당 ID 공급업체를 사용하지 않거나 앱에서 사용할 수 없는 추가 설정을 위해 SCIM API 사용하려는 조직을 위한 것입니다(예: <DNT>**managing user type**</DNT>). 추가 제한사항:
 
 * Ping Identity의 PingOne은 그룹 프로비저닝을 허용하지 **않기** 때문에 지원되지 않습니다.
 
@@ -26,7 +27,7 @@ SCIM API와의 통합을 설정한 후에는 일부 사용자를 기본 사용�
 
 ## SCIM 서비스 제공업체 [#scim-provider]
 
-New Relic의 SCIM 서비스 공급자는 [RFC 7643](https://tools.ietf.org/html/rfc7643) 및 [7644](https://tools.ietf.org/html/rfc7644) 에 설명된 대로 [SCIM 2.0 API](http://www.simplecloud.info/) 를 따릅니다. 사용자 정보를 New Relic과 통합하기 위해 SCIM 2.0 사양의 모든 측면을 구현할 필요는 없습니다. 사실, New Relic 서비스 제공자 자체가 사양의 모든 측면을 구현하지는 않습니다. 이 문서는 New Relic과의 통합에 사용할 수 있는 사양의 기능을 설명합니다.
+SCIM 서비스 제공업체는 [RFC 7643](https://tools.ietf.org/html/rfc7643) 및 [7644](https://tools.ietf.org/html/rfc7644) 에 설명된 대로 [SCIM 2.0 API](http://www.simplecloud.info/) 를 따릅니다. 사용자 정보를 New Relic과 통합하기 위해 SCIM 2.0 사양의 모든 측면을 구현할 필요는 없습니다. 사실, New Relic 서비스 공급자 자체가 사양의 모든 측면을 구현하지는 않습니다. 이 문서는 New Relic과의 통합에 사용할 수 있는 사양의 기능을 설명합니다.
 
 ## 입증 [#authentication]
 
@@ -62,7 +63,7 @@ New Relic은 SCIM 핵심 스키마에서 사용 가능한 필드의 하위 집�
       </td>
 
       <td>
-        **필수의.** 그룹의 이름입니다.
+        <DNT>**Required.**</DNT> 그룹의 이름입니다.
       </td>
     </tr>
 
@@ -110,7 +111,7 @@ New Relic은 SCIM 핵심 스키마에서 사용 가능한 필드의 하위 집�
       </td>
 
       <td>
-        **필수의.** New Relic 시스템 내 사용자의 고유 식별자입니다. 사용자의 이메일 주소를 사용합니다.
+        <DNT>**Required.**</DNT> 뉴렐릭 시스템 내에서 사용자에 대한 고유한 논란입니다. 사용자의 이메일 주소를 사용하세요.
       </td>
     </tr>
 
@@ -140,7 +141,7 @@ New Relic은 SCIM 핵심 스키마에서 사용 가능한 필드의 하위 집�
       </td>
 
       <td>
-        **필수의.** 사용자의 이메일 주소입니다.
+        <DNT>**Required.**</DNT> 사용자의 이메일 주소입니다.
       </td>
     </tr>
 
@@ -160,7 +161,7 @@ New Relic은 SCIM 핵심 스키마에서 사용 가능한 필드의 하위 집�
       </td>
 
       <td>
-        **필수의.** 사용자가 New Relic 내에서 활성 또는 비활성 상태여야 하는지 여부를 나타내는 부울입니다.
+        <DNT>**Required.**</DNT> 사용자가 New Relic 내에서 활성 또는 비활성 상태여야 하는지 여부를 나타내는 부울입니다.
       </td>
     </tr>
 
@@ -266,7 +267,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    GET /Groups/<var>YOUR_GROUP_ID</var>
+    GET /Groups/YOUR_GROUP_ID
     ```
 
     예시 응답:
@@ -334,7 +335,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     변경하려는 필드를 요청에 포함합니다. `members` 필드를 포함하면 그룹의 사용자가 구성원 필드의 내용과 일치하도록 조정됩니다. 요청 예시:
 
     ```
-    PUT /Groups/<var>YOUR_GROUP_ID</var>
+    PUT /Groups/YOUR_GROUP_ID
 
     {
       "schemas": [
@@ -372,7 +373,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    PATCH /Groups/<var>YOUR_GROUP_ID</var>
+    PATCH /Groups/YOUR_GROUP_ID
 
     {
       "schemas": [
@@ -400,7 +401,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    PATCH /Groups/<var>YOUR_GROUP_ID</var>
+    PATCH /Groups/YOUR_GROUP_ID
 
     {
       "schemas": [
@@ -430,7 +431,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    PATCH /Groups/<var>YOUR_GROUP_ID</var>
+    PATCH /Groups/YOUR_GROUP_ID
 
     {
       "schemas": [
@@ -460,7 +461,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    DELETE /Groups/<var>YOUR_GROUP_ID</var>
+    DELETE /Groups/YOUR_GROUP_ID
     ```
 
     예시 응답:
@@ -538,7 +539,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    GET /Users/<var>YOUR_USER_ID</var>
+    GET /Users/YOUR_USER_ID
     ```
 
     예시 응답:
@@ -628,7 +629,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     변경하려는 필드를 요청에 포함합니다. `groups` 필드를 포함하면 사용자 그룹이 그룹 필드의 내용과 일치하도록 조정됩니다. 요청 예시:
 
     ```
-    PUT /Users/<var>YOUR_USER_ID</var>
+    PUT /Users/YOUR_USER_ID
 
     {
       "schemas": [
@@ -680,7 +681,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    PATCH /Users/<var>YOUR_USER_ID</var>
+    PATCH /Users/YOUR_USER_ID
 
     {
       "schemas": [
@@ -708,7 +709,7 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
     요청 예시:
 
     ```
-    DELETE /Users/<var>YOUR_USER_ID</var>
+    DELETE /Users/YOUR_USER_ID
     ```
 
     예시 응답:
@@ -824,18 +825,18 @@ SCIM은 그룹 및 사용자를 조작하기 위한 여러 옵션을 제공합�
 
 ### 사용자의 사용자 유형 조정 [#edit-user-type]
 
-사용자가 New Relic에서 프로비저닝되면 [**사용자 관리** UI](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks#where) 에서 볼 수 있습니다.
+사용자가 뉴렐릭에 프로비저닝되면 [<DNT>**User management**</DNT> UI](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks#where) 에서 볼 수 있습니다.
 
 SCIM을 통해 New Relic에 사용자를 추가하지만 SCIM [을 통해 사용자 유형을 관리](#user-type) **하지 않는** 경우 [기본 사용자](/docs/accounts/accounts-billing/new-relic-one-user-management/user-type) 로 시작합니다. 사용자를 업그레이드하려면 다음 두 가지 옵션이 있습니다.
 
 * [사용자 관리 UI](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks#add-users) 를 사용합니다.
 * [SCIM API를 사용하여 사용자 유형을 관리합니다](#user-type) .
 
-### 액세스 권한 할당 [#access-grants]
+### 그룹 액세스 할당 [#access-grants]
 
 사용자가 New Relic에 있으면 특정 New Relic 계정, 특정 그룹 및 특정 역할에 대한 액세스 권한을 부여해야 합니다. 이렇게 하지 않으면 사용자는 New Relic 계정에 액세스할 수 없습니다. 이 작업을 수행하는 방법을 알아보려면 다음을 참조하세요.
 
-* [액세스 권한 부여 작동 방식](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#understand-concepts)
+* [사용자 액세스 작동 방식](/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#understand-concepts)
 * [사용자 관리 튜토리얼](/docs/accounts/accounts-billing/new-relic-one-user-management/tutorial-add-new-user-groups-roles-new-relic-one-user-model/)
 
 ### SAML SSO 설정

@@ -5,61 +5,45 @@ tags:
   - On-host integrations
   - On-host integrations list
 metaDescription: New Relic's Couchbase integration collects and sends inventory and metric data from your Couchbase cluster to the New Relic platform.
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-import guidedInstallCli from 'images/guided-install-cli.png'
-
 当社のCouchbase [統合](/docs/integrations/host-integrations/getting-started/introduction-host-integrations) は、Couchbaseクラスタからインベントリとメトリックデータを収集してNew Relicプラットフォームに送信し、Couchbase環境の健全性を素早く確認することができます。クラスタ、ノード、クエリエンジン、バケットの各レベルでデータを収集するので、問題の発生源を追跡することができます。
 
-インテグレーションのインストールと、当社がどのようなデータを収集するかについてお読みください。
+統合をインストールし、収集するデータを確認するために読んでください。
 
-## 互換性および要件 [#req]
+## 互換性と要件 [#req]
 
 当社のインテグレーションは、Couchbaseバージョン4.0以上に対応しています。
 
-インテグレーションをインストールする前に、以下の要件を満たしていることを確認してください。
-
-* CouchbaseがKubernetesで実行されて**いない**場合は、Couchbaseを実行しているホスト[にインフラストラクチャエージェントをインストールする](/docs/infrastructure/install-infrastructure-agent/get-started/install-infrastructure-agent-new-relic)必要があります。さもないと：
-
-  * Kubernetesで実行されている場合は、[これらの要件](/docs/monitor-service-running-kubernetes#requirements)をご覧ください。
-  * ECSで実行されている場合は、[これらの要件](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)をご覧ください。
-
 ## クイックスタート [#quick]
 
-ガイド付きインストールで、Couchbaseクラスタを迅速にインスツルメントし、遠隔測定データを送信します。ガイド付きインストールでは、お客様の環境に合わせてカスタマイズしたCLIコマンドを作成し、New Relic CLIとインフラストラクチャ・エージェントをダウンロードしてインストールします。
+Kubernetes または ECS 環境で Couchbase を実行していない場合は、ガイド付きインストールをお勧めします。ガイド付きインストールでは、インフラストラクチャ エージェントと CLI を使用して Couchbase 統合をセットアップし、環境内で実行されている他のアプリケーションとログ ソースを検出して、どのアプリケーションを計測する必要があるかを推奨します。
 
-<img
-  title="The guided install CLI."
-  alt="A screenshot of the guided install CLI."
-  src={guidedInstallCli}
-/>
+ガイド付きインストールは、ほとんどの設定と連動します。ただし、ご希望に添えない場合は、以下の他のインストールオプションがあります。
 
-始める準備はできていますか？ボタンの1つをクリックし、試行してください。
+始める準備はできていますか？使用する[データセンターの地域](/docs/accounts/accounts-billing/account-setup/choose-your-data-center)に応じて、該当するボタンをクリックします。インストールが完了したら、本ドキュメントに戻って設定オプションを確認してください。
 
 <ButtonGroup>
   <ButtonLink
     role="button"
-    to="https://one.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoiY291Y2hiYXNlLW9wZW4tc291cmNlLWludGVncmF0aW9uIiwiYWN0aXZlQ29tcG9uZW50IjoiVlRTT0NvbW1hbmQiLCJhY3RpdmVFbnZpcm9ubWVudCI6ImNvdWNoYmFzZS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiJ9"
+    to="https://one.newrelic.com/marketplace/install-data-source?state=7cd80f29-a702-ebb3-edcd-80cab8b61ee2"
     variant="primary"
   >
-    ガイド付きインストール
+    ガイド付きインストール（米国オプション）
   </ButtonLink>
 
   <ButtonLink
     role="button"
-    to="https://one.eu.newrelic.com/launcher/nr1-core.explorer?pane=eyJuZXJkbGV0SWQiOiJucjEtY29yZS5saXN0aW5nIn0=&cards[0]=eyJuZXJkbGV0SWQiOiJucjEtaW5zdGFsbC1uZXdyZWxpYy5ucjEtaW5zdGFsbC1uZXdyZWxpYyIsInBhdGgiOiJvaGkiLCJyZWNpcGVOYW1lIjoiY291Y2hiYXNlLW9wZW4tc291cmNlLWludGVncmF0aW9uIiwiYWN0aXZlQ29tcG9uZW50IjoiVlRTT0NvbW1hbmQiLCJhY3RpdmVFbnZpcm9ubWVudCI6ImNvdWNoYmFzZS1vcGVuLXNvdXJjZS1pbnRlZ3JhdGlvbiJ9"
+    to="https://one.eu.newrelic.com/marketplace/install-data-source?state=7cd80f29-a702-ebb3-edcd-80cab8b61ee2"
     variant="primary"
   >
-    EUガイド付きインストール
+    ガイド付きインストール（EUオプション）
   </ButtonLink>
 </ButtonGroup>
 
-ガイド付きインストールでは、インフラストラクチャ・エージェントを使用してCouchbaseの統合を設定します。それだけでなく、あなたの環境で稼働している他のアプリケーションやログ・ソースを発見し、どのようなものを導入すべきかを推奨します。
-
-ガイド付きインストールは、ほとんどのセットアップで動作します。しかし、それがあなたのニーズに合わない場合は、あなたのCouchbaseクラスタの監視を開始するために以下の他の方法を見つけることができます。
-
-## インストールと有効化 [#install]
+## インストール [#install]
 
 Couchbaseインテグレーションをインストールするには、お使いの環境の指示に従ってください。
 
@@ -68,97 +52,89 @@ Couchbaseインテグレーションをインストールするには、お使�
     id="ecs-install"
     title="ECS"
   >
-    [ECSで実行しているサービスを監視する](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)をご覧ください。
+    [ECSで実行されているモニターサービスを](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)参照してください。
   </Collapser>
 
-  ' '
+  ''
 
   <Collapser
     id="k8s-install"
     title="Kubernetes"
   >
-    [Kubernetesで実行しているサービスを監視する](/docs/monitor-service-running-kubernetes)をご覧ください。
+    [Kubernetesで実行されているモニターサービスを](/docs/monitor-service-running-kubernetes)参照してください。
   </Collapser>
 
   <Collapser
     id="linux-install"
     title="Linux"
   >
-    1. [インテグレーションのインストール](/docs/install-integrations-package) 、ファイル名 `nri-couchbase` の指示に従ってください。
+    1. [インフラストラクチャ エージェントをインストールし](/docs/integrations/host-integrations/installation/install-infrastructure-host-integrations/#install)、 `INTEGRATION_FILE_NAME`変数を`nri-couchbase`に置き換えます。
 
-    2. ディレクトリをintegrationsフォルダに変更します。
+    2. ディレクトリを統合フォルダに変更します。
 
        ```
        cd /etc/newrelic-infra/integrations.d
        ```
 
-    3. サンプルの設定ファイルのコピー：
+    3. サンプル構成ファイルのコピー：
 
        ```
        sudo cp couchbase-config.yml.sample couchbase-config.yml
        ```
 
-    4. `couchbase-config.yml` ファイルを [configuration settings](#config) で説明されているように編集します。
-
-    5. [Infrastructureエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    4. [構成設定](#config)の説明に従って、 `couchbase-config.yml`ファイルを編集します。
   </Collapser>
 
   <Collapser
     id="windows-install"
-    title="Windows"
+    title="ウィンドウズ"
   >
-    1. `nri-couchbase` .MSIインストーラーイメージを以下からダウンロードしてください。
+    1. `nri-couchbase` .MSIインストーラーイメージを以下からダウンロードします。
 
-       [http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi](http://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi)
+       [https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi](https://download.newrelic.com/infrastructure_agent/windows/integrations/nri-couchbase/nri-couchbase-amd64.msi)
 
-    2. インストールするには、Windowsのコマンドプロンプトで次のコマンドを実行します。
+    2. Windowsコマンドプロンプトからインストールするには、次のコマンドを実行します。
 
        ```
-       msiexec.exe /qn /i <var>PATH\TO\</var>nri-couchbase-amd64.msi
+       msiexec.exe /qn /i PATH\TO\nri-couchbase-amd64.msi
        ```
 
-    3. インテグレーションのディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、以下を実行してサンプル設定ファイルのコピーを作成します。
+    3. Integrationsディレクトリ`C:\Program Files\New Relic\newrelic-infra\integrations.d\`で、次のコマンドを実行してサンプル構成ファイルのコピーを作成します。
 
        ```
        cp couchbase-config.yml.sample couchbase-config.yml
        ```
 
-    4. `couchbase-config.yml` ファイルを [configuration settings](#config) で説明されているように編集します。
-
-    5. [Infrastructureエージェントを再起動します](/docs/infrastructure/new-relic-infrastructure/configuration/start-stop-restart-check-infrastructure-agent-status)。
+    4. [構成設定](#config)の説明に従って、 `couchbase-config.yml`ファイルを編集します。
   </Collapser>
 </CollapserGroup>
 
-追加の注：
+## 統合を更新する [#update]
 
-* **アドバンスト：**インテグレーションは[tarball書式](/docs/integrations/host-integrations/installation/install-host-integrations-built-new-relic#tarball)で使用すると、パッケージマネージャ以外にもインストールできます。
-* **オンホストインテグレーションは、自動的にアップデートしません。**最善の結果を得るため、[インテグレーションパッケージの更新](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)と[Infrastructureエージェントの更新](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に実施してください。
+このインテグレーションは、自動更新しません。最善の結果を得るため、[インテグレーションパッケージの更新](/docs/integrations/host-integrations/installation/update-infrastructure-host-integration-package)と[Infrastructureエージェントの更新](/docs/infrastructure/new-relic-infrastructure/installation/update-infrastructure-agent)を定期的に実施してください。
 
-## 設定 [#configuration]
+## インストール後のタスク [#after-install]
 
-### インテグレーションの設定 [#config]
+インストールが完了したら、設定オプションを設定できます。インテグレーションを機能させるには、設定がいくつか必要ですが、オプションの設定もあります。
 
-インストールの方法により、インテグレーションの設定方法はいくつかあります。
+### 統合を構成する [#config]
 
-* Kubernetesで有効化した場合：[Kubernetes上で実行中のサービスの監視](/docs/monitor-service-running-kubernetes)を参照してください。
-* Amazon ECSで有効化した場合：[ECS上で実行中のサービスの監視](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)を参照してください。
-* オンホストでインストールされている場合：インテグレーションのYAML設定ファイル（ `couchbase-config.yml）の設定を編集してください`.
+ECSまたはKubernetesインテグレーションからこのインテグレーションを有効にした場合は、以下のドキュメントを参照してください。
 
-インテグレーションのYAML形式設定では、必要なログインクレデンシャルやデータの収集方法を設定できます。どのオプションを変更するかは、設定とプリファレンスにより異なります。
+* [Kubernetes](/docs/monitor-service-running-kubernetes)
+* [ECS](/docs/integrations/host-integrations/host-integrations-list/monitor-services-running-amazon-ecs)
 
-設定ファイルには、 `interval` 、 `timeout` 、 `inventory_source` など、すべての統合に適用される共通の設定があります。これらの共通設定については、 [Configuration Format](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics) のドキュメントを参照してください。
+標準オンホストインストールの場合、このインテグレーションにはYAML設定ファイル、`apache-config.yml`が付属しています。この設定では、必要なログインクレデンシャルやデータの収集方法を設定できます。どのオプションを変更するかは、設定とプリファレンスにより異なります。コピーおよび編集できるサンプル設定ファイル`apache-config.yml.sample`が付属しています。
 
-<Callout variant="important">
-  従来の設定/定義ファイルをまだお使いの場合は、こちらの [ドキュメント](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/) を参考にしてください。
-</Callout>
+構成ファイルには、 `interval` 、 `timeout` 、 `inventory_source`などのすべての統合に適用できる共通の設定があります。これらの一般的な設定についてすべて読むには、 [構成フォーマット](/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/#configuration-basics)のドキュメントを参照してください。
 
-Couchbaseに関連する特定の設定は、コンフィギュレーションファイルの `env` セクションを使用して定義されます。これらの設定は、他のセキュリティ設定や機能と同様に、Couchbaseインスタンスへの接続を制御します。有効な設定のリストは、このドキュメントの次のセクションで説明します。
+Couchbase に関連する特定の設定は、構成ファイルの`env`セクションを使用して定義されます。これらの設定は、Couchbase インスタンスへの接続、およびその他のセキュリティ設定と機能を制御します。有効な設定のリストについては、このドキュメントの次のセクションで説明します。
 
-### Couchbase インスタンスの設定 [#instance-settings]
+#### カウチベースの構成オプション [#config-options]
 
-Couchbaseインテグレーションは、メトリクス(**M**)とインベントリ(**I**)の両方の情報を収集します。表の中で、 **Applies To** 列を使って、各コレクションで利用できる設定を確認してください。
+Couchbase 統合は、メトリクスとインベントリ情報の両方を収集します。この表は、各構成オプションの適用対象を示しています。
 
-' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' '
+'' '' '' '' '' '' '' '' '' '' '' '' ''
 
 <table>
   <thead>
@@ -176,7 +152,7 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </th>
 
       <th>
-        適用対象
+        に適用されます
       </th>
     </tr>
   </thead>
@@ -184,7 +160,9 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
   <tbody>
     <tr>
       <td>
-        **HOSTNAME**
+        <DNT>
+          **HOSTNAME**
+        </DNT>
       </td>
 
       <td>
@@ -192,17 +170,19 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td>
-        localhost
+        ローカルホスト
       </td>
 
       <td style={{ "text-align": "center" }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **ポート**
+        <DNT>
+          **PORT**
+        </DNT>
       </td>
 
       <td>
@@ -214,13 +194,15 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **QUERY_PORT**
+        <DNT>
+          **QUERY_PORT**
+        </DNT>
       </td>
 
       <td>
@@ -232,13 +214,15 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **ユーザー名**
+        <DNT>
+          **USERNAME**
+        </DNT>
       </td>
 
       <td>
@@ -250,17 +234,19 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **パスワード**
+        <DNT>
+          **PASSWORD**
+        </DNT>
       </td>
 
       <td>
-        指定ユーザーのパスワード。
+        指定されたユーザーのパスワード。
       </td>
 
       <td>
@@ -268,13 +254,15 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **USE_SSL**
+        <DNT>
+          **USE_SSL**
+        </DNT>
       </td>
 
       <td>
@@ -286,17 +274,19 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **CA_BUNDLE_FILE**
+        <DNT>
+          **CA_BUNDLE_FILE**
+        </DNT>
       </td>
 
       <td>
-        ホスト上のSSL証明書の場所。 `USE_SSL` がtrueの場合のみ必要です。
+        ホスト上のSSL証明書の場所。 `USE_SSL`がtrueの場合にのみ必要です。
       </td>
 
       <td>
@@ -304,17 +294,19 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **CA_BUNDLE_DIR**
+        <DNT>
+          **CA_BUNDLE_DIR**
+        </DNT>
       </td>
 
       <td>
-        Alternative Certificate Authority bundle directory.
+        代替認証局バンドルディレクトリ。
       </td>
 
       <td>
@@ -322,17 +314,19 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **タイムアウト**
+        <DNT>
+          **TIMEOUT**
+        </DNT>
       </td>
 
       <td>
-        APIリクエストのタイムアウト（単位：秒）。
+        APIリクエストのタイムアウト（秒単位）。
       </td>
 
       <td>
@@ -340,13 +334,15 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
       </td>
 
       <td style={{ 'text-align': 'center' }}>
-        M/I
+        M / I
       </td>
     </tr>
 
     <tr>
       <td>
-        **ENABLE_BUCKETS**
+        <DNT>
+          **ENABLE_BUCKETS**
+        </DNT>
       </td>
 
       <td>
@@ -364,7 +360,9 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
 
     <tr>
       <td>
-        **バケット統計の有効化**
+        <DNT>
+          **ENABLE_BUCKET_STATS**
+        </DNT>
       </td>
 
       <td>
@@ -382,7 +380,9 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
 
     <tr>
       <td>
-        **クラスタとノードの有効化**
+        <DNT>
+          **ENABLE_CLUSTER_AND_NODES**
+        </DNT>
       </td>
 
       <td>
@@ -400,11 +400,13 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
 
     <tr>
       <td>
-        **メトリクス**
+        <DNT>
+          **METRICS**
+        </DNT>
       </td>
 
       <td>
-        `true`に設定すると、メトリクスのみの収集が有効になります。
+        メトリックのみの収集を有効にするには、 `true`に設定します。
       </td>
 
       <td>
@@ -416,11 +418,13 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
 
     <tr>
       <td>
-        **インベントリ**
+        <DNT>
+          **INVENTORY**
+        </DNT>
       </td>
 
       <td>
-        `true`に設定すると、インベントリのみの収集が有効になります。
+        インベントリのみの収集を有効にするには、 `true`に設定します。
       </td>
 
       <td>
@@ -432,15 +436,17 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
   </tbody>
 </table>
 
-これらの設定値は、いくつかの方法で定義できます。
+これらの設定の値は、いくつかの方法で定義できます。
 
-* コンフィグファイルに直接値を追加する。これが最も一般的な方法です。
-* `{{}}` 表記を使用して環境変数から値を置き換えます。これには、インフラストラクチャ・エージェント v1.14.0+が必要です。詳しくはこちら [](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough)または、以下の例をご覧ください [](#envvar-replacement).
+* 設定ファイルに直接値を追加します（最も一般的な方法）。
+* `{{}}`表記を使用して、環境変数の値を置き換えます。これには、Infrastructureエージェントバージョン1.14.0以降が必要です。詳細については、[Infrastructure設定](/docs/infrastructure/install-infrastructure-agent/configuration/configure-infrastructure-agent/#passthrough)または[環境変数の例](#example5)を参照してください。
 * シークレット管理の使用。これを使用して、設定ファイルのプレーンテキストで公開されないようにパスワードなどの重要な情報を保護してください。詳細については、[シークレット管理](/docs/integrations/host-integrations/installation/secrets-management)を参照してください。
 
-### ラベル/カスタム属性 [#labels]
+### ラベル [#labels]
 
-メトリクスは、ラベルを使ってさらに装飾することができます。<br/> デフォルトのサンプル・コンフィグ・ファイルにはラベルの例が含まれていますが、これらは必須ではありませんので、お好きなものを削除、変更、または新たに追加することができます。
+さらに、メトリクスにラベルを付けることもできます。ラベルを使用すると、属性（キーや値のペア）をメトリクスに追加して、メトリクスのクエリを挙げ、フィルターをかけ、グループ化を行うことができます。
+
+デフォルトのサンプル設定ファイルにはラベルの例が含まれていますが、必須ではないため、選択したラベルを削除、変更、お好きな設定を新規追加することができます。
 
 ```
  labels:
@@ -448,14 +454,14 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
    role: load_balancer
 ```
 
-## 設定の例 [#examples]
+## 構成例 [#examples]
 
 <CollapserGroup>
   <Collapser
     id="basic-config"
-    title="基本設定"
+    title="基本構成"
   >
-    これは、ローカルホストからメトリクスとインベントリの収集に使用する基本設定です。
+    これは、ローカルホストからメトリックとインベントリを収集するために使用される基本構成です。
 
     ```
     integrations:
@@ -475,9 +481,9 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
 
   <Collapser
     id="basic-intervals"
-    title="メトリック/インベントリの間隔が異なる基本設定"
+    title="メトリック/在庫間隔が異なる基本構成"
   >
-    この構成では、15秒ごとにメトリクスを収集し、60秒ごとにインベントリを収集します。
+    この構成では、15秒ごとにメトリックを収集し、60秒ごとにインベントリを収集します。
 
     ```
     integrations:
@@ -510,9 +516,9 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
 
   <Collapser
     id="envvar-replacement"
-    title="環境変数の置き換え"
+    title="環境変数の置換"
   >
-    この構成では、環境変数 `COUCHBASE_HOST` を使用して、統合のHOSTNAME設定を入力しています。
+    この構成では、環境変数`COUCHBASE_HOST`を使用して、統合のHOSTNAME設定を設定しています。
 
     ```
     integrations:
@@ -533,9 +539,9 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
 
   <Collapser
     id="multi-instance"
-    title="マルチインスタンス監視"
+    title="マルチインスタンスモニタリング"
   >
-    この構成では、同じ統合から複数のCouchbaseサーバを監視しています。1つ目のインスタンス(`HOSTNAME:1st_couchbase_host` ）では、メトリクスとインベントリを収集していますが、2番目のインスタンス（`HOSTNAME: 2nd_couchbase_host` ）では、メトリクスのみを収集します。
+    この構成では、同じ統合から複数の Couchbase サーバーを監視しています。最初のインスタンス ( `HOSTNAME: 1st_couchbase_host` ) ではメトリックとインベントリを収集しますが、2 番目のインスタンス ( `HOSTNAME: 2nd_couchbase_host` ) ではメトリックのみを収集します。
 
     ```
     integrations:
@@ -581,7 +587,7 @@ Couchbaseインテグレーションは、メトリクス(**M**)とインベン�
   </Collapser>
 </CollapserGroup>
 
-## データの検索と使用 [#find-and-use]
+## データを見つけて使用する [#find-and-use]
 
 統合データは [統合ダッシュボード](/docs/integrations/new-relic-integrations/getting-started/infrastructure-integration-dashboards-charts) に報告されます。
 
@@ -592,17 +598,17 @@ Couchbaseのデータは、以下の [イベントタイプに添付されてい
 * `CouchbaseNodeSample`
 * `CouchbaseQueryEngineSample`
 
-トラブルシューティング目的で、またはカスタムのチャートとダッシュボードを作成するために、[このデータのクエリ](/docs/using-new-relic/data/understand-data/query-new-relic-data)を行えます。
+トラブルシューティングの目的で、またはカスタムチャートとダッシュボードを作成するために、[このデータをクエリ](/docs/using-new-relic/data/understand-data/query-new-relic-data)できます。
 
-データの検索・使用方法の詳細については、 [インテグレーションデータを理解する](/docs/infrastructure/integrations/find-use-infrastructure-integration-data)を参照してください。
+データを検索して使用する方法の詳細については、[統合データ](/docs/infrastructure/integrations/find-use-infrastructure-integration-data)についてを参照してください。
 
 ## メトリックデータ [#metrics]
 
-Couchbaseインテグレーションでは、以下のメトリックデータ属性を収集します。一部のメトリック名には、 `cluster.` や `node.` のように、カテゴリ・インジケータとピリオドが前置されています。
+Couchbase 統合は、次のメトリック データ属性を収集します。`cluster.`や`node.`など、一部のメトリック名には、カテゴリ インジケータとピリオドがプレフィックスとして付けられます。
 
 ### Couchbaseバケットのサンプルメトリクス [#bucket-sample-metric]
 
-これらの属性は `CouchbaseBucketSample` イベントタイプに添付されます。
+これらの属性は、 `CouchbaseBucketSample`イベント タイプに関連付けられています。
 
 <table>
   <thead>
@@ -860,7 +866,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
     <tr>
       <td>
-        `バケツ.メモリーハイウォーターマークインバイト`
+        `bucket.memoryHighWaterMarkInBytes`
       </td>
 
       <td>
@@ -870,7 +876,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
     <tr>
       <td>
-        `Bucket.MemoryLowWaterMarkInBytes`
+        `bucket.memoryLowWaterMarkInBytes`
       </td>
 
       <td>
@@ -890,7 +896,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
     <tr>
       <td>
-        `Bucket.metadataInRAMInBytes`
+        `bucket.metadataInRAMInBytes`
       </td>
 
       <td>
@@ -940,7 +946,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
     <tr>
       <td>
-        `バケツ.pendingResidentItemsRatio`
+        `bucket.pendingResidentItemsRatio`
       </td>
 
       <td>
@@ -1072,7 +1078,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
 ### カウチベースクラスターサンプルメトリクス [#cluster-sample-metric]
 
-これらの属性は `CouchbaseClusterSample` イベントタイプに添付されます。
+これらの属性は、 `CouchbaseClusterSample`イベント タイプに関連付けられています。
 
 <table>
   <thead>
@@ -1272,7 +1278,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
 ### Couchbaseノードのサンプルメトリクス [#node-sample-metric]
 
-これらの属性は `CouchbaseNodeSample` イベントタイプに添付されます。
+これらの属性は、 `CouchbaseNodeSample`イベント タイプに関連付けられています。
 
 <table>
   <thead>
@@ -1344,13 +1350,13 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
       </td>
 
       <td>
-        ノードの状態です。(`0` = 不健全, `1` = 健全)
+        ノードのステータス。( `0` = 不健康、 `1` = 健康)
       </td>
     </tr>
 
     <tr>
       <td>
-        `ノード.swapTotalInBytes`
+        `node.swapTotalInBytes`
       </td>
 
       <td>
@@ -1382,7 +1388,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
 ### Couchbase クエリエンジンのサンプルメトリクス [#query-engine-sample-metric]
 
-これらの属性は `CouchbaseQueryEngineSample` イベントタイプに添付されます。
+これらの属性は、 `CouchbaseQueryEngineSample`イベント タイプに関連付けられています。
 
 <table>
   <thead>
@@ -1480,7 +1486,7 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
 
     <tr>
       <td>
-        `queryengine.GarbageCollectionTimePausedInMilliseconds`
+        `queryengine.garbageCollectionTimePausedInMilliseconds`
       </td>
 
       <td>
@@ -1640,9 +1646,9 @@ Couchbaseインテグレーションでは、以下のメトリックデータ�
   </tbody>
 </table>
 
-## インベントリデータ [#inventory]
+## 在庫データ [#inventory]
 
-Couchbaseインテグレーションでは、Couchbaseデータベースの構成パラメータを取得します。このデータは、Infrastructure [Inventoryページ](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure) 、 **config/couchbase** ソースの下で利用できます。インベントリデータの詳細については、 [Understand data](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data) を参照してください。
+Couchbase インテグレーションは、Couchbase データベースの設定をキャプチャします。 データは、インフラストラクチャ UI の[インベントリ ページ](/docs/infrastructure/new-relic-infrastructure/infrastructure-ui-pages/infrastructure-inventory-page-search-your-entire-infrastructure)の<DNT>**config/couchbase**</DNT>ソースで確認できます。 インベントリデータの詳細については、 [「データを理解する」](/docs/infrastructure/integrations-getting-started/getting-started/understand-integration-data-data-types#inventory-data)を参照してください。
 
 このインテグレーションでは、以下のCouchbase構成パラメータのデータを取得します。
 
@@ -1667,7 +1673,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
       <tbody>
         <tr>
           <td>
-            `ノードロケーター`
+            `Node locator`
           </td>
 
           <td>
@@ -1677,7 +1683,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `プロキシポート`
+            `Proxy port`
           </td>
 
           <td>
@@ -1687,7 +1693,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `タイプ`
+            `Type`
           </td>
 
           <td>
@@ -1728,7 +1734,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
       <tbody>
         <tr>
           <td>
-            `コレクションノード`
+            `Collection node`
           </td>
 
           <td>
@@ -1738,7 +1744,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `カウチベースのバージョン`
+            `Couchbase version`
           </td>
 
           <td>
@@ -1779,7 +1785,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
       <tbody>
         <tr>
           <td>
-            `クラスター・メンバーシップ`
+            `Cluster membership`
           </td>
 
           <td>
@@ -1789,7 +1795,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `ホスト名`
+            `Hostname`
           </td>
 
           <td>
@@ -1799,7 +1805,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `オペレーティングシステム`
+            `Operating system`
           </td>
 
           <td>
@@ -1809,7 +1815,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `ポート`
+            `Port`
           </td>
 
           <td>
@@ -1819,7 +1825,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `リカバリータイプ`
+            `Recovery type`
           </td>
 
           <td>
@@ -1829,7 +1835,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `サービス`
+            `Services`
           </td>
 
           <td>
@@ -1839,7 +1845,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `バージョン`
+            `Version`
           </td>
 
           <td>
@@ -1870,7 +1876,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
       <tbody>
         <tr>
           <td>
-            `ノードのホスト名`
+            `Node hostname`
           </td>
 
           <td>
@@ -1880,7 +1886,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `ノードポート`
+            `Node port`
           </td>
 
           <td>
@@ -1890,7 +1896,7 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
 
         <tr>
           <td>
-            `バージョン`
+            `Version`
           </td>
 
           <td>
@@ -1902,6 +1908,6 @@ Couchbaseインテグレーションでは、Couchbaseデータベースの構�
   </Collapser>
 </CollapserGroup>
 
-## ソースコードのチェック [#source-code]
+## ソースコードを確認してください [#source-code]
 
-このインテグレーションは、オープンソース・ソフトウェアです。つまり、 [そのソースコードを閲覧して](https://github.com/newrelic/nri-couchbase "新しいウィンドウにリンクが開きます。") 改良を送ったり、独自のフォークを作成して構築することができます。
+このインテグレーションはオープンソースソフトウェアです。つまり、[ソースコードを参照](https://github.com/newrelic/nri-apache/)して改善を送信したり、独自のフォークを作成して構築したりできます。

@@ -1,12 +1,13 @@
 ---
 title: 메트릭 데이터 유형 쿼리
 metaDescription: 'How to query New Relic''s Metric data type, which is reported by our Metric API and the integrations that use it.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
-[메트릭 API](/docs/data-ingest-apis/get-data-new-relic/metric-api/introduction-metric-api) 를 통해 New Relic에 메트릭이 보고되면(해당 API를 사용하는 통합 포함) 데이터는 [`Metric` 데이터 유형](/docs/using-new-relic/data/understand-data/new-relic-data-types#dimensional-metrics) 으로 보고되며 쿼리에 사용할 수 있습니다.
+메트릭이 [Metric API](/docs/data-ingest-apis/get-data-new-relic/metric-api/introduction-metric-api) 를 통해 New Relic에 보고되면(해당 API를 사용하는 통합 포함) 데이터는 [`Metric` 데이터 유형](/docs/data-apis/understand-data/metric-data/metric-data-type) 으로 보고되며 쿼리에 사용할 수 있습니다.
 
-이 문서에는 다음이 포함됩니다.
+이 문서는 다음을 설명합니다.
 
 * [측정항목을 보고 쿼리](#view-and-query) 하는 방법
 * [예시 메트릭 쿼리](#example-metric-queries)
@@ -17,65 +18,23 @@ translationType: machine
 
 APM은 메트릭 타임슬라이스 데이터라고 하는 특정 유형의 데이터를 보고합니다. 쿼리하는 방법은 [메트릭 타임슬라이스 데이터 쿼리](/docs/query-data/nrql-new-relic-query-language/nrql-query-tutorials/query-metric-timeslice-data-nrql) 를 참조하세요.
 
+<Callout variant="important">
+  차원 메트릭 또는 이벤트 데이터와 함께 타임슬라이스 메트릭을 쿼리할 수 없습니다. `newrelic.timeslice.value` 또는 `apm.*` 측정항목과 관련된 모든 쿼리는 APM 측정항목만 반환할 수 있습니다.
+</Callout>
+
 다른 유형의 메트릭에 대한 정보는 [메트릭 데이터 유형](/docs/using-new-relic/data/understand-data/new-relic-data-types#metrics-new-relic) 을 참조하십시오.
 
 ## 측정항목 보기 및 쿼리 [#view-and-query]
 
 [NRQL](/docs/query-data/nrql-new-relic-query-language/getting-started/introduction-nrql) 을 사용하여 [쿼리 빌더](/docs/chart-builder/use-chart-builder/get-started/introduction-chart-builder) 에서 또는 [NerdGraph API](/docs/apis/nerdgraph/get-started/introduction-new-relic-nerdgraph) 를 사용하여 메트릭 데이터를 쿼리할 수 있습니다.
 
-메트릭을 쿼리하려면 다음 쿼리 형식을 사용합니다.
+메트릭을 쿼리하려면 다음 쿼리 형식을 사용할 수 있습니다.
 
 ```
-FROM <mark>Metric</mark> SELECT <var>function</var>(<var>metric_name</var>) WHERE <var>attribute</var>=<var>value</var> FACET <var>attribute</var> TIMESERIES
+FROM Metric SELECT function(metric_name) WHERE attribute=value FACET attribute TIMESERIES
 ```
 
-다음은 각 [측정항목 유형](/docs/report-metrics-metric-api#payload-metrics) 에 지원되는 기능입니다.
-
-<table>
-  <thead>
-    <tr>
-      <th style={{ width: "150px" }}>
-        측정항목 유형
-      </th>
-
-      <th>
-        지원되는 기능
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td>
-        `Summary`
-      </td>
-
-      <td>
-        개수, 합계, 최소값, 최대값 및 평균
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        `Count`
-      </td>
-
-      <td>
-        합집합
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        `Gauge`
-      </td>
-
-      <td>
-        개수, 합계, 최소값, 최대값, 평균 및 최신
-      </td>
-    </tr>
-  </tbody>
-</table>
+어떤 메트릭 데이터 유형에 대해 어떤 기능이 지원되는지에 대한 정보는 [메트릭 데이터 구조](/docs/data-apis/understand-data/metric-data/metric-data-type) 를 참조하십시오.
 
 `SELECT` 절에 적절한 값 함수를 사용하여 차트로 만들 측정항목의 이름을 추가합니다. `WHERE` 및 `FACET` 절은 속성 값과 함께 사용할 수 있습니다. 데이터를 차트로 표시하려면 키워드 `TIMESERIES` 을 포함하는 것을 잊지 마십시오.
 
@@ -172,7 +131,7 @@ FROM Metric select rate(sum(container_cpu_usage_seconds_total), 1 minute)
     이 예에서는 특정 메트릭에 대해 수신된 마지막 20개의 데이터 포인트를 나열하는 방법을 보여줍니다.
 
     ```
-    FROM Metric SELECT * WHERE metricName = 'container_fs_usage_bytes' LIMIT 20 <mark>RAW</mark>
+    FROM Metric SELECT * WHERE metricName = 'container_fs_usage_bytes' LIMIT 20 RAW
     ```
   </Collapser>
 </CollapserGroup>
@@ -233,22 +192,11 @@ FROM Metric select rate(sum(container_cpu_usage_seconds_total), 1 minute)
 
 ## 다음을 사용하여 개별 필드에 대한 결과 반환 `getField()` [#use-getField]
 
-메트릭에는 여러 필드가 연결되어 있으며 각 필드에는 고유한 값이 있습니다. 쿼리를 사용하여 이러한 값 중 하나를 추출하려면 `getField()` 를 사용하여 수행할 수 있습니다.
+[여러 유형의 `Metric` 데이터](/docs/data-apis/understand-data/metric-data/metric-data-type/#metric-types) (예: `gauge` 및 `count`)가 있으며 각 유형에는 여러 개의 연관된 <DNT>**fields**</DNT> 이 있습니다. 사용 가능한 필드 유형에 대한 자세한 내용은 [`getField()`](/docs/query-your-data/nrql-new-relic-query-language/get-started/nrql-syntax-clauses-functions/#func-getfield) 참조하세요.
 
-예를 들어 측정항목 내에서 단일 값을 사용하여 `WHERE` 절에서 비교를 수행하려는 경우 `getField(metricName, field)` 또는 `metricName[field]` 를 사용할 수 있습니다.
+`getField()` 사용하여 해당 필드를 추출할 수 있습니다. 예를 들어 지표 내의 단일 값을 사용하여 `WHERE` 절에서 비교를 수행하려는 경우 `getField(metricName, field)` 또는 단축 구문 `metricName[field]` 을 사용할 수 있습니다.
 
 <CollapserGroup>
-  <Collapser
-    id="example-list-gauge-metrics"
-    title="게이지 측정항목 목록"
-  >
-    이 예제 쿼리는 게이지 메트릭 목록을 반환합니다.
-
-    ```
-    FROM Metric SELECT uniques(metricName) WHERE %[type] = 'gauge'
-    ```
-  </Collapser>
-
   <Collapser
     id="example-list-names-host"
     title="특정 호스트에 대한 모든 메트릭 이름 나열"
@@ -256,8 +204,43 @@ FROM Metric select rate(sum(container_cpu_usage_seconds_total), 1 minute)
     측정항목의 평균 값은 `count` 에 대해 `total` 으로 계산되므로 다음 쿼리는 `average()` 값 함수의 결과가 2보다 큰 측정항목 데이터를 반환합니다.
 
     ```
-    FROM Metric SELECT average(apm.service.transaction.duration) WHERE appName = 'MyApp' AND apm.service.transaction.duration[total] / apm.service.transaction.duration[count] > 2
+    FROM Metric 
+    SELECT average(apm.service.transaction.duration) 
+    WHERE appName = 'MyApp' 
+    AND getField(apm.service.transaction.duration, total) / getField(apm.service.transaction.duration, count) > 2
     ```
+
+    또는 다음과 같은 약칭을 사용할 수 있습니다.
+
+    ```
+    FROM Metric 
+    SELECT average(apm.service.transaction.duration) 
+    WHERE appName = 'MyApp' 
+    AND apm.service.transaction.duration[total] / apm.service.transaction.duration[count] > 2
+    ```
+  </Collapser>
+
+  <Collapser
+    id="example-list-gauge-metrics"
+    title="게이지 측정항목 목록"
+  >
+    이 예제 쿼리는 게이지 메트릭 목록을 반환합니다.
+
+    ```
+    FROM Metric 
+    SELECT uniques(metricName) 
+    WHERE getField(%, type) = 'gauge'
+    ```
+
+    또는 다음과 같은 약칭을 사용할 수 있습니다.
+
+    ```
+    FROM Metric 
+    SELECT uniques(metricName) 
+    WHERE %[type] = 'gauge'
+    ```
+
+    `metricName` 과 일치하는 목표를 달성하려면 `%` 와일드카드를 사용하세요.
   </Collapser>
 </CollapserGroup>
 
@@ -289,7 +272,7 @@ NRQL `keyset` 및 `uniques` 함수는 `metricName` 속성(모든 측정항목에
     title="특정 측정항목에 대한 속성 키 표시"
   >
     ```
-    FROM Metric SELECT keyset() WHERE metricName = <var>METRIC_NAME</var>
+    FROM Metric SELECT keyset() WHERE metricName = METRIC_NAME
     ```
   </Collapser>
 </CollapserGroup>

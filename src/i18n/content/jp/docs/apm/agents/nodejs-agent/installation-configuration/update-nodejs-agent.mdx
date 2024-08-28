@@ -5,29 +5,34 @@ tags:
   - Nodejs agent
   - Installation and configuration
 metaDescription: 'How to update your APM Node.js agent, and notes on EOL support for early agent versions.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
 New Relic の最新の機能、拡張機能、重要なセキュリティパッチを最大限に活用するために、Node.js エージェントを最新バージョンにアップデートすることをお勧めします。特定のエージェントのアップデートに関する詳細については、 [Node.js エージェントのリリースノート](/docs/release-notes/agent-release-notes/nodejs-release-notes) を参照してください。リリースノートには、該当する場合にはダウンロードリンクと、最新バージョンをダウンロードして [インストールするための手順が記載されています](/docs/agents/nodejs-agent/installation-configuration/install-nodejs-agent) 。
 
-* `newrelic` モジュールが `package.json` に記載されている場合は、 `npm install` を実行してください。
-* `newrelic` モジュールだけをターゲットにしたい場合は、 `npm update newrelic` を実行します。
+* `newrelic`モジュールが`package.json`にリストされている場合は、 `npm install`を実行します。
+* `newrelic`モジュールのみをターゲットにする場合は、 `npm update newrelic`を実行します。
 
-**推奨：** 更新したバージョンを運用に移す前にテストしてみてください。問題が発生した場合は、Node.js エージェント [トラブルシューティング手順](/docs/agents/nodejs-agent/troubleshooting/troubleshooting-your-nodejs-installation) に従ってください。
+推奨事項: 更新されたバージョンを本番環境に移行する前にテストしてください。 問題が発生した場合は、Node.js エージェントの[トラブルシューティング手順](/docs/agents/nodejs-agent/troubleshooting/troubleshooting-your-nodejs-installation)に従ってください。
 
-## Node.jsエージェントバージョン8へのアップグレード [#node-agent-v8]
+## Node.js エージェント バージョン 11 へのアップグレード [#node-agent-v11]
 
-Node.jsのバージョン8にアップグレードする前に、主要な変更点についてこの情報を確認してください。
+Node.js バージョン 11 にアップグレードする前に、大きな変更点がないかこの情報を確認してください。
 
 <table>
   <thead>
     <tr>
       <th style={{ width: "250px" }}>
-        **Node.jsエージェントv8での主な変更点**
+        <DNT>
+          **Major changes with Node.js agent v11**
+        </DNT>
       </th>
 
       <th>
-        **コメント**
+        <DNT>
+          **Comments**
+        </DNT>
       </th>
     </tr>
   </thead>
@@ -35,7 +40,7 @@ Node.jsのバージョン8にアップグレードする前に、主要な変更
   <tbody>
     <tr>
       <td>
-        Node 16の公式パリティサポートを追加
+        Node.js 20 の公式パリティ サポートを追加しました。
       </td>
 
       <td/>
@@ -43,7 +48,7 @@ Node.jsのバージョン8にアップグレードする前に、主要な変更
 
     <tr>
       <td>
-        **BREAKING**: Dropped Node v10.x support.
+        <DNT>**BREAKING**</DNT>: Node.js 14 のサポートを廃止しました。
       </td>
 
       <td>
@@ -53,28 +58,345 @@ Node.jsのバージョン8にアップグレードする前に、主要な変更
 
     <tr>
       <td>
-        **BREAKING**: `serverless_mode` を機能フラグとして削除しました。
+        <DNT>**BREAKING**</DNT>: ESM ローダーを更新して Node.js 20 をサポートしました。
       </td>
 
       <td>
-        * 標準的な `serverless_mode` の設定が残っています。
+        * アプリケーションを実行するときは、 `--experimental-loader` 引数と `-r` 引数の両方を使用する必要があります。
+        * `node --experimental-loader newrelic/esm-loader.mjs -r newrelic path/to/app.js`
       </td>
     </tr>
 
     <tr>
       <td>
-        **BREAKING**: エージェントは、「certificates」設定を使用した場合、New Relic の証明書バンドルを自動的に含めなくなりました (一般的にプロキシで使用されます)。
+        <DNT>**BREAKING**</DNT>: デフォルトのコンテキスト マネージャーを AsyncLocalContextManager に更新しました。
       </td>
 
       <td>
-        * 現在の環境でこの機能が使えないと感じた場合は、feature-flagを利用して一時的にこの機能を復活させることができます。設定例： `feature_flag:{ certificate_bundle: true }。` 。この場合、Mozilla から提供されているような、あなたの環境に合った証明書バンドルを入手することをお勧めします。New Relic のバンドルと feature flag は、次のメジャーリリースで完全に削除される予定です。
+        * 以前のデフォルトの LegacyContextManager は、 `config.feature_flag.legacy_context_manager` の機能フラグを `true`に設定することで復元できます。
+        * 環境変数を使用したい場合は、 `NEW_RELIC_FEATURE_FLAG_LEGACY_CONTEXT_MANAGER` を `true`に設定できます。
+        * このコンテキスト マネージャーは将来のバージョンでは削除される予定であることに注意してください。この従来のコンテキスト マネージャーの使用に戻す必要がある場合は、 [New Relic サポート](https://support.newrelic.com/s/) または [GitHub の問題](https://github.com/newrelic/node-newrelic/issues/new?assignees=&labels=bug%2C+needs-triage&projects=&template=bug_report.md&title=)に報告してください。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: `shim.handleCATHeaders`の名前を`shim.handleMqTracingHeaders`に変更しました。
+      </td>
+
+      <td/>
+    </tr>
+
+    <tr>
+      <td>
+        New Relic の依存関係を、Node.js バージョンのサポートが更新されたバージョンに更新する
+      </td>
+
+      <td>
+        * @newrelic/aws-sdk v7.0.0
+        * @newrelic/koa v8.0.0
+        * @newrelic/native-metrics v10.0.0
+        * @newrelic/スーパーエージェント v7.0.0
+        * @newrelic/test-utilities v8.0.0
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Node.jsバージョンのサポート [#node-support-v11]
+
+Node.js 16 は、New Relic Node.js v11 エージェントでサポートされる最も古いバージョンです。Node.js 14 および 15 は v11 ではサポートされていません。Node.js 15 以前を実行しているお客様には、次の 2 つのオプションがあります。
+
+* サポートされているバージョンの Node.js にアップグレードし、New Relic Node.js v11 エージェントの新機能を活用してください。
+* New Relic Node.js v10 エージェントを使用し続けますが、エージェント バージョンの更新でのみ利用できる新機能は使用できません。
+
+<Callout variant="tip">
+  できるだけ早く Node.js の新しいバージョンにアップグレードしてください。New Relic Node.js エージェントの次のメジャー バージョンでは、Node.js 16 のサポートが削除される可能性があります。
+</Callout>
+
+## Node.js エージェント バージョン 10 へのアップグレード [#node-agent-v10]
+
+Node.js バージョン 10 にアップグレードする前に、大きな変更点がないかこの情報を確認してください。
+
+<table>
+  <thead>
+    <tr>
+      <th style={{ width: "250px" }}>
+        <DNT>
+          **Major changes with Node.js agent v11**
+        </DNT>
+      </th>
+
+      <th>
+        <DNT>
+          **Comments**
+        </DNT>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        * 同じ解決された moduleName に対して複数のインストルメンテーション フック (onRequire、onResolved) を登録する機能が追加されました。
+      </td>
+
+      <td>
+        * これは最初からエージェントの制限でした。
+        * API を使用して api.instrument、api.instrumentDatastore、api.instrumentWebframework、api.instrumentMessages、または api.instrumentConglomerate を計測した場合、既存の計測フックがオーバーライドされます。
+        * その結果、Node.js エージェントが設計どおりに機能しなくなります。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: `config.transaction_tracer.record_sql`のデフォルトをオフから難読化に更新しました。 つまり、SQL ステートメントはキャプチャされますが、難読化されます。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: ルート (URL) 構造体は、トランザクション、ルート セグメント、およびスパンの`request.parameters.route.*`属性として保存されるようになりました。
+      </td>
+
+      <td>
+        * クエリ パラメーターは、request.parameters.\* というプレフィックスが付いた属性として使用できます。トランザクションとスパンについて。
+        * ルート パラメーターは、request.parameters.route.\* というプレフィックスが付いた属性として使用できます。トランザクションとスパンについて。
+        * ルート パラメーター (別名 URL パラメーター) はさまざまな Web フレームワークの共通機能であり、API ルート定義の一部としてプレースホルダーを作成できます。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: WebFrameworkShim クラスから captureUrlParams を削除しました。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**DEPRECATION NOTICE**</DNT>: 複数回ラップされたアイテムをアンラップしようとすると、shim.unwrap と shim.unwrapOnce は機能しなくなります。
+      </td>
+
+      <td>
+        * これは、同じモジュールを複数回インストゥルメントできるようになったので、登録されているすべてのインスツルメンテーションを破壊せずに安全にラップを解除することができないためです。次のメジャー リリースでは shim.unwrap と shim.unwrapOnce を削除する予定です。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        New Relic の依存関係を、Node.js バージョンのサポートが更新されたバージョンに更新する
+      </td>
+
+      <td>
+        * @newrelic/aws-sdk v7.0.0
+        * @newrelic/koa v8.0.0
+        * @newrelic/native-metrics v10.0.0
+        * @newrelic/スーパーエージェント v7.0.0
+        * @newrelic/test-utilities v8.0.0
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Node.jsバージョンのサポート [#node-support-v10]
+
+Node.js 14 は、New Relic Node.js v10 エージェントでサポートされる最も古いバージョンです。Node.js 12 および 13 は v10 ではサポートされていません。Node.js 13 以前を実行しているお客様には、次の 2 つのオプションがあります。
+
+* サポートされているバージョンの Node.js にアップグレードし、New Relic Node.js v10 エージェントの新機能を活用してください。
+* アップデート エージェント バージョンでのみ利用可能な新機能を使用する機能なしで、New Relic Node.js v8 エージェントにとどまります。
+
+<Callout variant="tip">
+  できるだけ早く Node.js の新しいバージョンにアップグレードしてください。New Relic Node.js エージェントの次のメジャー バージョンでは、Node.js 14 のサポートが削除される可能性があります。
+</Callout>
+
+## Node.js エージェント バージョン 9 にアップグレードする [#node-agent-v9]
+
+Node.js バージョン 9 にアップグレードする前に、主な変更点についてこの情報を確認してください。
+
+<table>
+  <thead>
+    <tr>
+      <th style={{ width: "250px" }}>
+        <DNT>
+          **Major changes with Node.js agent v9**
+        </DNT>
+      </th>
+
+      <th>
+        <DNT>
+          **Comments**
+        </DNT>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        Node.js 18 の公式パリティ サポートが追加されました。
+      </td>
+
+      <td/>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: Node.js 12 のサポートを廃止しました。
+      </td>
+
+      <td>
+        * 詳細については、当社の [サポートポリシー](/docs/agents/nodejs-agent/getting-started/compatibility-requirements-nodejs-agent) をご覧ください。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: エージェントは、「証明書」設定 (通常はプロキシを使用) を使用するときに、 New Relic証明書バンドルを自動的に含めなくなりました。
+      </td>
+
+      <td>
+        * 「証明書」構成 (通常はプロキシを使用) を使用する場合、エージェントには New Relic 証明書バンドルが含まれなくなりました。これにより現在の環境が破壊される場合は、Mozilla から提供されているような CA バンドルを入手することをお勧めします。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: エージェントは、仕様およびその他のエージェントに準拠するために、ポート443への外部HTTPSリクエストを行う際にポートを除外するようになりました。
+      </td>
+
+      <td>
+        * デフォルトの HTTPS ポートを使用する場合、以前の外部セグメントは`External/example.com:443`という名前になります。
+        * 外部セグメントの名前は`External/example.com`になります。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: `await_support`機能フラグを介して非同期フックベースの Promise コンテキスト追跡を無効にする機能が削除されました。 これにより、レガシー プロミス インストゥルメンテーションも削除されます。
+      </td>
+
+      <td>
+        * `await_support`機能フラグをリリースしました。エージェントは、async_hooks に依存して async promise の伝播を追跡するようになりました。最終的な結果は、 `feature_flag.await_support`を false に設定した場合、レガシー インストルメンテーションは promise チェーン内のすべての関数を個別のセグメントとして追跡します。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: 廃止された[oracle](https://www.npmjs.com/package/oracle) npm パッケージのインストゥルメンテーションを削除しました。
+      </td>
+
+      <td/>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: `pg`の最小バージョンを 8.2.x に更新しました。 これは、Node.js 14 以降で実行される最も古いサポート バージョンです。
+      </td>
+
+      <td/>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: hapi の最小サポートバージョンを v20.0.0 に更新しました。
+      </td>
+
+      <td>
+        * v20.0.0 より前のすべてのバージョンは、セキュリティ上の理由から、hapi によって非推奨になっています。[サポート ポリシーを参照して](https://hapi.dev/policies/support/)ください。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        New Relic の依存関係を、Node.js バージョンのサポートが更新されたバージョンに更新する
+      </td>
+
+      <td>
+        * @newrelic/aws-sdk v5.0.0
+        * @newrelic/koa v7.0.0
+        * @newrelic/native-metrics v9.0.0
+        * @newrelic/superagent v6.0.0
+        * @newrelic/test-utilities v7.0.0
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Node.jsバージョンのサポート [#node-support-v9]
+
+Node.js 14 は、New Relic Node.js v9 エージェントでサポートされている最も古いバージョンです。Node.js 12 および 13 は v9 ではサポートされていません。Node.js 13 以前を実行しているお客様には、次の 2 つのオプションがあります。
+
+* サポートされているバージョンの Node.js にアップグレードして、New Relic Node.js v9 エージェントの新機能を活用してください。
+* アップデート エージェント バージョンでのみ利用可能な新機能を使用する機能なしで、New Relic Node.js v8 エージェントにとどまります。
+
+<Callout variant="tip">
+  できるだけ早く Node.js の新しいバージョンにアップグレードしてください。New Relic Node.js エージェントの次のメジャー バージョンでは、Node.js 14 のサポートが削除される可能性があります。
+</Callout>
+
+## Node.jsエージェントバージョン8へのアップグレード [#node-agent-v8]
+
+Node.jsのバージョン8にアップグレードする前に、主要な変更点についてこの情報を確認してください。
+
+<table>
+  <thead>
+    <tr>
+      <th style={{ width: "250px" }}>
+        <DNT>
+          **Major changes with Node.js agent v8**
+        </DNT>
+      </th>
+
+      <th>
+        <DNT>
+          **Comments**
+        </DNT>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        Node.js 16 の公式パリティ サポートが追加されました。
+      </td>
+
+      <td/>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: Node.js v10.x のサポートを廃止しました。
+      </td>
+
+      <td>
+        * 詳細については、当社の [サポートポリシー](/docs/agents/nodejs-agent/getting-started/compatibility-requirements-nodejs-agent) をご覧ください。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: 機能フラグとして`serverless_mode`を削除しました。
+      </td>
+
+      <td>
+        * 標準の`serverless_mode`構成はまだ存在します。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <DNT>**BREAKING**</DNT>: &amp;apos;certificates&amp;apos; 設定 (通常はプロキシを使用) を使用する場合、エージェントにはNew Relic証明書バンドルが自動的に含まれなくなりました。
+      </td>
+
+      <td>
+        * これにより現在の環境が壊れていることがわかった場合は、機能フラグを利用して、この機能を一時的に復元できます。構成例: `feature_flag: { certificate_bundle: true }` 。この場合、Mozilla などの環境用の証明書バンドルを取得することをお勧めします。New Relic バンドルと機能フラグは、次のメジャー リリースで完全に削除されます。
         * config.feature_flags.certificate_bundleのデフォルトをfalseに設定しました。
       </td>
     </tr>
 
     <tr>
       <td>
-        New Relic DependenciesをNodeのバージョンサポートが更新されたバージョンに更新する。
+        New Relic Dependencies を更新された Node.js バージョンのサポートを含むバージョンに更新する
       </td>
 
       <td>
@@ -88,15 +410,15 @@ Node.jsのバージョン8にアップグレードする前に、主要な変更
   </tbody>
 </table>
 
-## ノードのバージョン対応 [#node-support-v8]
+## Node.jsバージョンのサポート [#node-support-v8]
 
-Node v12 は、New Relic Node.js v8 エージェントがサポートする最も古いバージョンです。Node 10 および 11 は v8 ではサポートされていません。Node 11以前のバージョンをお使いのお客様には2つの選択肢があります。
+Node.js v12 は、New Relic Node.js v8 エージェントでサポートされている最も古いバージョンです。Node.js 10 および 11 は v8 ではサポートされていません。Node.js 11 以前を実行しているお客様には、次の 2 つのオプションがあります。
 
-* サポートされているNodeのバージョンにアップグレードして、New Relic Node.js v8エージェントの新機能を利用することができます。
+* サポートされているバージョンの Node.js にアップグレードして、New Relic Node.js v8 エージェントの新機能を活用してください。
 * New Relic Node.js v7エージェントのままでは、エージェントのバージョンを更新した場合にのみ利用できる新機能を使用することができません。
 
 <Callout variant="tip">
-  できるだけ早く、新しいバージョンのNodeにアップグレードしてください。New Relic Node.js エージェントの次のメジャーバージョンでは、おそらく Node 12 のサポートが削除されるでしょう。
+  できるだけ早く Node.js の新しいバージョンにアップグレードしてください。New Relic Node.js エージェントの次のメジャー バージョンでは、Node.js 12 のサポートが削除される可能性があります。
 </Callout>
 
 ## Node.jsエージェントバージョン7へのアップグレード [#node-agent-v7]
@@ -107,11 +429,15 @@ Node.jsのバージョン7にアップグレードする前に、主要な変更
   <thead>
     <tr>
       <th style={{ width: "250px" }}>
-        **Node.jsエージェントv7での主な変更点**
+        <DNT>
+          **Major changes with Node.js agent v7**
+        </DNT>
       </th>
 
       <th>
-        **コメント**
+        <DNT>
+          **Comments**
+        </DNT>
       </th>
     </tr>
   </thead>
@@ -119,53 +445,50 @@ Node.jsのバージョン7にアップグレードする前に、主要な変更
   <tbody>
     <tr>
       <td>
-        **BREAKING** 非推奨の削除 `httpResponseCode`, `response.status` and `httpResponseMessage` httpレスポンス属性
+        <DNT>**BREAKING**</DNT> 非推奨の`httpResponseCode` 、 `response.status` 、 `httpResponseMessage` HTTP レスポンス属性を削除しました
       </td>
 
       <td>
-        * **v6.4.2-v6.14.0:** agent v6.4.2以降、これらの属性は非推奨とされていましたが、新しい属性への移行期間を設けるために残されました。
-        * **v7:** http response attribute reporting が有効な場合、 `http.statusCode` と `http.statusText` が報告されます。
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        **BREAKING** 削除された非推奨 `setIgnoreTransaction` APIメソッド
-      </td>
-
-      <td>
-        * **v5 - v6:** agent v5.0.0以降、このメソッドは非推奨とされていましたが、新しいメソッドへの移行期間として残してありました。
-        * **v7:** アプリケーションは、API メソッドを使用する必要があります [`transactionHandle.ignore()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#transaction-handle-ignore) .
+        * <DNT>**v6.4.2-v6.14.0:**</DNT> エージェント v6.4.2 以降、これらの属性は非推奨としてマークされましたが、新しい属性への移行期間を設けるために残されました。
+        * <DNT>**v7:**</DNT> http 応答属性レポートが有効になっている場合、 `http.statusCode`と`http.statusText`レポートされます。
       </td>
     </tr>
 
     <tr>
       <td>
-        **BREAKING** `api.custom_parameters_enabled` configuration item and associated environment variable `NEW_RELIC_API_CUSTOM_PARAMETERS` を削除しました。
+        <DNT>**BREAKING**</DNT> 非推奨の`setIgnoreTransaction` API メソッドを削除しました
       </td>
 
       <td>
-        * アプリケーションは、設定 [`api.custom_attributes_enabled` または関連する環境変数 `NEW_RELIC_API_CUSTOM_ATTRIBUTES`](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration/#custom-attributes) を使用して、 [`newrelic.addCustomAttribute`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#add-custom-attribute) と [`newrelic.addCustomAttributes`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#add-custom-attributes)`.`
-        * ``
-
-        ``
+        * <DNT>**v5 - v6:**</DNT> エージェント v5.0.0 以降、このメソッドは非推奨としてマークされましたが、新しいメソッドへの移行期間を設けるために残されました。
+        * <DNT>**v7:**</DNT> アプリケーションは API メソッド[`transactionHandle.ignore()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#transaction-handle-ignore)を使用する必要があります。
       </td>
     </tr>
 
     <tr>
       <td>
-        **BREAKING** 非推奨のDistributed Tracing APIメソッド、 `creationDivertTracePayload()` and `acceptDivertTracePayload()を削除しました。`
+        <DNT>**BREAKING**</DNT> `api.custom_parameters_enabled`設定項目と関連する環境変数`NEW_RELIC_API_CUSTOM_PARAMETERS`を削除しました。
       </td>
 
       <td>
-        * **v6.4.0-v6.14.0:** agent v6.4.0以降、これらのメソッドは非推奨とされていましたが、新しいメソッドへの移行期間として残してあります。
-        * **v7:** アプリケーションは、APIメソッド [`transactionHandle.insertDistributedTraceHeaders(headers)`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#transaction-handle-insertDistributedTraceHeaders) と [`transactionHandle.acceptDistributedTraceHeaders(transportType, headers) `](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#transaction-handle-acceptDistributedTraceHeaders)を使用しなければなりません。これらのメソッドにより、Node エージェントは、 `transactionHandle.acceptDistributedTraceHeaders(headers)` を呼び出す際に、W3C の `traceparent` および `tracestate` ヘッダを受け入れ、 `transactionHandle.acceptDistributedTraceHeaders(headers) を呼び出す際に、New Relic の分散トレース・ヘッダとともに W3C ヘッダを含めるようになりました。 distributed_tracing.exclude_newrelic_header:true を使用して New Relic トレースヘッダーフォーマットが無効化されていない限り、`[ を挿入します。](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration/#dt-exclude-newrelic-header)
+        * [`newrelic.addCustomAttribute`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#add-custom-attribute)と[`newrelic.addCustomAttributes`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#add-custom-attributes)を有効にするには、アプリケーションで構成[`api.custom_attributes_enabled`または関連する環境変数`NEW_RELIC_API_CUSTOM_ATTRIBUTES`](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration/#custom-attributes)を使用する必要があります。
       </td>
     </tr>
 
     <tr>
       <td>
-        New Relic DependenciesをNodeのバージョンサポートが更新されたバージョンに更新する。
+        <DNT>**BREAKING**</DNT> 非推奨のディストリビューティッド（分散）トレーシングAPIメソッド`createDistributedTracePayload()`と `acceptDistributedTracePayload()`
+      </td>
+
+      <td>
+        * <DNT>**v6.4.0-v6.14.0:**</DNT> エージェント v6.4.0 以降、これらのメソッドは非推奨としてマークされましたが、新しいメソッドへの移行期間を設けるために残されました。
+        * <DNT>**v7:**</DNT> アプリケーションは API メソッド[`transactionHandle.insertDistributedTraceHeaders(headers)`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#transaction-handle-insertDistributedTraceHeaders)と[`transactionHandle.acceptDistributedTraceHeaders(transportType, headers) `](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api/#transaction-handle-acceptDistributedTraceHeaders)を使用する必要があります。 これらのメソッドを使用すると、Node.js エージェントは、`transactionHandle.acceptDistributedTraceHeaders(headers)` を呼び出すときに W3C の `traceparent` および `tracestate` ヘッダーを受け入れ、`distributed_tracing.exclude_newrelic_header:true` を使用して New Relictrack ヘッダー形式が無効にされていない限り、`transactionHandle.insertDistributedTraceHeaders(headers)` を呼び出すときに W3C ヘッダーをNew Relic New Relicティッド（分散）トレーシング ヘッダーとともに含めるようになります[。](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration/#dt-exclude-newrelic-header)
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        New Relic Dependencies を更新された Node.js バージョンのサポートを含むバージョンに更新する
       </td>
 
       <td>
@@ -179,14 +502,14 @@ Node.jsのバージョン7にアップグレードする前に、主要な変更
   </tbody>
 </table>
 
-## ノードのバージョン対応 [#node-support-v7]
+## Node.jsバージョンのサポート [#node-support-v7]
 
-Node v10 は、New Relic Node.js v7 エージェントがサポートする最も古いバージョンです。Node 8および9はv7ではサポートされていません。 Node 9以前のバージョンをお使いのお客様には2つの選択肢があります。
+Node.js v10 は、New Relic Node.js v7 エージェントでサポートされている最も古いバージョンです。Node.js 8 および 9 は v7 ではサポートされていません。Node.js 9 以前を実行しているお客様には、次の 2 つのオプションがあります。
 
-* サポートされているNodeのバージョンにアップグレードして、New Relic Node.js v7エージェントの新機能を活用してください。
+* サポートされているバージョンの Node.js にアップグレードして、New Relic Node.js v7 エージェントの新機能を活用してください。
 * New Relic Node.js v6 エージェントのままでは、エージェントのバージョンを更新したときにのみ利用できる新機能を使用できません。
 
-[Node 10はアップデートを受け取りません](https://github.com/nodejs/Release/tree/cecdcf#end-of-life-releases) 。できるだけ早く、新しいバージョンのNodeにアップグレードしてください。Node 10 のサポートは New Relic Node.js エージェント v8 で打ち切られました。
+[Node.js 10 は更新を受け取りません](https://github.com/nodejs/Release/tree/cecdcf#end-of-life-releases)。できるだけ早く Node.js の新しいバージョンにアップグレードしてください。Node.js 10 のサポートは、New Relic Node.js エージェント v8 で廃止されました。
 
 ## Node.jsエージェントバージョン6へのアップグレード [#node-agent-v6]
 
@@ -196,11 +519,15 @@ Node.jsエージェント・バージョン6にアップグレードする前に
   <thead>
     <tr>
       <th style={{ width: "250px" }}>
-        **Node.jsエージェントv6の主な変更点**
+        <DNT>
+          **Major changes with Node.js agent v6**
+        </DNT>
       </th>
 
       <th>
-        **コメント**
+        <DNT>
+          **Comments**
+        </DNT>
       </th>
     </tr>
   </thead>
@@ -212,38 +539,38 @@ Node.jsエージェント・バージョン6にアップグレードする前に
       </td>
 
       <td>
-        * **v6:** @koa/router v8.0.2までのサポートを追加しました。現在、@koa/router v8.0.3 以降はサポートされていません。
-        * **v6:** Node v12のサポートを追加し、Node v6, 7, 9のサポートを削除しました。サポートされる最小のバージョンはNode v8です。
+        * <DNT>**v6:**</DNT> @koa/router v8.0.2 までのサポートが追加されました。 @koa/router v8.0.3 以降は現在サポートされていません。
+        * <DNT>**v6:**</DNT> Node.js v12 のサポートが追加され、Node.js v6、7、9 のサポートが削除されました。 サポートされる最小バージョンは Node.js v8 です。
         * また、GithubにあるNew Relicの [Koa Release Notesもご覧ください。](https://github.com/newrelic/node-newrelic-koa/blob/master/NEWS.md) 。
       </td>
     </tr>
 
     <tr>
       <td>
-        非推奨の `max_samples_per_minute` 設定パラメータを削除しました。これは `max_samples_stored` の動作で置き換えられます。
+        非推奨の`max_samples_per_minute`構成パラメーターを削除しました。これは`max_samples_stored`動作に置き換えられました
       </td>
 
       <td>
-        * **v1 - v5:** `max_samples_per_minute` では、エージェントが1分間に収集するイベントの最大数が定義されていました。以前、アプリケーションで `max_samples_per_minute` を上限値として使用していた場合、サーバでデータがドロップしないように、閾値を有効な上限値まで下げる必要があるかもしれません。10k以下を推奨します。
-        * **v5:** agent v5 以下では、 `max_samples_stored` エージェントが [New Relic collector](/docs/accounts-partnerships/education/getting-started-new-relic/glossary#collector) と通信できない場合に保存するイベントの最大数を定義していました。
-        * **v6:** `max_samples_stored` の新しい動作は、エージェントが 1 分間に収集するイベントの最大数を定義します。この数以上のイベントがある場合、エージェントは統計的なサンプリングを収集します。この設定の使い方は、他のAPMエージェントと同じです。
-        * **トラブルシューティングのヒント。** イベントデータが不足している場合は、 `max_samples_stored` の値を大きくするか、デフォルトの値に戻してください。 `max_samples_stored` の値は10,000を超えないようにしてください。
+        * <DNT>**v1 - v5:**</DNT> `max_samples_per_minute` エージェントが 1 分間に収集するイベントの最大数を定義します。 アプリケーションが以前に上限として`max_samples_per_minute`を使用していた場合、サーバー上でデータがドロップされないように、閾値を有効な最大値まで下げる必要がある場合があります。 10k未満をお勧めします。
+        * <DNT>**v5:**</DNT> エージェント v5 以前では、 `max_samples_stored` 、エージェントが[New Relic コレクター](/docs/accounts-partnerships/education/getting-started-new-relic/glossary#collector)と通信できない場合に保存するイベントの最大数を定義しました。
+        * <DNT>**v6:**</DNT> `max_samples_stored`の新しい動作は、エージェントが 1 分あたりに収集するイベントの最大数を定義します。 この数を超える場合、エージェントは統計サンプルを収集します。 この設定の使用方法は、他のAPMエージェントと一致しています。
+        * <DNT>**Troubleshooting tips:**</DNT> イベント データが不足している場合は、 `max_samples_stored`の値を増やすか、デフォルト値に戻します。 `max_samples_stored`の値は 10,000 を超えてはなりません。
       </td>
     </tr>
   </tbody>
 </table>
 
-## ノードのバージョン対応 [#node-support-v6]
+## Node.jsバージョンのサポート [#node-support-v6]
 
-Node 8 は、New Relic Node.js v6 エージェントがサポートする最も古いバージョンです。Node 6、7、9はv6ではサポートされていません。Node 6、7、9をお使いのお客様には2つの選択肢があります。
+Node.js 8 は、New Relic Node.js v6 エージェントでサポートされている最も古いバージョンです。Node.js 6、7、9 は v6 ではサポートされていません。Node.js 6、7、および 9 を実行しているお客様には、次の 2 つのオプションがあります。
 
-* サポートされているNodeのバージョンにアップグレードして、New Relic Node.js v6エージェントの新機能を活用してください。
+* サポートされているバージョンの Node.js にアップグレードして、New Relic Node.js v6 エージェントの新機能を活用してください。
 * New Relic Node.js v5エージェントのままでは、エージェントのバージョンを更新したときにのみ利用できる新機能を使用できません。
 
-[Node 8 はもはやアップデートを受けることはありません](https://github.com/nodejs/Release/tree/cecdcf#end-of-life-releases) が、New Relic は当面の間、これらのバージョンの Node のサポートを継続します。
+[Node.js 8 は更新を受け取らなくなりまし](https://github.com/nodejs/Release/tree/cecdcf#end-of-life-releases)たが、New Relic は当面の間、これらのバージョンの Node.js を引き続きサポートします。
 
 <Callout variant="tip">
-  できるだけ早く、新しいバージョンのNodeにアップグレードしてください。New Relic Node.js エージェントの次のメジャーバージョンでは、おそらく Node 8 のサポートが削除されるでしょう。
+  できるだけ早く Node.js の新しいバージョンにアップグレードしてください。New Relic Node.js エージェントの次のメジャー バージョンでは、Node.js 8 のサポートが削除される可能性があります。
 </Callout>
 
 ## Node.jsエージェントバージョン5へのアップグレード [#node-agent-v5]
@@ -254,11 +581,15 @@ Node.js agent v5 にアップグレードする前に、主要な変更点につ
   <thead>
     <tr>
       <th style={{ width: "250px" }}>
-        **Node.js v5 エージェントの主な変更点**
+        <DNT>
+          **Major changes with Node.js v5 agent**
+        </DNT>
       </th>
 
       <th>
-        **コメント**
+        <DNT>
+          **Comments**
+        </DNT>
       </th>
     </tr>
   </thead>
@@ -266,84 +597,84 @@ Node.js agent v5 にアップグレードする前に、主要な変更点につ
   <tbody>
     <tr>
       <td>
-        非推奨の `addCustomParameter` メソッドを削除しました。
+        非推奨の`addCustomParameter`メソッドを削除しました。
       </td>
 
       <td>
-        * **v2 - v4:** agent v2.7.0以降、これらのメソッドは非推奨とされていましたが、新しいメソッドへの移行期間として残してあります。
-        * **v5:** アプリケーションは、APIメソッド [`newrelic.addCustomAttribute()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#add-custom-attribute) と [`newrelic.addCustomAttributes()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#add-custom-attributes) を使用する必要があります。これらのメソッドは、従来のメソッドの代わりとなるものです。
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        非推奨の `create*Transaction` メソッドを削除しました。
-      </td>
-
-      <td>
-        * **v2 - v4:** agent v2.0.2以降、これらのメソッドは非推奨とマークされていましたが、新しいメソッドへの移行期間として残してあります。
-        * **v5:** アプリケーションは、APIメソッド [`newrelic.startWebTransaction()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#startWebTransaction) および [`newrelic.startBackgroundTransaction()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#startBackgroundTransaction) ...にアップデートする必要があります。
-        * **トラブルシューティングのヒント：**これらの新しい方法は、古い方法のドロップイン代替ではあり**ません**。これらの新しい方法に移行する前に、[カスタムインストルメンテーションガイド](/docs/agents/nodejs-agent/supported-features/nodejs-custom-instrumentation#web-txn)を確認してください。
+        * <DNT>**v2 - v4:**</DNT> エージェント v2.7.0 以降、これらのメソッドは非推奨としてマークされましたが、新しいメソッドへの移行期間を設けるために残されました。
+        * <DNT>**v5:**</DNT> アプリケーションは API メソッド[`newrelic.addCustomAttribute()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#add-custom-attribute)と[`newrelic.addCustomAttributes()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#add-custom-attributes)を使用する必要があります。 これらは古い方法の代替品です。
       </td>
     </tr>
 
     <tr>
       <td>
-        非推奨の `createTracer` メソッドを削除しました。
+        非推奨の`create*Transaction`メソッドを削除しました。
       </td>
 
       <td>
-        * **v3 - v4:** agent v3.3.0 以降、このメソッドは非推奨とされ、 `newrelic.startSegment()` が採用されました。
-        * **v5:** アプリケーションは [にアップデートする必要があります`newrelic.startSegment()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#startSegment) .
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        `node-cassandra-cql` instrumentationを削除しました。
-      </td>
-
-      <td>
-        * **v4:** npmパッケージを使用するアプリケーション [`node-cassandra-cql`](https://www.npmjs.com/package/node-cassandra-cql) は、Cassandraのデータストアメトリクスを取得します。
-        * **v5:** アプリケーションは、Cassandraデータストアのメトリクスを取得するために、 [`cassandra-driver`](https://www.npmjs.com/package/cassandra-driver) パッケージに移行する必要があります。このモジュールは同じ開発者によって積極的にメンテナンスされています。 `node-cassandra-cql` パッケージは2014年2月に放棄され、 `cassandra-driver` パッケージが採用されました。
+        * <DNT>**v2 - v4:**</DNT> エージェント v2.0.2 以降、これらのメソッドは非推奨としてマークされましたが、新しいメソッドへの移行期間を設けるために残されました。
+        * <DNT>**v5:**</DNT> アプリケーションは API メソッド[`newrelic.startWebTransaction()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#startWebTransaction)および[`newrelic.startBackgroundTransaction()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#startBackgroundTransaction)に更新する必要があります。
+        * <DNT>**Troubleshooting tips:**</DNT> これらの新しい方法は、古い方法に代わるものではあり**ません**。 これらの新しい方法に移行する前に、[カスタムインストゥルメンテーション ガイド](/docs/agents/nodejs-agent/supported-features/nodejs-custom-instrumentation#web-txn)を確認してください。
       </td>
     </tr>
 
     <tr>
       <td>
-        非推奨の `capture_params` と `ignored_params` の設定を削除しました。
+        非推奨の`createTracer`メソッドを削除しました。
       </td>
 
       <td>
-        * **v2 - v4:** agent v2.7.0 以降、これらの設定パラメータでは警告が記録され、その値は自動的に新しい属性設定にアップグレードされます。
-        * **v5:** 警告は記録されますが、設定は無視され、自動アップグレードは行われなくなります。
-        * **トラブルシューティングのヒント。** アプリケーションのパラメータが `ignored_params` 設定にリストされていた場合、それらを [`attributes.exclude`](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration#attributes_exclude) に移動する必要があります。
+        * <DNT>**v3 - v4:**</DNT> エージェント v3.3.0 以降では、このメソッドは非推奨となり、代わりに`newrelic.startSegment()`が使用されるようになりました。
+        * <DNT>**v5:**</DNT> アプリケーションを[`newrelic.startSegment()`](/docs/agents/nodejs-agent/api-guides/nodejs-agent-api#startSegment)に更新する必要があります。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `node-cassandra-cql`インストルメンテーションを削除しました。
+      </td>
+
+      <td>
+        * <DNT>**v4:**</DNT> npm パッケージ[`node-cassandra-cql`](https://www.npmjs.com/package/node-cassandra-cql)を使用するアプリケーションは、Cassandra のデータストア メトリックを取得します。
+        * <DNT>**v5:**</DNT> Cassandra データストアメトリックを取得するには、アプリケーションを[`cassandra-driver`](https://www.npmjs.com/package/cassandra-driver)パッケージに移行する必要があります。 このモジュールは同じ開発者によって積極的に保守されています。 `node-cassandra-cql`パッケージは 2014 年 2 月に廃止され、代わりに`cassandra-driver`パッケージが導入されました。
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        非推奨の`capture_params`および`ignored_params`構成を削除しました。
+      </td>
+
+      <td>
+        * <DNT>**v2 - v4:**</DNT> エージェント v2.7.0 以降では、これらの設定引数によって警告がログに記録され、値は新しい属性設定に自動的にアップグレードされるようになりました。
+        * <DNT>**v5:**</DNT> 警告は引き続きログに記録されますが、設定は無視され、自動アップグレードは行われなくなります。
+        * <DNT>**Troubleshooting tips:**</DNT> アプリケーションが`ignored_params`設定 にリストされている場合は、それらを[`attributes.exclude`](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration#attributes_exclude)に移動する必要があります。
       </td>
     </tr>
   </tbody>
 </table>
 
-## ノードのバージョン対応 [#node-support-v5]
+## Node.jsバージョンのサポート [#node-support-v5]
 
-Node 6 は、New Relic Node.js v5 エージェントでサポートされる最も古いバージョンです。Node 4と5はv5ではサポートされていません。 Node 4または5をお使いのお客様には2つの選択肢があります。
+Node.js 6 は、New Relic Node.js v5 エージェントでサポートされている最も古いバージョンです。Node.js 4 および 5 は v5 ではサポートされていません。Node.js 4 または 5 を実行しているお客様には、次の 2 つのオプションがあります。
 
-* サポートされているNodeのバージョンにアップグレードすることで、New Relic Node.js v5エージェントの新機能を利用することができます。
+* サポートされているバージョンの Node.js にアップグレードして、New Relic Node.js v5 エージェントの新機能を活用してください。
 * New Relic Node.js v4 エージェントのままでは、エージェントのバージョンを更新したときにのみ利用できる新機能を使用できません。
 
-[Node 7 と 9 はもうアップデートを受けていません。](https://github.com/nodejs/Release/tree/cecdcf#end-of-life-releases) しかし、New Relic は当面の間、これらのバージョンの Node をサポートし続けます。
+[Node.js 7 および 9 は更新を受け取らなくなりまし](https://github.com/nodejs/Release/tree/cecdcf#end-of-life-releases)たが、New Relic は当面の間、これらのバージョンの Node.js を引き続きサポートします。
 
 <Callout variant="tip">
-  できるだけ早く、新しいバージョンのNodeにアップグレードしてください。New Relic Node.js エージェントの次のメジャーバージョンでは、おそらく Node 6 および 7 のサポートが削除されるでしょう。
+  できるだけ早く Node.js の新しいバージョンにアップグレードしてください。New Relic Node.js エージェントの次のメジャー バージョンでは、Node.js 6 および 7 のサポートが削除される可能性があります。
 </Callout>
 
 ## v5での機能フラグ [#v5-feature-flags]
 
 New Relic for Node.js v5.の時点で。
 
-* `custom_instrumentation`: この機能は設定できなくなりました。
-* `custom_metrics`: この機能は設定できなくなりました。
-* `synthetics`: この機能は設定できなくなりました。
-* `native_metrics`: この機能は、 `plugins.native_metrics.enabled` の設定値で制御されるようになりました。
+* `custom_instrumentation`: この機能は構成できなくなりました。
+* `custom_metrics`: この機能は構成できなくなりました。
+* `synthetics`: この機能は構成できなくなりました。
+* `native_metrics`: この機能は、 `plugins.native_metrics.enabled`構成値によって制御されるようになりました。
 
 ## Node.jsエージェントバージョン4へのアップグレード [#node-agent-v4]
 
@@ -354,23 +685,23 @@ Node.js agent v4 にアップグレードする前に、主要な変更点につ
     id="https-proxy-agent"
     title="https-proxy-agentのv0からv2へのアップグレード"
   >
-    Node.js v4 エージェントの主な変更点は、 `https-proxy-agent` の v0 から v2 へのアップグレードです。この依存関係は、New Relic Node.js エージェントが使用していた `https-proxy-agent` に [セキュリティ上の問題](/docs/using-new-relic/new-relic-security/security-bulletins/security-bulletin-nr18-08) があったために更新されました。 `https-proxy` v2はnode v0.10およびv0.12との互換性がないため、New Relicはこれらのエージェントバージョンを非推奨としました。New Relic の Node.js エージェントの v3 から v4 への移行に必要なアクションはありません。
+    Node.js v4 エージェントの主な変更点には、 `https-proxy-agent`の v0 から v2 へのアップグレードが含まれます。この依存関係は、New Relic Node.js エージェントが使用した`https-proxy-agent`の[セキュリティの問題](/docs/using-new-relic/new-relic-security/security-bulletins/security-bulletin-nr18-08)により更新されました。`https-proxy` v2 はノード v0.10 および v0.12 と互換性がないため、New Relic は、これらのエージェント バージョンを廃止しました。New Relic の Node.js エージェントの v3 から v4 に移行するために必要なアクションはありません。
   </Collapser>
 
   <Collapser
     id="v4-node-version"
-    title="ノードのバージョン対応"
+    title="Node.jsバージョンのサポート"
   >
-    Node 4 は、New Relic Node.js v4 エージェントがサポートする最も古いバージョンです。Node 0.10および0.12はv4ではサポートされていません。 Node 0.10または0.12をお使いのお客様には2つの選択肢があります。
+    Node.js 4 は、New Relic Node.js v4 エージェントでサポートされている最も古いバージョンです。Node.js 0.10 および 0.12 は v4 ではサポートされていません。Node.js 0.10 または 0.12 を実行しているお客様には、次の 2 つのオプションがあります。
 
-    * サポートされているNodeのバージョンにアップグレードして、New Relic Node.js v4エージェントの新機能を活用してください。
+    * サポートされているバージョンの Node.js にアップグレードして、New Relic Node.js v4 エージェントの新機能を活用してください。
 
     * New Relic Node.js v3 エージェントのままでは、エージェントのバージョンが更新された場合にのみ利用できる新機能を利用することができません。
 
-      [Node 4, 5, 7 もアップデートが行われなくなりました。](https://github.com/nodejs/Release/tree/1d8fca#end-of-life-releases), しかし、New Relic は当面の間、これらのバージョンの Node のサポートを継続します。
+      [Node.js 4、5、および 7 も更新を受け取りません](https://github.com/nodejs/Release/tree/1d8fca#end-of-life-releases)が、New Relic は当面の間、これらのバージョンの Node.js を引き続きサポートします。
 
       <Callout variant="tip">
-        できるだけ早く、新しいバージョンのNodeにアップグレードしてください。New Relic Node.js エージェントの次のメジャーバージョンでは、おそらく Node 4 および 5 のサポートが削除されるでしょう。
+        できるだけ早く Node.js の新しいバージョンにアップグレードしてください。New Relic Node.js エージェントの次のメジャー バージョンでは、Node.js 4 および 5 のサポートが削除される可能性があります。
       </Callout>
   </Collapser>
 </CollapserGroup>
@@ -388,11 +719,15 @@ Node.js エージェント agent v3 にアップグレードする前に、主�
       <thead>
         <tr>
           <th style={{ width: "250px" }}>
-            **Node.js v3 agentの主な変更点**
+            <DNT>
+              **Major changes with Node.js v3 agent**
+            </DNT>
           </th>
 
           <th>
-            **コメント**
+            <DNT>
+              **Comments**
+            </DNT>
           </th>
         </tr>
       </thead>
@@ -404,20 +739,20 @@ Node.js エージェント agent v3 にアップグレードする前に、主�
           </td>
 
           <td>
-            * **v2:** v2のエージェントでは、暗号化せずにNew Relicに接続するように設定することが可能でした。
-            * **v3:** Node.js エージェント v3 は、通信を保護するために常に TLS 暗号化を使用して New Relic サーバーに接続します。エージェントがこれを無効にするように設定されている場合は、警告が記録され、設定は無視されます。
+            * <DNT>**v2:**</DNT> v2 エージェントでは、暗号化なしで New Relic に接続するようにエージェントを構成することができました。
+            * <DNT>**v3:**</DNT> Node.js エージェント v3 は、通信を保護するために常に TLS 暗号化を使用して New Relic サーバーに接続します。 エージェントがこれを無効にするように構成されている場合、警告がログに記録され、設定は無視されます。
           </td>
         </tr>
 
         <tr>
           <td>
-            リクエストパラメーターのプレフィックスが `request.parameters に変更されました。`
+            リクエスト パラメータにプレフィックスが付きました `request.parameters.`
           </td>
 
           <td>
-            * **v2:** v2エージェントは、ルートパラメータ(`/users/:userId`)やクエリパラメータ(`/users?userId=123`)などのリクエストパラメータを、パラメータ名(`userId`)として収集しています。
-            * **v3:** v3 エージェントは、すべてのリクエストパラメータの前に文字列 `request.parameters.` を付けます。例えば、`userId` は、 `request.parameters.userId` のように表示されます。
-            * **トラブルシューティングのヒント。** ダッシュボード、アラートポリシー、またはリクエストパラメータに基づくその他の NRQL クエリがある場合は、新しいパラメータ名でそれらを更新してください。
+            * <DNT>**v2:**</DNT> v2 エージェントは、ルート引数 ( `/users/:userId` ) やクエリ引数 ( `/users?userId=123` ) などのリクエスト引数を引数名 ( `userId` ) として収集します。
+            * <DNT>**v3:**</DNT> v3 エージェントは、すべてのリクエストの先頭に文字列`request.parameters.`を付加します。 たとえば、 `userId` `request.parameters.userId`として表示されます。
+            * <DNT>**Troubleshooting tips:**</DNT> ダッシュボード、アラートポリシー、またはリクエスト フォーラムに基づくその他のNRQLクエリがある場合は、それらを新しいフォーラム名で更新します。
           </td>
         </tr>
       </tbody>
@@ -428,7 +763,7 @@ Node.js エージェント agent v3 にアップグレードする前に、主�
     id="v3-feature-flags"
     title="v3での機能フラグ"
   >
-    New Relic Node.js agent v3より、 `send_request_uri_attribute` の機能が設定できなくなりました。
+    New Relic Node.js エージェント v3 以降、 `send_request_uri_attribute`機能は構成できなくなりました。
   </Collapser>
 </CollapserGroup>
 
@@ -445,11 +780,15 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
       <thead>
         <tr>
           <th style={{ width: "200px" }}>
-            **Node.js v2 agentの主な変更点**
+            <DNT>
+              **Major changes with Node.js v2 agent**
+            </DNT>
           </th>
 
           <th>
-            **コメント**
+            <DNT>
+              **Comments**
+            </DNT>
           </th>
         </tr>
       </thead>
@@ -461,9 +800,9 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
           </td>
 
           <td>
-            * **v1:** v1 エージェントでは、設定プロパティ `rules.name` および `rules.ignore` で定義されたルールが逆順に適用され、リストの最初のルールが最後に適用されました。
-            * **v2:** Node.js agent v2 は、定義された順にルールを適用するので、リストの最初のルールが最初に適用されます。
-            * **トラブルシューティングのヒント。** v1エージェントでネーミングルールを使用して問題が発生した場合は、設定でルールの順番を逆にしてください。
+            * <DNT>**v1:**</DNT> v1 エージェントでは、構成プロパティ`rules.name`および`rules.ignore`で定義されたルールが逆の順序で適用され、リストの最初のルールが最後に適用されました。
+            * <DNT>**v2:**</DNT> Node.js エージェント v2 は、定義された順序でルールを適用するため、リストの最初のルールが最初に適用されます。
+            * <DNT>**Troubleshooting tips:**</DNT> v1 エージェントで命名規則を使用していて問題に気付いた場合は、設定で規則の順序を逆にしてください。
           </td>
         </tr>
 
@@ -473,9 +812,9 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
           </td>
 
           <td>
-            * **v1:** v1 エージェントは、HTTP サーバーの `request` イベントのリスナーごとに新しいトランザクションを開始していました。 `request` イベントに複数のリスナーがいるアプリケーションでは、ほとんどの場合、正しく名前が付けられない余計なトランザクションが作成されていました。
-            * **v2:** v2エージェントは、 `リクエスト` イベントを発するごとに、1つのトランザクションのみを作成します。
-            * **トラブルシューティングのヒント。** 複数の `リクエスト` イベントリスナーを使用し、余分なトランザクションを削除するために `newrelic.ignoreTransaction()` の呼び出しを追加した場合は、これらの呼び出しを削除してください。
+            * <DNT>**v1:**</DNT> v1 エージェントは、HTTP サーバーの`request`イベントで各リスナーに対して新しいトランザクションを開始しました。 `request`イベントに複数のリスナーを持つアプリケーションでは、この結果、ほとんどの場合、正しく名前が付けられない余分なトランザクションが作成されました。
+            * <DNT>**v2:**</DNT> v2 エージェントは、発行された`request`イベントごとに 1 つのトランザクションのみを作成します。
+            * <DNT>**Troubleshooting tips:**</DNT> 複数の`request`イベント リスナーを使用し、余分なトランザクションを削除するために`newrelic.ignoreTransaction()`への呼び出しを追加した場合は、それらの呼び出しを削除します。
           </td>
         </tr>
 
@@ -485,9 +824,9 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
           </td>
 
           <td>
-            * **v1:** v1エージェントは、送信されるHTTPリクエストオブジェクトが発する未処理の `エラー` イベントを飲み込んでいました。
-            * **v2:** v2エージェントは、この動作を削除します。その代わり、v2エージェントは通常のNodeの実行を変更しません。つまり、 `エラー` イベントは常に発せられます。
-            * **トラブルシューティングのヒント。** アウトバウンドのリクエストを行っていて、現在 `エラー` イベントをリッスンしていない場合は、リスナーを追加して、アプリケーションに応じて適切にエラーを処理してください。
+            * <DNT>**v1:**</DNT> v1 エージェントは、送信 HTTP 要求オブジェクトによって発行された未処理の`error`イベントを取り込みました。
+            * <DNT>**v2:**</DNT> v2 エージェントではこの動作が削除されます。 代わりに、v2 エージェントは通常の Node.js 実行を変更しません。 つまり、 `error`イベントは常に発行されます。
+            * <DNT>**Troubleshooting tips:**</DNT> 送信リクエストを行っており、現在`error`イベントをリッスンしていない場合は、リスナーを追加し、アプリケーションに応じてエラーを処理します。
           </td>
         </tr>
       </tbody>
@@ -498,17 +837,21 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
     id="config-options"
     title="v2で更新された設定オプション"
   >
-    `newrelic.js` で、 [Node.js エージェントの設定](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration) のプロパティを編集して、最新のバージョンに対応させます。
+    `newrelic.js`で、最新バージョンとの互換性のために使用する[Node.js エージェント構成](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration)プロパティを編集します。
 
     <table>
       <thead>
         <tr>
           <th width={200}>
-            **償却資産**
+            <DNT>
+              **Deprecated property**
+            </DNT>
           </th>
 
           <th>
-            **新規物件**
+            <DNT>
+              **New property**
+            </DNT>
           </th>
         </tr>
       </thead>
@@ -522,7 +865,7 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
           <td>
             `attributes.enabled: false`
 
-            デフォルトでは、リクエスト属性は New Relic に送信されません。 `attributes.enabled: true` を設定すると、エージェントが定義した属性やカスタム属性をトレースに含めることができます。 `capture_params` プロパティは非推奨となりました。
+            デフォルトでは、リクエスト属性は New Relic に送信されません。`attributes.enabled: true`を設定して、トレースにエージェント定義またはカスタムの属性を含めます。`capture_params`プロパティは廃止されました。
           </td>
         </tr>
 
@@ -532,9 +875,9 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
           </td>
 
           <td>
-            `attribute.excludeを指定します。[]`
+            `attributes.exclude: []`
 
-            任意のリクエスト属性キーを `attributes.exclude` リストに追加します。ここでは、完全に一致しなければならないのではなく、ワイルドカード(`*`)を各項目に追加して、より広い範囲でフィルタリングできるようになっています。 `ignored_params` プロパティは非推奨となりました。
+            要求属性キーを`attributes.exclude`リストに追加します。現在、完全一致である必要はなく、ワイルドカード ( `*` ) を各項目に追加して、より広範なフィルタリングを行うことができます。`ignored_params`プロパティは廃止されました。
           </td>
         </tr>
       </tbody>
@@ -542,15 +885,15 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
 
     これらの [Node.js エージェント設定](/docs/agents/nodejs-agent/installation-configuration/nodejs-agent-configuration) プロパティには、以下のような特定の宛先に対するオーバーライドもあります。
 
-    * `トランザクショントレーサー`
+    * `transaction_tracer`
 
-    * `トランザクション_イベント`
+    * `transaction_events`
 
-    * `エラーコレクター`
+    * `error_collector`
 
-    * `ブラウザモニタリング`
+    * `browser_monitoring`
 
-      たとえば、ルート `attributes.enabled` が `true` で、 `transaction_tracer.attributes.enabled: false` を設定すると、トランザクション トレースで収集される属性が制限されますが、他のすべての属性については許可されます。
+      たとえば、ルート`attributes.enabled`が`true`で`transaction_tracer.attributes.enabled: false`を設定すると、属性がトランザクション追跡で収集されることは制限されますが、他のすべての属性は引き続き許可されます。
   </Collapser>
 
   <Collapser
@@ -564,28 +907,28 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
         id="newrelic_createWebTransaction"
         title={<InlineCode>newrelic.createWebTransaction()</InlineCode>}
       >
-        [`newrelic.startWebTransaction()`](#newrelic_start_transaction) と [`newrelic.getTransaction()`](#newrelic_getTransaction) に置き換えてください。
+        [`newrelic.startWebTransaction()`](#newrelic_start_transaction)と[`newrelic.getTransaction()`](#newrelic_getTransaction)に置き換えます。
       </Collapser>
 
       <Collapser
         id="newrelic_createBackgroundTransaction"
         title={<InlineCode>newrelic.createBackgroundTransaction()</InlineCode>}
       >
-        [`newrelic.startBackgroundTransaction()`](#newrelic_start_transaction) と [`newrelic.getTransaction()`](#newrelic_getTransaction) に置き換えてください。
+        [`newrelic.startBackgroundTransaction()`](#newrelic_start_transaction)と[`newrelic.getTransaction()`](#newrelic_getTransaction)に置き換えます。
       </Collapser>
 
       <Collapser
         id="newrelic_addCustomParameter"
         title={<InlineCode>newrelic.addCustomParameter()</InlineCode>}
       >
-        置き換え [`newrelic.addCustomAttribute()`](#newrelic_add_custom_attribute) .
+        [`newrelic.addCustomAttribute()`](#newrelic_add_custom_attribute)に置き換えます。
       </Collapser>
 
       <Collapser
         id="newrelic_addCustomParameter"
         title={<InlineCode>newrelic.addCustomParameters()</InlineCode>}
       >
-        置き換え [`newrelic.addCustomAttributes()`](#newrelic_add_custom_attributes) .
+        [`newrelic.addCustomAttributes()`](#newrelic_add_custom_attributes)に置き換えます。
       </Collapser>
     </CollapserGroup>
   </Collapser>
@@ -610,16 +953,28 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
 
       <Collapser
         id="newrelic_start_transaction"
-        title={<><InlineCode>newrelic.startWebTransaction()</InlineCode><InlineCode>newrelic.startBackgroundTransaction()</InlineCode></>}
+        title={<><InlineCode>
+          newrelic.startWebTransaction()
+        </InlineCode><InlineCode>
+          newrelic.startBackgroundTransaction()
+        </InlineCode></>}
       >
-        これらの新しいAPIメソッドは、従来の `create*Transaction` メソッドに代わるものです。このメソッドは、より使いやすく、プロミスとシームレスに連携します。v1のメソッドとは異なり、提供されたコールバックは直ちに起動されます。
+        これらの新しい API メソッドは、古い`create*Transaction`メソッドを置き換えます。それらは使いやすく、Promise とシームレスに連携します。v1 メソッドとは異なり、提供されたコールバックはすぐに呼び出されます。
       </Collapser>
 
       <Collapser
         id="newrelic_instrument"
-        title={<><InlineCode>newrelic.instrument()</InlineCode><InlineCode>newrelic.instrumentDatastore()</InlineCode><InlineCode>newrelic.instrumentWebframework()</InlineCode><InlineCode>newrelic.instrumentMessages()</InlineCode></>}
+        title={<><InlineCode>
+          newrelic.instrument()
+        </InlineCode><InlineCode>
+          newrelic.instrumentDatastore()
+        </InlineCode><InlineCode>
+          newrelic.instrumentWebframework()
+        </InlineCode><InlineCode>
+          newrelic.instrumentMessages()
+        </InlineCode></>}
       >
-        これらのメソッドを使用して、New Relic Node.js エージェントによってすでにインスツルメンテーションされているモジュールを含む、サードパーティモジュールのカスタムインスツルメンテーションを追加します。詳細は、New Relic の [Node.js instrumentation tutorials on GitHub](https://newrelic.github.io/node-newrelic/docs/tutorial-Instrumentation-Basics.html) をご覧ください。
+        これらのメソッドを使用して、New Relic Node.js エージェントによってすでにインストルメント化されているものを含め、サード パーティ モジュールのカスタム インストルメンテーションを追加します。詳細については[、GitHub の New Relic の Node.js インストルメンテーション チュートリアルを](https://newrelic.github.io/node-newrelic/tutorial-Instrumentation-Basics.html)参照してください。
       </Collapser>
 
       <Collapser
@@ -640,26 +995,26 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
 
   <Collapser
     id="node-support"
-    title="ノードのバージョンがv2に対応"
+    title="v2 の Node.js バージョンのサポート"
   >
-    New Relic Node.js v2 エージェントがサポートする Node の最も古いバージョンは 0.10 です。2014年7月以降更新されていないNode 0.8は、v2ではサポートされていません。Node 0.8をお使いのお客様には2つの選択肢があります。
+    New Relic Node.js v2 エージェントでサポートされている Node.js の最も古いバージョンは 0.10 です。2014 年 7 月以降更新されていない Node.js 0.8 は、v2 ではサポートされていません。Node.js 0.8 を実行しているお客様には、次の 2 つのオプションがあります。
 
-    * サポートされているNodeのバージョンにアップグレードして、New Relic Node.js v2エージェントの新機能を活用してください。
+    * サポートされているバージョンの Node.js にアップグレードして、New Relic Node.js v2 エージェントの新機能を活用してください。
 
     * New Relic Node.js v1 エージェントのままでは、エージェントのバージョンが更新された場合にのみ利用できる新機能を使用することができません。
 
-      [Node 0.10 もアップデートが行われなくなりました。](https://github.com/nodejs/LTS/tree/2b4253#lts-schedule1) しかし、New Relic は当面の間、このバージョンの Node のサポートを継続します。
+      [Node.js 0.10 も更新を受信しなくなりまし](https://github.com/nodejs/LTS/tree/2b4253#lts-schedule1)たが、New Relic は当面の間、このバージョンの Node.js を引き続きサポートします。
 
-      **推奨：** 新しいバージョンのNodeにできるだけ早くアップグレードする。
+      推奨事項: できるだけ早く Node.js の新しいバージョンにアップグレードしてください。
   </Collapser>
 
   <Collapser
     id="npm-versions"
     title="v2時点でのnpmのバージョンサポート"
   >
-    New Relic Node.jsのエージェントには、npmのバージョン2.0.0以上が必要になりました。このバージョンのnpmは、Node 0.10.44以降にパッケージされています。
+    New Relic Node.js エージェントには、npm バージョン 2.0.0 以降が必要になりました。このバージョンの npm は、Node.js 0.10.44 以降にパッケージ化されています。
 
-    以前のバージョンのNode 0.10を使用している場合は、まずnpm 2.0.0以上をインストールするか、より新しいNodeのバージョンにアップグレードする必要があります。npmバージョン2.0.0をインストールするには
+    以前のバージョンの Node.js 0.10 を使用している場合は、最初に npm 2.0.0 以降をインストールするか、新しいバージョンの Node.js にアップグレードする必要があります。npm バージョン 2 をインストールするには:
 
     ```
     $ npm install --global npm@2
@@ -672,8 +1027,8 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
   >
     New Relic Node.js agent v2.の時点で。
 
-    * `express_segments`: この機能は設定できなくなりました。
-    * `cat`: この機能は、 `cross_application_tracer.enabled` の設定値で制御されるようになりました。
+    * `express_segments`: この機能は構成できなくなりました。
+    * `cat`: この機能は、 `cross_application_tracer.enabled`構成値によって制御されるようになりました。
   </Collapser>
 
   <Collapser
@@ -686,15 +1041,21 @@ Node.js agent v2 にアップグレードする前に、主要な変更点につ
       <thead>
         <tr>
           <th style={{ width: "150px" }}>
-            **モジュール**
+            <DNT>
+              **Module**
+            </DNT>
           </th>
 
           <th style={{ width: "175px" }}>
-            **V2最小**
+            <DNT>
+              **V2 minimum**
+            </DNT>
           </th>
 
           <th style={{ width: "175px" }}>
-            **v2以前の最小値**
+            <DNT>
+              **Minimum before v2**
+            </DNT>
           </th>
         </tr>
       </thead>

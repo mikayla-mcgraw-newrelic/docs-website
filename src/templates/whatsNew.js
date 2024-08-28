@@ -12,6 +12,7 @@ import {
 import SEO from '../components/SEO';
 import PageTitle from '../components/PageTitle';
 import { TYPES } from '../utils/constants';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const WhatsNewTemplate = ({ data, location, pageContext }) => {
   const {
@@ -33,8 +34,12 @@ const WhatsNewTemplate = ({ data, location, pageContext }) => {
 
   const { disableSwiftype } = pageContext;
 
+  if (typeof window !== 'undefined' && typeof newrelic === 'object') {
+    window.newrelic.setCustomAttribute('pageType', 'Template/WhatsNew');
+  }
+
   return (
-    <>
+    <ErrorBoundary eventName="whatsNew">
       <SEO
         location={location}
         title={title}
@@ -146,7 +151,7 @@ const WhatsNewTemplate = ({ data, location, pageContext }) => {
           issueLabels={['feedback', 'feedback-issue']}
         />
       </Layout.Content>
-    </>
+    </ErrorBoundary>
   );
 };
 
@@ -157,7 +162,7 @@ WhatsNewTemplate.propTypes = {
 };
 
 export const pageQuery = graphql`
-  query($slug: String!, $locale: String) {
+  query($slug: String!) {
     site {
       siteMetadata {
         siteUrl
@@ -176,8 +181,6 @@ export const pageQuery = graphql`
         fileRelativePath
       }
     }
-
-    ...MainLayout_query
   }
 `;
 

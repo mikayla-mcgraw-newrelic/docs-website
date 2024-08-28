@@ -5,6 +5,7 @@ tags:
   - REST API v2
   - Basic functions
 metaDescription: 'To prevent resource-intensive API calls from affecting other customers'' API calls, New Relic''s REST API includes overload protection.'
+freshnessValidatedDate: never
 translationType: machine
 ---
 
@@ -18,7 +19,7 @@ translationType: machine
 
 通常の運用では、APIはレスポンスに過負荷保護ステータスを付加しません。お客様は何もする必要はありません。
 
-**報告期間** 時間間隔で、New Relic は各 API リクエストのシステムへの影響を追跡します。
+<DNT>**reporting period**</DNT>時間間隔にわたって、New Relic は各 API リクエストがシステムに与える影響を追跡します。
 
 これらは、過負荷保護やレート制限のトリガーとなる典型的なケースです。
 
@@ -109,7 +110,7 @@ APIキーの個別制限を超えた場合に、APIレスポンスに表示さ�
   <tbody>
     <tr>
       <td id="overload-reset">
-        `リトライ・アフター`
+        `Retry-After`
       </td>
 
       <td>
@@ -125,7 +126,7 @@ APIキーの個別制限を超えた場合に、APIレスポンスに表示さ�
 
 ```
 curl -X GET 'https://api.newrelic.com/v2/applications.json' \
-     -H 'Api-Key:<var><a href="/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key">$API_KEY</a></var>' -i
+     -H "Api-Key:<a href='/docs/apis/rest-api-v2/getting-started/introduction-new-relic-rest-api-v2#api_key'>$API_KEY</a>" -i
 HTTP/1.1 429 Too Many Requests
 Content-Type: application/json
 ...
